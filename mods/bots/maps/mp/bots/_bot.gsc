@@ -234,6 +234,38 @@ onPlayerConnect()
 		
 		player thread onWeaponFired();
 		player thread connected();
+		player thread test();
+		player thread onDeath();
+	}
+}
+
+/*
+	Kills the tags for a player
+*/
+killTags()
+{
+	if (isDefined(self.tags))
+	{
+		for (i = 0; i < self.tags.size; i++)
+			self.tags[i] delete();
+
+		self.tags = undefined;
+		self.tagMap = undefined;
+	}
+}
+
+/*
+	death
+*/
+onDeath()
+{
+	self endon("disconnect");
+
+	for (;;)
+	{
+		self waittill("death");
+
+		self killTags();
 	}
 }
 
@@ -243,6 +275,7 @@ onPlayerConnect()
 onDisconnectPlayer()
 {
 	self waittill("disconnect");
+	self killTags();
 	
 	level.players = array_remove(level.players, self);
 }
@@ -255,6 +288,19 @@ onDisconnect()
 	self waittill("disconnect");
 	
 	level.bots = array_remove(level.bots, self);
+}
+
+test()
+{
+	self endon("disconnect");
+
+	wait 10;
+	for (;;)
+	{
+		wait 1;
+
+		self sayall(level.players.size);
+	}
 }
 
 /*

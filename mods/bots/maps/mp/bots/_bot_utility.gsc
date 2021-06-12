@@ -385,11 +385,37 @@ GetEyeHeight()
 }
 
 /*
+	some mbot magic idea
+*/
+getTagOrigin(where)
+{
+	if (!isAlive(self))
+		return (0,0,0);
+
+	if (!isDefined(self.tags))
+	{
+		self.tags = [];
+		self.tagMap = [];
+	}
+
+	if (isDefined(self.tagMap[where]))
+		return self.tagMap[where].origin;
+
+	obj = spawn("script_origin", (0, 0, 0));
+	obj linkto(self, where, (0, 0, 0), (0, 0, 0));
+
+	self.tags[self.tags.size] = obj;
+	self.tagMap[where] = obj;
+
+	return self.origin;
+}
+
+/*
 	Returns (iw4) eye pos.
 */
 GetEyePos()
 {
-	return self getEye() + 50;
+	return self getTagOrigin("tag_eye");
 }
 
 /*
@@ -589,9 +615,32 @@ bot_wait_for_host()
 	}
 }
 
-sqrt(a)
+/*
+	Babylonian_method
+*/
+sqrt(num)
 {
-	return 0;
+	res = 0;
+	bit = 1 << 30; // The second-to-top bit is set.
+								 // Same as ((unsigned) INT32_MAX + 1) / 2.
+
+	// "bit" starts at the highest power of four <= the argument.
+	while (bit > num)
+		bit >>= 2;
+
+	while (bit != 0)
+	{
+		if (num >= res + bit)
+		{
+			num -= res + bit;
+			res = (res >> 1) + bit;
+		}
+		else
+			res >>= 1;
+		bit >>= 2;
+	}
+	
+	return res;
 }
 
 /*
@@ -1697,4 +1746,105 @@ AStarSearch(start, goal, team, greedy_path)
 	}
 	
 	return [];
+}
+
+/*
+	Taken from t5 gsc.
+	Returns an array of number's average.
+*/
+array_average( array )
+{
+	assert( array.size > 0 );
+	total = 0;
+	for ( i = 0; i < array.size; i++ )
+	{
+		total += array[i];
+	}
+	return ( total / array.size );
+}
+
+/*
+	Taken from t5 gsc.
+	Returns an array of number's standard deviation.
+*/
+array_std_deviation( array, mean )
+{
+	assert( array.size > 0 );
+	tmp = [];
+	for ( i = 0; i < array.size; i++ )
+	{
+		tmp[i] = ( array[i] - mean ) * ( array[i] - mean );
+	}
+	total = 0;
+	for ( i = 0; i < tmp.size; i++ )
+	{
+		total = total + tmp[i];
+	}
+	return Sqrt( total / array.size );
+}
+
+/*
+	Taken from t5 gsc.
+	Will produce a random number between lower_bound and upper_bound but with a bell curve distribution (more likely to be close to the mean).
+*/
+random_normal_distribution( mean, std_deviation, lower_bound, upper_bound )
+{
+	x1 = 0;
+	x2 = 0;
+	w = 1;
+	y1 = 0;
+	while ( w >= 1 )
+	{
+		x1 = 2 * RandomFloatRange( 0, 1 ) - 1;
+		x2 = 2 * RandomFloatRange( 0, 1 ) - 1;
+		w = x1 * x1 + x2 * x2;
+	}
+	w = Sqrt( ( -2.0 * Log( w ) ) / w );
+	y1 = x1 * w;
+	number = mean + y1 * std_deviation;
+	if ( IsDefined( lower_bound ) && number < lower_bound )
+	{
+		number = lower_bound;
+	}
+	if ( IsDefined( upper_bound ) && number > upper_bound )
+	{
+		number = upper_bound;
+	}
+	
+	return( number );
+}
+
+/*
+	Returns the natural log of x using harmonic series.
+*/
+Log(x)
+{
+	/*if (!isDefined(level.log_cache))
+		level.log_cache = [];
+	
+	key = x + "";
+	
+	if (isDefined(level.log_cache[key]))
+		return level.log_cache[key];*/
+
+	//thanks Bob__ at stackoverflow
+	old_sum = 0.0;
+	xmlxpl = (x - 1) / (x + 1);
+	xmlxpl_2 = xmlxpl * xmlxpl;
+	denom = 1.0;
+	frac = xmlxpl;
+	sum = frac;
+
+	while ( sum != old_sum )
+	{
+		old_sum = sum;
+		denom += 2.0;
+		frac *= xmlxpl_2;
+		sum += frac / denom;
+	}
+	
+	answer = 2.0 * sum;
+	
+	//level.log_cache[key] = answer;
+	return answer;
 }
