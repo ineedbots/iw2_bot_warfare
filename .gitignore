@@ -1,0 +1,15 @@
+# Ignore everything in repository root 
+/*
+
+# Files to not ignore
+!/.gitignore
+!/z_client.bat
+
+# Folder to not ignore
+!/mods
+/mods/*
+!/mods/bots
+
+*.dat
+*.log
+players/
