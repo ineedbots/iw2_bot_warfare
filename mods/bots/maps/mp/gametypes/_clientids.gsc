@@ -3,6 +3,8 @@ init()
 	level.clientid = 0;
 
 	level thread onPlayerConnect();
+
+	level thread maps\mp\bots\_bot::init();
 }
 
 onPlayerConnect()

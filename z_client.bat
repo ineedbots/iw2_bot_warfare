@@ -1,0 +1,1 @@
+start "" "%~dp0CoD2MP_s.exe" +set fs_game "mods/bots" +set developer "1" +set developer_script "1" +set com_introPlayed "1"
