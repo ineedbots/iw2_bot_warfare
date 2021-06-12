@@ -234,7 +234,6 @@ onPlayerConnect()
 		
 		player thread onWeaponFired();
 		player thread connected();
-		player thread test();
 		player thread onDeath();
 	}
 }
@@ -288,19 +287,6 @@ onDisconnect()
 	self waittill("disconnect");
 	
 	level.bots = array_remove(level.bots, self);
-}
-
-test()
-{
-	self endon("disconnect");
-
-	wait 10;
-	for (;;)
-	{
-		wait 1;
-
-		self sayall(level.players.size);
-	}
 }
 
 /*

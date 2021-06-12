@@ -871,25 +871,37 @@ parseTokensIntoWaypoint(tokens)
 */
 readWpsFromFile(mapname)
 {
-	/*waypoints = [];
-	filename = "waypoints/" + mapname + "_wp.csv";
+	waypoints = [];
+	filename = mapname + "_wp.csv";
+	f = openfile(filename, "read");
 
-	if (!FS_TestFile(filename))
+	if (f < 0)
 		return waypoints;
 
 	print("Attempting to read waypoints from " + filename);
 
-	csv = FS_FOpen(filename, "read");
-
 	for (;;)
 	{
-		waypointCount = int(FS_ReadLine(csv));
+		argc = fReadLn(f);
+		if (argc <= 0)
+			break;
+
+		waypointCount = int(fgetarg(f, 0));
 		if (waypointCount <= 0)
 			break;
 
 		for (i = 1; i <= waypointCount; i++)
 		{
-			line = FS_ReadLine(csv);
+			argc = fReadLn(f);
+			line = "";
+			for (h = 0; h < argc; h++)
+			{
+				line += fgetarg(f, h);
+
+				if (h < argc - 1)
+					line += ",";
+			}
+
 			if (!isDefined(line) || line == "")
 				continue;
 
@@ -903,10 +915,8 @@ readWpsFromFile(mapname)
 		break;
 	}
 	
-	FS_FClose(csv);
-	return waypoints;*/
-
-	return [];
+	closeFile(f);
+	return waypoints;
 }
 
 /*
@@ -917,6 +927,83 @@ float(num)
 	setCvar("temp_dvar_bot_util", num);
 
 	return GetCvarFloat("temp_dvar_bot_util");
+}
+
+/*
+	Try mbot wps
+*/
+loadmbotWps(mapname, gametype)
+{
+	f = openfile(mapname + "_" + gametype + ".wp", "read");
+	wps = [];
+
+	if (f < 0)
+		f = openfile(mapname + "_" + gametype + ".tmp", "read");
+
+	if (f < 0)
+		return wps;
+
+	argc = fReadLn(f);
+	if (argc <= 0)
+	{
+		closeFile(f);
+		return wps;
+	}
+
+	arg = fgetarg(f, 0);
+	if (!isDefined(arg) || arg != "mbotwp")
+	{
+		closeFile(f);
+		return wps;
+	}
+
+	i = 0;
+	while(freadln(f) != -1)
+	{
+		s = fgetarg(f, 0);
+		t = strtok(s, " ,");
+
+		wp = spawnStruct();
+		wp.origin = (float(t[0]), float(t[1]), float(t[2]));
+
+		stance = "stand";
+		if (t[4] == "1")
+			stance = "crouch";
+		else if (t[4] == "2")
+			stance = "prone";
+
+		wp.children = [];
+		k = 0;
+		for(k = 0; k < int(t[5]); k++)
+			wp.children[k] = int(t[6+k]);
+
+		if (t[3] == "l" || t[3] == "m" || t[3] == "f" || t[3] == "j")
+			wp.type = "climb";
+		else if (t[3] == "g")
+			wp.type = "grenade";
+		else if (t[3] == "c")
+		{
+			wp.type = "crouch";
+
+			wpc = wp.children[0];
+			wp.children = [];
+			wp.children[0] = wpc;
+		}
+		else
+			wp.type = stance;
+
+		if ((t.size == 9 && t[3] == "w" && t[5] == "1") || t[3] == "g" || t[3] == "c")
+		{
+			k += 6;
+			wp.angles = (float(t[k]), float(t[k+1]), 0.0);
+		}
+
+		wps[i] = wp;
+		i++;
+	}
+
+	closeFile(f);
+	return wps;
 }
 
 /*
@@ -955,6 +1042,16 @@ load_waypoints()
 	if (!level.waypoints.size)
 	{
 		//maps\mp\bots\_bot_http::getRemoteWaypoints(mapname);
+	}
+
+	if (!level.waypoints.size)
+	{
+		wps = loadmbotWps(mapname, "tdm");
+
+		level.waypoints = wps;
+
+		if (level.waypoints.size)
+			print("Loaded mbot " + level.waypoints.size + " wps");
 	}
 
 	level.waypointCount = level.waypoints.size;
