@@ -365,6 +365,53 @@ getValidGrenade()
 }
 
 /*
+	CoD2
+*/
+getCurrentWeaponSlot()
+{
+	current = self getCurrentWeapon();
+	weapon1 = self getweaponslotweapon("primary");
+	weapon2 = self getweaponslotweapon("primaryb");
+	currentslot = undefined;
+
+	if(current == weapon1)
+		currentslot = "primary";
+	else
+	{
+		currentslot = "primaryb";
+	}
+
+	return currentslot;
+}
+
+/*
+	CoD2
+*/
+getStance()
+{
+	height = self GetEyeHeight();
+
+	if (height > 50)
+		return "stand";
+
+	if (height < 20)
+		return "prone";
+
+	return "crouch";
+}
+
+/*
+	CoD2
+*/
+getVelocity()
+{
+	if (!isAlive(self))
+		return (0,0,0);
+
+	return self.velocity;
+}
+
+/*
 	Returns if the given weapon is full auto.
 */
 WeaponIsFullAuto(weap)

@@ -110,6 +110,10 @@ init()
 	level thread watchGameEnded();
 
 	//level thread maps\mp\bots\_bot_http::doVersionCheck();
+
+	level.teamBased = true;
+	if (getcvar("gamemode") == "dm")
+		level.teamBased = false;
 }
 
 /*
@@ -235,6 +239,81 @@ onPlayerConnect()
 		player thread onWeaponFired();
 		player thread connected();
 		player thread onDeath();
+		player thread watchWeapons();
+		player thread watchVelocity();
+		player thread watchVars();
+	}
+}
+
+/*
+	CoD2
+*/
+watchWeapons()
+{
+	self endon("disconnect");
+
+	for (;;)
+	{
+		weap = self getCurrentWeapon();
+		self thread watchAmmoUsage(weap);
+
+		while (weap == self getCurrentWeapon())
+			wait 0.05;
+
+		self notify("weapon_change", self getCurrentWeapon());
+	}
+}
+
+/*
+	CoD2
+*/
+watchAmmoUsage(weap)
+{
+	self endon("disconnect");
+	self endon("weapon_change");
+
+	for (;;)
+	{
+		aCount = self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot());
+
+		while (aCount == self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot()))
+			wait 0.05;
+
+		if (self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot()) < aCount)
+			self notify("weapon_fired");
+		else
+			self notify("reload");
+	}
+}
+
+/*
+	CoD2
+*/
+watchVars()
+{
+	self endon("disconnect");
+
+	for (;;)
+	{
+		wait 0.05;
+
+		self.team = self.pers["team"];
+	}
+}
+
+/*
+	CoD2
+*/
+watchVelocity()
+{
+	self endon("disconnect");
+
+	lastOrigin = self.origin;
+	for (;;)
+	{
+		wait 0.05;
+		self.velocity = vector_scale(self.origin - lastOrigin, 20);
+		lastOrigin = self.origin;
 	}
 }
 
@@ -708,23 +787,24 @@ addBots()
 onWeaponFired()
 {
 	self endon("disconnect");
-
 	self.bots_firing = false;
-
 	for(;;)
 	{
-		self.bots_firing = false;
-
-		while (!self attackButtonPressed())
-			wait 0.05;
-
-		self.bots_firing = true;
-
-		while (self attackButtonPressed())
-			wait 0.05;
-
-		wait 1;
+		self waittill( "weapon_fired" );
+		self thread doFiringThread();
 	}
+}
+
+/*
+	Lets bot's know that the player is firing.
+*/
+doFiringThread()
+{
+	self endon("disconnect");
+	self endon("weapon_fired");
+	self.bots_firing = true;
+	wait 1;
+	self.bots_firing = false;
 }
 
 /*
@@ -817,6 +897,8 @@ watchNades()
 */
 watchGameEnded()
 {
+	level.gameEnded = false;
+
 	for (;;)
 	{
 		wait 0.05;
@@ -833,5 +915,6 @@ watchGameEnded()
 		}
 	}
 
+	level.gameEnded = true;
 	level notify("game_ended");
 }
