@@ -79,7 +79,7 @@ allowTeamChoice()
 */
 BotChangeToWeapon(weap)
 {
-	//self maps\mp\bots\_bot_internal::changeToWeap(weap);
+	self maps\mp\bots\_bot_internal::changeToWeap(weap);
 }
 
 /*
@@ -87,7 +87,7 @@ BotChangeToWeapon(weap)
 */
 BotPressAttack(time)
 {
-	//self maps\mp\bots\_bot_internal::pressFire(time);
+	self maps\mp\bots\_bot_internal::pressFire(time);
 }
 
 /*
@@ -95,7 +95,7 @@ BotPressAttack(time)
 */
 BotPressADS(time)
 {
-	//self maps\mp\bots\_bot_internal::pressADS(time);
+	self maps\mp\bots\_bot_internal::pressADS(time);
 }
 
 /*
@@ -103,7 +103,7 @@ BotPressADS(time)
 */
 BotPressUse(time)
 {
-	//self maps\mp\bots\_bot_internal::use(time);
+	self maps\mp\bots\_bot_internal::use(time);
 }
 
 /*
@@ -111,7 +111,7 @@ BotPressUse(time)
 */
 BotPressFrag(time)
 {
-	//self maps\mp\bots\_bot_internal::frag(time);
+	self maps\mp\bots\_bot_internal::frag(time);
 }
 
 /*
@@ -119,7 +119,7 @@ BotPressFrag(time)
 */
 BotPressSmoke(time)
 {
-	//self maps\mp\bots\_bot_internal::smoke(time);
+	self maps\mp\bots\_bot_internal::smoke(time);
 }
 
 /*
@@ -362,6 +362,22 @@ getValidGrenade()
 	}
 	
 	return random(possibles);
+}
+
+/*
+	Is second greande
+*/
+isSecondaryGrenade(nade)
+{
+	return isSubStr(nade, "smoke_grenade_");
+}
+
+/*
+	CoD2
+*/
+weaponClass(weap)
+{
+
 }
 
 /*
@@ -1243,11 +1259,33 @@ getMapName(map)
 }
 
 /*
+	cod2
+*/
+waittill_any( string1, string2, string3, string4, string5 )
+{
+	assert( isdefined( string1 ) );
+	
+	if ( isdefined( string2 ) )
+		self endon( string2 );
+
+	if ( isdefined( string3 ) )
+		self endon( string3 );
+
+	if ( isdefined( string4 ) )
+		self endon( string4 );
+
+	if ( isdefined( string5 ) )
+		self endon( string5 );
+	
+	self waittill( string1 );
+}
+
+/*
 	Does the extra check when adding bots
 */
 doExtraCheck()
 {
-	//maps\mp\bots\_bot_internal::checkTheBots();
+	maps\mp\bots\_bot_internal::checkTheBots();
 }
 
 /*
