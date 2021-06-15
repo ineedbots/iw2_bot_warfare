@@ -101,6 +101,15 @@ init()
 	level.players = [];
 
 	level.bots_fullautoguns = [];
+	level.bots_fullautoguns["greasegun"] = true;
+	level.bots_fullautoguns["thompson"] = true;
+	level.bots_fullautoguns["bar"] = true;
+	level.bots_fullautoguns["pps42"] = true;
+	level.bots_fullautoguns["sten"] = true;
+	level.bots_fullautoguns["bren"] = true;
+	level.bots_fullautoguns["mp44"] = true;
+	level.bots_fullautoguns["ppsh"] = true;
+	level.bots_fullautoguns["mp40"] = true;
 	
 	level thread fixGamemodes();
 	
@@ -908,9 +917,9 @@ watchGameEnded()
 			if (level.roundended)
 				break;
 		}
-		else if (isDefined(level.gameended))
+		else if (isDefined(level.mapended))
 		{
-			if (level.gameended)
+			if (level.mapended)
 				break;
 		}
 	}

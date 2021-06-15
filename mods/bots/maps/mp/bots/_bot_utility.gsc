@@ -59,6 +59,22 @@ is_bot()
 }
 
 /*
+	iw5
+*/
+allowClassChoice()
+{
+	return true;
+}
+
+/*
+	iw5
+*/
+allowTeamChoice()
+{
+	return true;
+}
+
+/*
 	Bot changes to the weap
 */
 BotChangeToWeapon(weap)
@@ -310,35 +326,11 @@ HasThreat()
 }
 
 /*
-	If the player is defusing
-*/
-IsDefusing()
-{
-	return (isDefined(self.isDefusing) && self.isDefusing);
-}
-
-/*
-	If the play is planting
-*/
-isPlanting()
-{
-	return (isDefined(self.isPlanting) && self.isPlanting);
-}
-
-/*
-	If the player is carrying a bomb
-*/
-isBombCarrier()
-{
-	return (isDefined(self.isBombCarrier) && self.isBombCarrier);
-}
-
-/*
 	If the site is in use
 */
 isInUse()
 {
-	return (isDefined(self.inUse) && self.inUse);
+	return (isDefined(self.planting) && self.planting) || (isDefined(self.defusing) && self.defusing);
 }
 
 /*
@@ -347,6 +339,14 @@ isInUse()
 getValidGrenade()
 {
 	grenadeTypes = [];
+	grenadeTypes[0] = "frag_grenade_american_mp";
+	grenadeTypes[1] = "smoke_grenade_american_mp";
+	grenadeTypes[2] = "frag_grenade_british_mp";
+	grenadeTypes[3] = "smoke_grenade_british_mp";
+	grenadeTypes[4] = "frag_grenade_russian_mp";
+	grenadeTypes[5] = "smoke_grenade_russian_mp";
+	grenadeTypes[6] = "frag_grenade_german_mp";
+	grenadeTypes[7] = "smoke_grenade_german_mp";
 	
 	possibles = [];
 	
@@ -560,7 +560,7 @@ _timeout( delay )
 */
 isWeaponDroppable(weap)
 {
-	return false;
+	return (maps\mp\gametypes\_weapons::isPistol(weap) || maps\mp\gametypes\_weapons::isMainWeapon(weap));
 }
 
 /*
