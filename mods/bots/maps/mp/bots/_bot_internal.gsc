@@ -258,7 +258,7 @@ doBotMovement_loop(data)
 
 	// move!
 	self botMovement(int(dir[0]), int(dir[1]));
-	self setOrigin(move_To);
+	self setOrigin(self.origin + vector_scale(vectorNormalize(move_To - self.origin), 25));
 }
 
 /*
@@ -1381,7 +1381,7 @@ walk_loop()
 				d = VectorNormalize(trace["position"] - myOrg);
 				n = trace["normal"];
 				
-				r = d - 2 * vector_scale(VectorDot(d, n), n);
+				r = d - vector_scale(vector_scale(VectorDot(d, n), n), 2);
 
 				goal = PhysicsTrace(myOrg, myOrg + vector_scale((r[0], r[1], 0), stepDist), false, self);
 				goal = PhysicsTrace(goal + (0, 0, 50), goal + (0, 0, -40), false, self);
