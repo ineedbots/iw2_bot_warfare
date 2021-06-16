@@ -208,7 +208,7 @@ doBotMovement_loop(data)
 					0);
 
 		// make the length 127
-		dir = VectorNormalize(dir) * 127;
+		dir = vector_scale(VectorNormalize(dir), 127);
 
 		// invert the second component as the engine requires this
 		dir = (dir[0], 0-dir[1], 0);
@@ -227,18 +227,18 @@ doBotMovement_loop(data)
 	}*/
 	
 	startPos = self.origin + (0, 0, 50);
-	startPosForward = startPos + anglesToForward((0, angles[1], 0)) * 25;
+	startPosForward = startPos + vector_scale(anglesToForward((0, angles[1], 0)), 25);
 	bt = bulletTrace(startPos, startPosForward, false, self);
 	if (bt["fraction"] >= 1)
 	{
 		// check if need to jump
 		bt = bulletTrace(startPosForward, startPosForward - (0, 0, 40), false, self);
 
-		//if (bt["fraction"] < 1 && bt["normal"][2] > 0.9 && data.i > 1.5 && !self isOnLadder())
-		//{
-		//	data.i = 0;
-		//	self thread jump();
-		//}
+		/*if (bt["fraction"] < 1 && bt["normal"][2] > 0.9 && data.i > 1.5 && !self isOnLadder())
+		{
+			data.i = 0;
+			self thread jump();
+		}*/
 	}
 	// check if need to knife glass
 	else if (bt["surfacetype"] == "glass")
@@ -258,6 +258,7 @@ doBotMovement_loop(data)
 
 	// move!
 	self botMovement(int(dir[0]), int(dir[1]));
+	self setOrigin(move_To);
 }
 
 /*
@@ -330,6 +331,9 @@ SetWeaponDistMulti(weap)
 IsWeapSniper(weap)
 {
 	if (weap == "none")
+		return false;
+
+	if (weaponClass(weap) != "sniper")
 		return false;
 	
 	return true;
@@ -404,8 +408,8 @@ reload_watch_loop()
 		if (weap == "none")
 			break;
 
-	//	if (self GetWeaponAmmoClip(weap) >= WeaponClipSize(weap))
-	//		break;
+		if (self GetWeaponSlotClipAmmo(self getWeaponSlot(weap)) >= WeaponClipSize(weap))
+			break;
 	}
 	self.bot.isreloading = false;
 }
@@ -513,14 +517,14 @@ reload_thread()
 	if (cur == "" || cur == "none")
 		return;
 	
-	//if(IsWeaponClipOnly(cur) || !self GetWeaponAmmoStock(cur))
-	//	return;
+	if(IsWeaponClipOnly(cur) || !self getweaponslotammo(self getWeaponSlot(cur)))
+		return;
 	
-	//maxsize = WeaponClipSize(cur);
-	//cursize = self GetWeaponammoclip(cur);
+	maxsize = WeaponClipSize(cur);
+	cursize = self GetWeaponSlotClipAmmo(self getWeaponSlot(cur));
 	
-	//if(cursize/maxsize < 0.5)
-	//	self thread reload();
+	if(cursize/maxsize < 0.5)
+		self thread reload();
 }
 
 /*
@@ -594,7 +598,7 @@ updateAimOffset(obj)
 	else
 		offsetScalar = 1 - objCreatedFor / aimDiffTime;
 
-	obj.aim_offset = obj.aim_offset_base * offsetScalar;
+	obj.aim_offset = vector_scale(obj.aim_offset_base, offsetScalar);
 }
 
 /*
@@ -1026,8 +1030,6 @@ aim_loop()
 			
 			if(self.bot.isfraggingafter || self.bot.issmokingafter)
 				nadeAimOffset = dist/3000;
-			else if(curweap != "none" && weaponClass(curweap) == "grenade")
-				nadeAimOffset = dist/16000;
 			
 			if(no_trace_time && (!isDefined(self.bot.after_target) || self.bot.after_target != target))
 			{
@@ -1042,8 +1044,6 @@ aim_loop()
 							if(isDefined(nade) && rand <= self.pers["bots"]["behavior"]["nade"] && bulletTracePassed(eyePos, eyePos + (0, 0, 75), false, self) && bulletTracePassed(last_pos, last_pos + (0, 0, 100), false, target) && dist > level.bots_minGrenadeDistance && dist < level.bots_maxGrenadeDistance && getCvarInt("bots_play_nade"))
 							{
 								time = 0.5;
-								if (nade == "frag_grenade_mp")
-									time = 2;
 
 								if(!isSecondaryGrenade(nade))
 									self thread frag(time);
@@ -1148,8 +1148,6 @@ aim_loop()
 
 		if(self.bot.isfraggingafter || self.bot.issmokingafter)
 			nadeAimOffset = dist/3000;
-		else if(curweap != "none" && weaponClass(curweap) == "grenade")
-			nadeAimOffset = dist/16000;
 
 		aimpos = last_pos + (0, 0, self getEyeHeight() + nadeAimOffset);
 		conedot = getConeDot(aimpos, eyePos, angles);
@@ -1195,7 +1193,7 @@ aim_loop()
 	{
 		lookat = undefined;
 
-		if(self.bot.second_next_wp != -1 && !self.bot.issprinting && !self.bot.climbing)
+		if(self.bot.second_next_wp != -1 && !self.bot.climbing)
 			lookat = level.waypoints[self.bot.second_next_wp].origin;
 		else if(isDefined(self.bot.towards_goal))
 			lookat = self.bot.towards_goal;
@@ -1267,7 +1265,7 @@ canFire(curweap)
 	if(curweap == "none")
 		return false;
 		
-	return /*self GetWeaponammoclip(curweap)*/;
+	return self GetWeaponSlotClipAmmo(self getWeaponSlot(curweap));
 }
 
 /*
@@ -1287,7 +1285,7 @@ canAds(dist, curweap)
 		return false;
 	
 	weapclass = (weaponClass(curweap));
-	if(weapclass == "spread" || weapclass == "grenade")
+	if(weapclass == "spread")
 		return false;
 	
 	return true;
@@ -1304,9 +1302,6 @@ isInRange(dist, curweap)
 	weapclass = weaponClass(curweap);
 	
 	if(weapclass == "spread" && dist > level.bots_maxShotgunDistance)
-		return false;
-
-	if (curweap == "m2_flamethrower_mp" && dist > level.bots_maxShotgunDistance)
 		return false;
 		
 	return true;
@@ -1360,7 +1355,7 @@ walk_loop()
 	{
 		self thread killWalkCauseNoWaypoints();
 		stepDist = 64;
-		forward = AnglesToForward(self GetPlayerAngles())*stepDist;
+		forward = vector_scale(AnglesToForward(self GetPlayerAngles()), stepDist);
 		forward = (forward[0], forward[1], 0);
 		myOrg = self.origin + (0, 0, 32);
 
@@ -1376,7 +1371,7 @@ walk_loop()
 			{
 				// didnt hit anything, just choose a random direction then
 				dir = (0,randomIntRange(-180, 180),0);
-				goal = PhysicsTrace(myOrg, myOrg + AnglesToForward(dir) * stepDist, false, self);
+				goal = PhysicsTrace(myOrg, myOrg + vector_scale(AnglesToForward(dir), stepDist), false, self);
 				goal = PhysicsTrace(goal + (0, 0, 50), goal + (0, 0, -40), false, self);
 			}
 			else
@@ -1386,9 +1381,9 @@ walk_loop()
 				d = VectorNormalize(trace["position"] - myOrg);
 				n = trace["normal"];
 				
-				r = d - 2 * (VectorDot(d, n)) * n;
+				r = d - 2 * vector_scale(VectorDot(d, n), n);
 
-				goal = PhysicsTrace(myOrg, myOrg + (r[0], r[1], 0) * stepDist, false, self);
+				goal = PhysicsTrace(myOrg, myOrg + vector_scale((r[0], r[1], 0), stepDist), false, self);
 				goal = PhysicsTrace(goal + (0, 0, 50), goal + (0, 0, -40), false, self);
 			}
 		}
@@ -1453,8 +1448,8 @@ strafe(target)
 	anglesRight = (0, angles[1]-90, 0);
 	
 	myOrg = self.origin + (0, 0, 16);
-	left = myOrg + anglestoforward(anglesLeft)*500;
-	right = myOrg + anglestoforward(anglesRight)*500;
+	left = myOrg + vector_scale(anglestoforward(anglesLeft), 500);
+	right = myOrg + vector_scale(anglestoforward(anglesRight), 500);
 	
 	traceLeft = BulletTrace(myOrg, left, false, self);
 	traceRight = BulletTrace(myOrg, right, false, self);
@@ -1776,6 +1771,7 @@ reload()
 	self notify("bot_reload");
 	self endon("bot_reload");
 	
+	self notify("reload_start");
 	self botAction("+reload");
 	wait 0.05;
 	self botAction("-reload");
@@ -2015,9 +2011,9 @@ bot_lookat(pos, time, vel)
 		steps = 1;
 
 	myEye = self GetEyePos(); // get our eye pos
-	myEye += (self getVelocity() * 0.05) * (steps - 1); // account for our velocity
+	myEye += vector_scale(vector_scale(self getVelocity(), 0.05), steps - 1); // account for our velocity
 
-	pos += (vel * 0.05) * (steps - 1); // add the velocity vector
+	pos += vector_scale(vector_scale(vel, 0.05), steps - 1); // add the velocity vector
 
 	myAngle=self getPlayerAngles();
 	angles = VectorToAngles( (pos - myEye) - anglesToForward(myAngle) );

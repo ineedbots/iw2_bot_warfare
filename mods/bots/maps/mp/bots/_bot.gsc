@@ -281,14 +281,16 @@ watchAmmoUsage(weap)
 	self endon("disconnect");
 	self endon("weapon_change");
 
+	slot = self getWeaponSlot(weap);
+
 	for (;;)
 	{
-		aCount = self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot());
+		aCount = self GetWeaponSlotClipAmmo(slot);
 
-		while (aCount == self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot()))
+		while (aCount == self GetWeaponSlotClipAmmo(slot))
 			wait 0.05;
 
-		if (self GetWeaponSlotClipAmmo(self getCurrentWeaponSlot()) < aCount)
+		if (self GetWeaponSlotClipAmmo(slot) < aCount)
 			self notify("weapon_fired");
 		else
 			self notify("reload");
@@ -412,6 +414,30 @@ connected()
 	self thread onDisconnect();
 
 	level notify("bot_connected", self);
+
+	self thread spawnBot();
+}
+
+spawnBot()
+{
+	wait 5;
+
+	self notify("menuresponse", game["menu_team"], "autoassign");
+
+	wait 0.5;
+
+	weap = "mp40_mp";
+	if (self.team == "allies")
+	{
+		if (game["allies"] == "american")
+			weap = "thompson_mp";
+		else if (game["allies"] == "british")
+			weap = "greasegun_mp";
+		else
+			weap = "ppsh_mp";
+	}
+	
+	self notify("menuresponse", game["menu_weapon_" + self.team], weap);
 }
 
 /*

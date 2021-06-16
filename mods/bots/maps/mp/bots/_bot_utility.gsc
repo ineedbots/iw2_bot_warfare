@@ -377,27 +377,34 @@ isSecondaryGrenade(nade)
 */
 weaponClass(weap)
 {
-
+	return "";
 }
 
 /*
 	CoD2
 */
-getCurrentWeaponSlot()
+WeaponClipSize(weap)
 {
-	current = self getCurrentWeapon();
-	weapon1 = self getweaponslotweapon("primary");
-	weapon2 = self getweaponslotweapon("primaryb");
-	currentslot = undefined;
+	return 1;
+}
 
-	if(current == weapon1)
-		currentslot = "primary";
+/*
+	CoD2
+*/
+getWeaponSlot(weap)
+{
+	if (self getweaponslotweapon("primary") == weap)
+		return "primary";
 	else
-	{
-		currentslot = "primaryb";
-	}
+		return "primaryb";
+}
 
-	return currentslot;
+/*
+	IsWeaponClipOnly cod2
+*/
+IsWeaponClipOnly(weap)
+{
+	return false;
 }
 
 /*
@@ -737,7 +744,7 @@ RaySphereIntersect(start, end, spherePos, radius)
 	//mu2 = (0-b - sqrt(bb4ac)) / (2 * a);
 
 	// intersection points of the sphere
-	ip1 = start + mu1 * dp;
+	ip1 = start + vector_scale(dp, mu1);
 	//ip2 = start + mu2 * dp;
 
 	myDist = DistanceSquared(start, end);
