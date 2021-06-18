@@ -10,6 +10,11 @@
 /mods/*
 !/mods/bots
 
+!/deploy.js
+!/deploy.bat
+!/z_deploy.bat
+!/.astylerc
+
 *.dat
 *.log
 players/
