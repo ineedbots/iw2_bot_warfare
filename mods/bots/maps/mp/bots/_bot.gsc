@@ -327,9 +327,9 @@ watchVars()
 
 	for ( ;; )
 	{
-		wait 0.05;
-
 		self.team = self.pers["team"];
+
+		wait 0.05;
 	}
 }
 
