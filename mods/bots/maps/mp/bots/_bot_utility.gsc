@@ -466,6 +466,9 @@ getTagOrigin( where )
 	if ( !isAlive( self ) )
 		return ( 0, 0, 0 );
 
+	if ( !isDefined( self.bot_model_fix ) )
+		return self.origin;
+
 	if ( !isDefined( self.tags ) )
 	{
 		self.tags = [];

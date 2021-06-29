@@ -272,7 +272,19 @@ onPlayerConnect()
 		player thread watchWeapons();
 		player thread watchVelocity();
 		player thread watchVars();
+		player thread doPlayerModelFix();
 	}
+}
+
+/*
+	Fixes a weird iw3 bug when for a frame the player doesn't have any bones when they first spawn in.
+*/
+doPlayerModelFix()
+{
+	self endon( "disconnect" );
+	self waittill( "spawned_player" );
+	wait 0.05;
+	self.bot_model_fix = true;
 }
 
 /*
@@ -442,6 +454,8 @@ connected()
 
 spawnBot()
 {
+	self endon( "disconnect" );
+	
 	wait 5;
 
 	self notify( "menuresponse", game["menu_team"], "autoassign" );
