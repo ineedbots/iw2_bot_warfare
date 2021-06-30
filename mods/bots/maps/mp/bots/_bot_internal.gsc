@@ -259,7 +259,6 @@ doBotMovement_loop( data )
 
 	// move!
 	self botMovement( int( dir[0] ), int( dir[1] ) );
-	self setOrigin( self.origin + vector_scale( vectorNormalize( move_To - self.origin ), 25 ) );
 }
 
 /*
@@ -2099,7 +2098,10 @@ bot_lookat( pos, time, vel )
 	}
 }
 
-botStop() {}
-botAction( a ) {}
-botMovement( a, b ) {}
-botWeapon( a ) {}
+/*
+	Weapon
+*/
+botWeapon( a )
+{
+	self switchToWeapon( a );
+}

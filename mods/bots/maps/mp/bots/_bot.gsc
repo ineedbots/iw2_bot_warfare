@@ -142,7 +142,7 @@ init()
 
 	level.teamBased = true;
 
-	if ( getcvar( "gamemode" ) == "dm" )
+	if ( getcvar( "g_gametype" ) == "dm" )
 		level.teamBased = false;
 }
 
@@ -455,7 +455,7 @@ connected()
 spawnBot()
 {
 	self endon( "disconnect" );
-	
+
 	wait 5;
 
 	self notify( "menuresponse", game["menu_team"], "autoassign" );
