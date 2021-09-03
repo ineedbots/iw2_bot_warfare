@@ -2049,7 +2049,7 @@ bot_lookat( pos, time, vel )
 	self endon( "spawned_player" );
 	level endon ( "game_ended" );
 
-	if ( level.gameEnded || self.bot.isfrozen )
+	if ( level.gameEnded || self.bot.isfrozen || !getCvarInt( "bots_play_aim" ) )
 		return;
 
 	if ( !isDefined( pos ) )
