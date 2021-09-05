@@ -16,6 +16,11 @@
 !/z_deploy.bat
 !/.astylerc
 
+!/main
+/main/*
+!/main/server.cfg
+!/z_server.bat
+
 *.dat
 *.log
 players/
