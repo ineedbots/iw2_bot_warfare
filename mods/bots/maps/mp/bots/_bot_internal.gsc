@@ -1109,7 +1109,7 @@ aim_loop()
 					if ( !nadeAimOffset && conedot > 0.999 && lengthsquared( aimoffset ) < 0.05 )
 						self thread bot_lookat( aimpos, 0.05 );
 					else
-						self thread bot_lookat( aimpos, aimspeed, target getVelocity() );
+						self thread bot_lookat( aimpos, aimspeed, target getVelocity(), true );
 				}
 				else
 				{
@@ -2040,7 +2040,7 @@ botMoveTo( where )
 /*
 	Bots will look at the pos
 */
-bot_lookat( pos, time, vel )
+bot_lookat( pos, time, vel, doAimPredict )
 {
 	self notify( "bots_aim_overlap" );
 	self endon( "bots_aim_overlap" );
@@ -2055,6 +2055,9 @@ bot_lookat( pos, time, vel )
 	if ( !isDefined( pos ) )
 		return;
 
+	if ( !isDefined( doAimPredict ) )
+		doAimPredict = false;
+
 	if ( !isDefined( time ) )
 		time = 0.05;
 
@@ -2067,9 +2070,13 @@ bot_lookat( pos, time, vel )
 		steps = 1;
 
 	myEye = self GetEyePos(); // get our eye pos
-	myEye += vector_scale( vector_scale( self getVelocity(), 0.05 ), steps - 1 ); // account for our velocity
 
-	pos += vector_scale( vector_scale( vel, 0.05 ), steps - 1 ); // add the velocity vector
+	if ( doAimPredict )
+	{
+		myEye += vector_scale( vector_scale( self getVelocity(), 0.05 ), steps - 1 ); // account for our velocity
+
+		pos += vector_scale( vector_scale( vel, 0.05 ), steps - 1 ); // add the velocity vector
+	}
 
 	myAngle = self getPlayerAngles();
 	angles = VectorToAngles( ( pos - myEye ) - anglesToForward( myAngle ) );
