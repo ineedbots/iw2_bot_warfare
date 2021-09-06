@@ -4,7 +4,6 @@
 # Files to not ignore
 !/.gitignore
 !/.vscode
-!/z_client.bat
 
 # Folder to not ignore
 !/mods
