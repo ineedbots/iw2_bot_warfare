@@ -18,34 +18,11 @@ connected()
 {
 	self endon( "disconnect" );
 
+	self.bot_change_class = true;
+
 	self thread difficulty();
-
-	self thread spawnBot();
-}
-
-spawnBot()
-{
-	self endon( "disconnect" );
-
-	wait 5;
-
-	self notify( "menuresponse", game["menu_team"], "autoassign" );
-
-	wait 0.5;
-
-	weap = "mp40_mp";
-
-	if ( self.team == "allies" )
-	{
-		if ( game["allies"] == "american" )
-			weap = "thompson_mp";
-		else if ( game["allies"] == "british" )
-			weap = "greasegun_mp";
-		else
-			weap = "ppsh_mp";
-	}
-
-	self notify( "menuresponse", game["menu_weapon_" + self.team], weap );
+	self thread teamWatch();
+	self thread classWatch();
 }
 
 /*
@@ -350,5 +327,74 @@ difficulty()
 		}
 
 		wait 5;
+	}
+}
+
+/*
+	Makes sure the bot is on a team.
+*/
+teamWatch()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		while ( !isdefined( self.pers["team"] )  || !allowTeamChoice() )
+			wait .05;
+
+		wait 0.1;
+
+		if ( self.team != "axis" || self.team != "allies" )
+			self notify( "menuresponse", game["menu_team"], getCvar( "bots_team" ) );
+
+		while ( isdefined( self.pers["team"] ) )
+			wait .05;
+	}
+}
+
+/*
+	Chooses a random class
+*/
+chooseRandomClass()
+{
+	weap = "mp40_mp";
+
+	if ( self.team == "allies" )
+	{
+		if ( game["allies"] == "american" )
+			weap = "thompson_mp";
+		else if ( game["allies"] == "british" )
+			weap = "greasegun_mp";
+		else
+			weap = "ppsh_mp";
+	}
+
+	return weap;
+}
+
+/*
+	Selects a class for the bot.
+*/
+classWatch()
+{
+	self endon( "disconnect" );
+
+	// cod2 has to wait this long or else theres a crash?
+	wait 3;
+
+	for ( ;; )
+	{
+		while ( !isdefined( self.pers["team"] ) || !allowClassChoice() )
+			wait .05;
+
+		wait 0.5;
+
+		if ( !isDefined( self.pers["weapon"] ) || self.pers["weapon"] == "" || !isDefined( self.bot_change_class ) )
+			self notify( "menuresponse", game["menu_weapon_" + self.team], self chooseRandomClass() );
+
+		self.bot_change_class = true;
+
+		while ( isdefined( self.pers["team"] ) && isDefined( self.pers["weapon"] ) && self.pers["weapon"] != "" && isDefined( self.bot_change_class ) )
+			wait .05;
 	}
 }
