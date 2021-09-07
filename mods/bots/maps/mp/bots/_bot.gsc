@@ -185,7 +185,7 @@ onPlayerDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 	if ( self is_bot() )
 	{
 		self maps\mp\bots\_bot_internal::onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
-		//self maps\mp\bots\_bot_script::onDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset);
+		self maps\mp\bots\_bot_script::onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
 	}
 
 	self [[level.prevCallbackPlayerDamage]]( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
@@ -199,7 +199,7 @@ onPlayerKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
 	if ( self is_bot() )
 	{
 		self maps\mp\bots\_bot_internal::onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
-		//self maps\mp\bots\_bot_script::onKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration);
+		self maps\mp\bots\_bot_script::onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
 	}
 
 	self [[level.prevCallbackPlayerKilled]]( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
@@ -219,56 +219,12 @@ hook_callbacks()
 }
 
 /*
-	Adds the level.radio object for koth. Cause the iw3 script doesn't have it.
-*/
-fixKoth()
-{
-	level.radio = undefined;
-
-	for ( ;; )
-	{
-		wait 0.05;
-
-		if ( !isDefined( level.radioObject ) )
-		{
-			continue;
-		}
-
-		for ( i = level.radios.size - 1; i >= 0; i-- )
-		{
-			if ( level.radioObject != level.radios[i].gameobject )
-				continue;
-
-			level.radio = level.radios[i];
-			break;
-		}
-
-		while ( isDefined( level.radioObject ) && level.radio.gameobject == level.radioObject )
-			wait 0.05;
-	}
-}
-
-/*
 	Fixes gamemodes when level starts.
 */
 fixGamemodes()
 {
 	for ( i = 0; i < 19; i++ )
 	{
-		if ( isDefined( level.bombZones ) && level.gametype == "sd" )
-		{
-			//for(i = 0; i < level.bombZones.size; i++)
-			//level.bombZones[i].onUse = ::onUsePlantObjectFix;
-			break;
-		}
-
-		if ( isDefined( level.radios ) && level.gametype == "koth" )
-		{
-			level thread fixKoth();
-
-			break;
-		}
-
 		wait 0.05;
 	}
 }
@@ -458,39 +414,12 @@ connected()
 	}
 
 	self thread maps\mp\bots\_bot_internal::connected();
-	//self thread maps\mp\bots\_bot_script::connected();
+	self thread maps\mp\bots\_bot_script::connected();
 
 	level.bots[level.bots.size] = self;
 	self thread onDisconnect();
 
 	level notify( "bot_connected", self );
-
-	self thread spawnBot();
-}
-
-spawnBot()
-{
-	self endon( "disconnect" );
-
-	wait 5;
-
-	self notify( "menuresponse", game["menu_team"], "autoassign" );
-
-	wait 0.5;
-
-	weap = "mp40_mp";
-
-	if ( self.team == "allies" )
-	{
-		if ( game["allies"] == "american" )
-			weap = "thompson_mp";
-		else if ( game["allies"] == "british" )
-			weap = "greasegun_mp";
-		else
-			weap = "ppsh_mp";
-	}
-
-	self notify( "menuresponse", game["menu_weapon_" + self.team], weap );
 }
 
 /*
@@ -501,7 +430,7 @@ added()
 	self endon( "disconnect" );
 
 	self thread maps\mp\bots\_bot_internal::added();
-	//self thread maps\mp\bots\_bot_script::added();
+	self thread maps\mp\bots\_bot_script::added();
 }
 
 /*
