@@ -25,6 +25,8 @@ connected()
 	self thread difficulty();
 	self thread teamWatch();
 	self thread classWatch();
+	self thread onBotSpawned();
+	self thread onSpawned();
 }
 
 /*
@@ -527,4 +529,50 @@ classWatch()
 		while ( isdefined( self.pers["team"] ) && isDefined( self.pers["weapon"] ) && self.pers["weapon"] != "" && isDefined( self.bot_change_class ) )
 			wait .05;
 	}
+}
+
+/*
+	When the bot spawns.
+*/
+onSpawned()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "spawned_player" );
+
+		if ( randomInt( 100 ) <= self.pers["bots"]["behavior"]["class"] )
+			self.bot_change_class = undefined;
+
+		self.bot_lock_goal = false;
+		self.help_time = undefined;
+		self.bot_was_follow_script_update = undefined;
+	}
+}
+
+/*
+	When the bot spawned, after the difficulty wait. Start the logic for the bot.
+*/
+onBotSpawned()
+{
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+
+	for ( ;; )
+	{
+		self waittill( "bot_spawned" );
+
+		self thread start_bot_threads();
+	}
+}
+
+/*
+	Starts all the bot thinking
+*/
+start_bot_threads()
+{
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	self endon( "death" );
 }
