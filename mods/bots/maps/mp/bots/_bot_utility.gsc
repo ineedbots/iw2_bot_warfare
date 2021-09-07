@@ -455,6 +455,14 @@ getVelocity()
 }
 
 /*
+	If the model of the player is good
+*/
+IsPlayerModelOK()
+{
+	return ( isDefined( self.bot_model_fix ) );
+}
+
+/*
 	Returns if the given weapon is full auto.
 */
 WeaponIsFullAuto( weap )

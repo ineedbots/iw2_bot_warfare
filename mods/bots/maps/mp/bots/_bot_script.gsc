@@ -18,6 +18,8 @@ connected()
 {
 	self endon( "disconnect" );
 
+	self.killerLocation = undefined;
+	self.lastKiller = undefined;
 	self.bot_change_class = true;
 
 	self thread difficulty();
@@ -30,6 +32,35 @@ connected()
 */
 onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration )
 {
+	self.killerLocation = undefined;
+	self.lastKiller = undefined;
+
+	if ( !IsDefined( self ) || !isDefined( self.team ) )
+		return;
+
+	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
+		return;
+
+	if ( iDamage <= 0 )
+		return;
+
+	if ( !IsDefined( eAttacker ) || !isDefined( eAttacker.team ) )
+		return;
+
+	if ( eAttacker == self )
+		return;
+
+	if ( level.teamBased && eAttacker.team == self.team )
+		return;
+
+	if ( !IsDefined( eInflictor ) || eInflictor.classname != "player" )
+		return;
+
+	if ( !isAlive( eAttacker ) )
+		return;
+
+	self.killerLocation = eAttacker.origin;
+	self.lastKiller = eAttacker;
 }
 
 /*
@@ -37,6 +68,105 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 */
 onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset )
 {
+	if ( !IsDefined( self ) || !isDefined( self.team ) )
+		return;
+
+	if ( !isAlive( self ) )
+		return;
+
+	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
+		return;
+
+	if ( iDamage <= 0 )
+		return;
+
+	if ( !IsDefined( eAttacker ) || !isDefined( eAttacker.team ) )
+		return;
+
+	if ( eAttacker == self )
+		return;
+
+	if ( level.teamBased && eAttacker.team == self.team )
+		return;
+
+	if ( !IsDefined( eInflictor ) || eInflictor.classname != "player" )
+		return;
+
+	if ( !isAlive( eAttacker ) )
+		return;
+
+	self bot_cry_for_help( eAttacker );
+
+	self SetAttacker( eAttacker );
+}
+
+/*
+	When the bot gets attacked, have the bot ask for help from teammates.
+*/
+bot_cry_for_help( attacker )
+{
+	if ( !level.teamBased )
+	{
+		return;
+	}
+
+	theTime = GetTime();
+
+	if ( IsDefined( self.help_time ) && theTime - self.help_time < 1000 )
+	{
+		return;
+	}
+
+	self.help_time = theTime;
+
+	for ( i = level.players.size - 1; i >= 0; i-- )
+	{
+		player = level.players[i];
+
+		if ( !player is_bot() )
+		{
+			continue;
+		}
+
+		if ( !isDefined( player.team ) )
+			continue;
+
+		if ( !player IsPlayerModelOK() )
+			continue;
+
+		if ( !IsAlive( player ) )
+		{
+			continue;
+		}
+
+		if ( player == self )
+		{
+			continue;
+		}
+
+		if ( player.team != self.team )
+		{
+			continue;
+		}
+
+		dist = player.pers["bots"]["skill"]["help_dist"];
+		dist *= dist;
+
+		if ( DistanceSquared( self.origin, player.origin ) > dist )
+		{
+			continue;
+		}
+
+		if ( RandomInt( 100 ) < 50 )
+		{
+			self SetAttacker( attacker );
+
+			if ( RandomInt( 100 ) > 70 )
+			{
+				break;
+			}
+		}
+	}
 }
 
 /*
