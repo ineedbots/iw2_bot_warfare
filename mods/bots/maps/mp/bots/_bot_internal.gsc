@@ -215,16 +215,16 @@ doBotMovement_loop( data )
 	}
 
 	// climb through windows
-	/*  if (self isMantling())
-	    {
+	if ( self isMantling() )
+	{
 		data.wasMantling = true;
 		self crouch();
-	    }
-	    else if (data.wasMantling)
-	    {
+	}
+	else if ( data.wasMantling )
+	{
 		data.wasMantling = false;
 		self stand();
-	    }*/
+	}
 
 	startPos = self.origin + ( 0, 0, 50 );
 	startPosForward = startPos + vector_scale( anglesToForward( ( 0, angles[1], 0 ) ), 25 );
@@ -235,11 +235,11 @@ doBotMovement_loop( data )
 		// check if need to jump
 		bt = bulletTrace( startPosForward, startPosForward - ( 0, 0, 40 ), false, self );
 
-		/*  if (bt["fraction"] < 1 && bt["normal"][2] > 0.9 && data.i > 1.5 && !self isOnLadder())
-		    {
+		if ( bt["fraction"] < 1 && bt["normal"][2] > 0.9 && data.i > 1.5 && !self isOnLadder() )
+		{
 			data.i = 0;
 			self thread jump();
-		    }*/
+		}
 	}
 	// check if need to knife glass
 	else if ( bt["surfacetype"] == "glass" )

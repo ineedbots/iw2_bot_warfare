@@ -379,6 +379,22 @@ isSecondaryGrenade( nade )
 /*
 	CoD2
 */
+isMantling()
+{
+	return false;
+}
+
+/*
+	CoD2
+*/
+isOnLadder()
+{
+	return false;
+}
+
+/*
+	CoD2
+*/
 weaponClass( weap )
 {
 	return "";
