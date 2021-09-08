@@ -489,17 +489,74 @@ teamWatch()
 */
 chooseRandomClass()
 {
-	weap = "mp40_mp";
+	weap = "";
+	weapons = [];
 
-	if ( self.team == "allies" )
+	/*  weapons[weapons.size] = "greasegun_mp";
+		weapons[weapons.size] = "m1carbine_mp";
+		weapons[weapons.size] = "m1garand_mp";
+		weapons[weapons.size] = "bar_mp";
+		weapons[weapons.size] = "shotgun_mp";
+		weapons[weapons.size] = "thompson_mp";
+		weapons[weapons.size] = "springfield_mp";
+		weapons[weapons.size] = "sten_mp";
+		weapons[weapons.size] = "enfield_mp";
+		weapons[weapons.size] = "bren_mp";
+		weapons[weapons.size] = "enfield_scope_mp";
+		weapons[weapons.size] = "SVT40_mp";
+		weapons[weapons.size] = "PPS42_mp";
+		weapons[weapons.size] = "ppsh_mp";
+		weapons[weapons.size] = "g43_mp";
+		weapons[weapons.size] = "mosin_nagant_mp";
+		weapons[weapons.size] = "mosin_nagant_sniper_mp";
+		weapons[weapons.size] = "mp40_mp";
+		weapons[weapons.size] = "kar98k_mp";
+		weapons[weapons.size] = "kar98k_sniper_mp";
+		weapons[weapons.size] = "mp44_mp";*/
+
+	if ( self.team == "axis" )
+	{
+		weapons[weapons.size] = "mp40_mp";
+		weapons[weapons.size] = "mp44_mp";
+		weapons[weapons.size] = "kar98k_mp";
+		weapons[weapons.size] = "kar98k_sniper_mp";
+		weapons[weapons.size] = "shotgun_mp";
+		weapons[weapons.size] = "g43_mp";
+	}
+	else
 	{
 		if ( game["allies"] == "american" )
-			weap = "thompson_mp";
+		{
+			weapons[weapons.size] = "shotgun_mp";
+			weapons[weapons.size] = "bar_mp";
+			weapons[weapons.size] = "thompson_mp";
+			weapons[weapons.size] = "springfield_mp";
+			weapons[weapons.size] = "m1garand_mp";
+			weapons[weapons.size] = "m1carbine_mp";
+			weapons[weapons.size] = "greasegun_mp";
+		}
 		else if ( game["allies"] == "british" )
-			weap = "greasegun_mp";
+		{
+			weapons[weapons.size] = "shotgun_mp";
+			weapons[weapons.size] = "sten_mp";
+			weapons[weapons.size] = "bren_mp";
+			weapons[weapons.size] = "enfield_mp";
+			weapons[weapons.size] = "enfield_scope_mp";
+			weapons[weapons.size] = "m1garand_mp";
+			weapons[weapons.size] = "thompson_mp";
+		}
 		else
-			weap = "ppsh_mp";
+		{
+			weapons[weapons.size] = "shotgun_mp";
+			weapons[weapons.size] = "ppsh_mp";
+			weapons[weapons.size] = "mosin_nagant_mp";
+			weapons[weapons.size] = "mosin_nagant_sniper_mp";
+			weapons[weapons.size] = "SVT40_mp";
+			weapons[weapons.size] = "PPS42_mp";
+		}
 	}
+
+	weap = weapons[randomint( weapons.size )];
 
 	return weap;
 }
