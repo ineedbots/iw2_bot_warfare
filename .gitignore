@@ -3,6 +3,8 @@
 
 # Files to not ignore
 !/.gitignore
+!/.gitattributes
+!/.editorconfig
 !/.vscode
 
 # Folder to not ignore
