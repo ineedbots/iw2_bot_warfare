@@ -397,7 +397,12 @@ isOnLadder()
 */
 weaponClass( weap )
 {
-	return "";
+	answer = level.bots_weapon_class_names[weap];
+
+	if ( !isDefined( answer ) )
+		answer = "";
+
+	return answer;
 }
 
 /*
@@ -405,7 +410,12 @@ weaponClass( weap )
 */
 WeaponClipSize( weap )
 {
-	return 1;
+	answer = level.bots_weapon_clip_sizes[weap];
+
+	if ( !isDefined( answer ) )
+		answer = 1;
+
+	return answer;
 }
 
 /*
@@ -424,7 +434,7 @@ getWeaponSlot( weap )
 */
 IsWeaponClipOnly( weap )
 {
-	return false;
+	return isSubStr( weap, "grenade_" );
 }
 
 /*

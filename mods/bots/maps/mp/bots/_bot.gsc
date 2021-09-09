@@ -137,6 +137,50 @@ init()
 	level.bots_fullautoguns["ppsh"] = true;
 	level.bots_fullautoguns["mp40"] = true;
 
+	level.bots_weapon_clip_sizes = [];
+	level.bots_weapon_clip_sizes["m1carbine_mp"] = 1;
+	level.bots_weapon_clip_sizes["m1garand_mp"] = 1;
+	level.bots_weapon_clip_sizes["bar_mp"] = 1;
+	level.bots_weapon_clip_sizes["shotgun_mp"] = 1;
+	level.bots_weapon_clip_sizes["thompson_mp"] = 1;
+	level.bots_weapon_clip_sizes["springfield_mp"] = 1;
+	level.bots_weapon_clip_sizes["sten_mp"] = 1;
+	level.bots_weapon_clip_sizes["enfield_mp"] = 1;
+	level.bots_weapon_clip_sizes["bren_mp"] = 1;
+	level.bots_weapon_clip_sizes["enfield_scope_mp"] = 1;
+	level.bots_weapon_clip_sizes["svt40_mp"] = 1;
+	level.bots_weapon_clip_sizes["pps42_mp"] = 1;
+	level.bots_weapon_clip_sizes["ppsh_mp"] = 1;
+	level.bots_weapon_clip_sizes["g43_mp"] = 1;
+	level.bots_weapon_clip_sizes["mosin_nagant_mp"] = 1;
+	level.bots_weapon_clip_sizes["mosin_nagant_sniper_mp"] = 1;
+	level.bots_weapon_clip_sizes["mp40_mp"] = 1;
+	level.bots_weapon_clip_sizes["kar98k_mp"] = 1;
+	level.bots_weapon_clip_sizes["kar98k_sniper_mp"] = 1;
+	level.bots_weapon_clip_sizes["mp44_mp"] = 1;
+
+	level.bots_weapon_class_names = [];
+	level.bots_weapon_class_names["m1carbine_mp"] = "";
+	level.bots_weapon_class_names["m1garand_mp"] = "";
+	level.bots_weapon_class_names["bar_mp"] = "";
+	level.bots_weapon_class_names["shotgun_mp"] = "";
+	level.bots_weapon_class_names["thompson_mp"] = "";
+	level.bots_weapon_class_names["springfield_mp"] = "";
+	level.bots_weapon_class_names["sten_mp"] = "";
+	level.bots_weapon_class_names["enfield_mp"] = "";
+	level.bots_weapon_class_names["bren_mp"] = "";
+	level.bots_weapon_class_names["enfield_scope_mp"] = "";
+	level.bots_weapon_class_names["svt40_mp"] = "";
+	level.bots_weapon_class_names["pps42_mp"] = "";
+	level.bots_weapon_class_names["ppsh_mp"] = "";
+	level.bots_weapon_class_names["g43_mp"] = "";
+	level.bots_weapon_class_names["mosin_nagant_mp"] = "";
+	level.bots_weapon_class_names["mosin_nagant_sniper_mp"] = "";
+	level.bots_weapon_class_names["mp40_mp"] = "";
+	level.bots_weapon_class_names["kar98k_mp"] = "";
+	level.bots_weapon_class_names["kar98k_sniper_mp"] = "";
+	level.bots_weapon_class_names["mp44_mp"] = "";
+
 	level thread fixGamemodes();
 
 	level thread onPlayerConnect();
