@@ -138,7 +138,7 @@ init()
 	level.bots_fullautoguns["mp40"] = true;
 
 	level.bots_weapon_clip_sizes = [];
-	level.bots_weapon_clip_sizes["m1carbine_mp"] = 10;
+	level.bots_weapon_clip_sizes["m1carbine_mp"] = 15;
 	level.bots_weapon_clip_sizes["m1garand_mp"] = 8;
 	level.bots_weapon_clip_sizes["bar_mp"] = 20;
 	level.bots_weapon_clip_sizes["shotgun_mp"] = 6;
@@ -160,7 +160,7 @@ init()
 	level.bots_weapon_clip_sizes["mp44_mp"] = 30;
 	level.bots_weapon_clip_sizes["colt_mp"] = 7;
 	level.bots_weapon_clip_sizes["webley_mp"] = 6;
-	level.bots_weapon_clip_sizes["luger_mp"] = 7;
+	level.bots_weapon_clip_sizes["luger_mp"] = 8;
 	level.bots_weapon_clip_sizes["tt30_mp"] = 8;
 	level.bots_weapon_clip_sizes["greasegun_mp"] = 32;
 
