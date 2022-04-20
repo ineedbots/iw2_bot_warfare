@@ -71,6 +71,12 @@ init()
 	if ( getCvar( "bots_skill_allies_med" ) == "" )
 		setCvar( "bots_skill_allies_med", 0 );
 
+	if ( getCvar( "bots_skill_min" ) == "" )
+		setCvar( "bots_skill_min", 1 );
+
+	if ( getCvar( "bots_skill_max" ) == "" )
+		setCvar( "bots_skill_max", 7 );
+
 	if ( getCvar( "bots_loadout_rank" ) == "" ) // what rank the bots should be around, -1 is around the players, 0 is all random
 		setCvar( "bots_loadout_rank", -1 );
 
@@ -474,6 +480,26 @@ connected()
 	self thread onDisconnect();
 
 	level notify( "bot_connected", self );
+
+	self thread watchBotDebugEvent();
+}
+
+/*
+	DEBUG
+*/
+watchBotDebugEvent()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "bot_event", msg, str, b, c, d, e, f, g );
+
+		if ( msg == "debug" && GetCvarInt( "bots_main_debug" ) )
+		{
+			print( "Bot Warfare debug: " + self.name + ": " + str );
+		}
+	}
 }
 
 /*
@@ -577,6 +603,20 @@ diffBots_loop()
 
 			player.pers["bots"]["skill"]["base"] = var_skill;
 		}
+	}
+
+	playercount = level.players.size;
+	min_diff = GetCvarInt( "bots_skill_min" );
+	max_diff = GetCvarInt( "bots_skill_max" );
+
+	for ( i = 0; i < playercount; i++ )
+	{
+		player = level.players[i];
+
+		if ( !player is_bot() )
+			continue;
+
+		player.pers["bots"]["skill"]["base"] = int( clamp( player.pers["bots"]["skill"]["base"], min_diff, max_diff ) );
 	}
 }
 
