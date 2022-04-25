@@ -438,6 +438,16 @@ getWeaponSlot( weap )
 }
 
 /*
+	cOD2
+*/
+GetAmmoCount( weap )
+{
+	slot = self getWeaponSlot( weap );
+
+	return self GetWeaponSlotClipAmmo( slot ) + self GetWeaponSlotAmmo( slot );
+}
+
+/*
 	IsWeaponClipOnly cod2
 */
 IsWeaponClipOnly( weap )

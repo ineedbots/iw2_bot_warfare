@@ -300,8 +300,30 @@ spawned()
 	self thread aim();
 	self thread watchHoldBreath();
 	self thread onNewEnemy();
+	self thread watchPickupGun();
 
 	self notify( "bot_spawned" );
+}
+
+/*
+	watchPickupGun
+*/
+watchPickupGun()
+{
+	self endon( "disconnect" );
+	self endon( "death" );
+
+	for ( ;; )
+	{
+		wait 1;
+
+		weap = self GetCurrentWeapon();
+
+		if ( weap != "none" && self GetAmmoCount( weap ) )
+			continue;
+
+		self thread use( 0.5 );
+	}
 }
 
 /*
@@ -1050,7 +1072,7 @@ aim_loop()
 			if ( !isDefined( bone ) )
 				bone = "j_spineupper";
 
-			if ( self.bot.isfraggingafter || self.bot.issmokingafter )
+			if ( self.bot.isfraggingafter || self.bot.issmokingafter || isSubStr( "_grenade_", curweap ) )
 				nadeAimOffset = dist / 3000;
 
 			if ( no_trace_time && ( !isDefined( self.bot.after_target ) || self.bot.after_target != target ) )
@@ -1171,7 +1193,7 @@ aim_loop()
 		last_pos = self.bot.after_target_pos;
 		dist = DistanceSquared( self.origin, last_pos );
 
-		if ( self.bot.isfraggingafter || self.bot.issmokingafter )
+		if ( self.bot.isfraggingafter || self.bot.issmokingafter || isSubStr( "_grenade_", curweap ) )
 			nadeAimOffset = dist / 3000;
 
 		aimpos = last_pos + ( 0, 0, self getEyeHeight() + nadeAimOffset );
