@@ -476,7 +476,7 @@ teamWatch()
 
 		wait 0.1;
 
-		if ( self.team != "axis" || self.team != "allies" )
+		if ( self.team != "axis" && self.team != "allies" )
 			self notify( "menuresponse", game["menu_team"], getCvar( "bots_team" ) );
 
 		while ( isdefined( self.pers["team"] ) )
