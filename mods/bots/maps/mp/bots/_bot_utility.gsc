@@ -57,7 +57,7 @@ doHostCheck()
 */
 is_bot()
 {
-	return ( ( isDefined( self.pers["isBot"] ) && self.pers["isBot"] ) || ( isDefined( self.pers["isBotWarfare"] ) && self.pers["isBotWarfare"] ) || isSubStr( self getguid() + "", "bot" ) );
+	return ( ( isDefined( self.pers["isBot"] ) && self.pers["isBot"] ) || ( isDefined( self.pers["isBotWarfare"] ) && self.pers["isBotWarfare"] ) || self isBot() );
 }
 
 /*
@@ -828,7 +828,7 @@ RaySphereIntersect( start, end, spherePos, radius )
 /*
 	Scales the vector
 */
-vector_scale ( vec, scale )
+vector_scale( vec, scale )
 {
 	vec = ( vec[0] * scale, vec[1] * scale, vec[2] * scale );
 	return vec;
