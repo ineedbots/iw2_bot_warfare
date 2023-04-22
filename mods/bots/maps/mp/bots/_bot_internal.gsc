@@ -1449,7 +1449,7 @@ walk_loop()
 				d = VectorNormalize( trace["position"] - myOrg );
 				n = trace["normal"];
 
-				r = d - vector_scale( vector_scale( VectorDot( d, n ), n ), 2 );
+				r = d - vector_scale( vector_scale( n, VectorDot( d, n ) ), 2 );
 
 				goal = PhysicsTrace( myOrg, myOrg + vector_scale( ( r[0], r[1], 0 ), stepDist ), false, self );
 				goal = PhysicsTrace( goal + ( 0, 0, 50 ), goal + ( 0, 0, -40 ), false, self );
@@ -2134,12 +2134,4 @@ bot_lookat( pos, time, vel, doAimPredict )
 		self setPlayerAngles( myAngle );
 		wait 0.05;
 	}
-}
-
-/*
-	Weapon
-*/
-botWeapon( a )
-{
-	self switchToWeapon( a );
 }

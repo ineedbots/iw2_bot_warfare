@@ -1,6 +1,144 @@
 #include maps\mp\_utility;
 
 /*
+	Custom exports with engine mod
+*/
+isBot()
+{
+	return false; // no equal in libcod
+}
+
+/*
+	Custom exports with engine mod
+*/
+botAction( action )
+{
+	switch ( action )
+	{
+		case "+fire":
+			self fireweapon( true );
+			break;
+
+		case "-fire":
+			self fireweapon( false );
+			break;
+
+		case "+ads":
+			self adsaim( true );
+			break;
+
+		case "-ads":
+			self adsaim( false );
+			break;
+
+		case "-reload":
+			self reloadweapon( false );
+			break;
+
+		case "+reload":
+			self reloadweapon( true );
+			break;
+
+		case "-melee":
+			self meleeweapon( false );
+			break;
+
+		case "+melee":
+			self meleeweapon( true );
+			break;
+
+		case "+frag":
+			self thrownade( true );
+			break;
+
+		case "-frag":
+			self thrownade( false );
+			break;
+
+		case "-gocrouch":
+		case "-goprone":
+		case "-gostand":
+			self setbotstance( "stand" );
+			break;
+
+		case "+gocrouch":
+			self setbotstance( "crouch" );
+			break;
+
+		case "+goprone":
+			self setbotstance( "prone" );
+			break;
+
+		case "+gostand":
+			self setbotstance( "jump" );
+			break;
+
+		case "-smoke": // no equal in libcod
+		case "-activate":
+		case "-holdbreath":
+			break;
+	}
+}
+
+/*
+	Custom exports with engine mod
+*/
+botMovement( up, right )
+{
+	// best i can do for libcod...
+	if ( up > 63 )
+	{
+		self setwalkdir( "forward" );
+		return;
+	}
+
+	if ( right > 63 )
+	{
+		self setwalkdir( "right" );
+		return;
+	}
+
+	if ( up < -63 )
+	{
+		self setwalkdir( "back" );
+		return;
+	}
+
+	if ( right < -63 )
+	{
+		self setwalkdir( "left" );
+		return;
+	}
+
+	self setwalkdir( "none" );
+}
+
+/*
+	Custom exports with engine mod
+*/
+botStop()
+{
+	self adsaim( false );
+	self reloadweapon( false );
+	self meleeweapon( false );
+	self fireweapon( false );
+	self thrownade( false );
+	self setbotstance( "stand" );
+	self setlean( "none" );
+	self setwalkdir( "none" );
+	self switchtoweaponid( 1 );
+}
+
+/*
+	Weapon
+*/
+botWeapon( a )
+{
+	// libcod needs weapon name to id
+	self switchToWeapon( a );
+}
+
+/*
 	Returns if player is the host
 */
 is_host()
@@ -876,7 +1014,7 @@ DistanceSquared2D( to, from )
 /*
 	Rounds to the nearest whole number.
 */
-Round( x )
+RoundNum( x )
 {
 	y = int( x );
 
@@ -1235,6 +1373,9 @@ loadmbotWps( mapname, gametype )
 	{
 		s = fgetarg( f, 0 );
 		t = strtok( s, " ," );
+
+		if ( !isDefined( t ) || t.size < 6 )
+			break;
 
 		wp = spawnStruct();
 		wp.origin = ( float( t[0] ), float( t[1] ), float( t[2] ) );

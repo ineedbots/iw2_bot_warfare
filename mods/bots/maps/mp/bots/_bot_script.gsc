@@ -181,7 +181,7 @@ set_diff()
 	switch ( rankVar )
 	{
 		case 0:
-			self.pers["bots"]["skill"]["base"] = Round( random_normal_distribution( 3.5, 1.75, 1, 7 ) );
+			self.pers["bots"]["skill"]["base"] = RoundNum( random_normal_distribution( 3.5, 1.75, 1, 7 ) );
 			break;
 
 		case 8:
