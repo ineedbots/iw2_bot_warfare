@@ -6,5 +6,5 @@ TODO:
   - _bot_script
   - _menu
   - _wp_editor
-	 - _bot_chat
+  - _bot_chat
 
