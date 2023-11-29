@@ -14,6 +14,9 @@ init()
 	if ( !getCvarInt( "bots_main" ) )
 		return;
 
+	if ( !wait_for_builtins() )
+		PrintLn( "FATAL: NO BUILT-INS FOR BOTS" );
+
 	thread load_waypoints();
 	thread hook_callbacks();
 
@@ -203,8 +206,6 @@ init()
 	level thread handleBots();
 	level thread watchNades();
 	level thread watchGameEnded();
-
-	//level thread maps\mp\bots\_bot_http::doVersionCheck();
 
 	level.teamBased = true;
 
@@ -495,9 +496,36 @@ watchBotDebugEvent()
 	{
 		self waittill( "bot_event", msg, str, b, c, d, e, f, g );
 
-		if ( msg == "debug" && GetCvarInt( "bots_main_debug" ) )
+		if ( GetCvarInt( "bots_main_debug" ) >= 2 )
 		{
-			print( "Bot Warfare debug: " + self.name + ": " + str );
+			big_str = "Bot Warfare debug: " + self.name + ": " + msg;
+
+			if ( isDefined( str ) && isString( str ) )
+				big_str += ", " + str;
+
+			if ( isDefined( b ) && isString( b ) )
+				big_str += ", " + b;
+
+			if ( isDefined( c ) && isString( c ) )
+				big_str += ", " + c;
+
+			if ( isDefined( d ) && isString( d ) )
+				big_str += ", " + d;
+
+			if ( isDefined( e ) && isString( e ) )
+				big_str += ", " + e;
+
+			if ( isDefined( f ) && isString( f ) )
+				big_str += ", " + f;
+
+			if ( isDefined( g ) && isString( g ) )
+				big_str += ", " + g;
+
+			BotBuiltinPrintConsole( big_str );
+		}
+		else if ( msg == "debug" && GetCvarInt( "bots_main_debug" ) )
+		{
+			BotBuiltinPrintConsole( "Bot Warfare debug: " + self.name + ": " + str );
 		}
 	}
 }

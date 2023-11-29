@@ -1,27 +1,8 @@
-# Ignore everything in repository root 
-/*
-
-# Files to not ignore
-!/.gitignore
-!/.gitattributes
-!/.editorconfig
-!/.vscode
-
-# Folder to not ignore
-!/mods
-/mods/*
-!/mods/bots
-
-!/deploy.js
-!/deploy.bat
-!/z_deploy.bat
-!/.astylerc
-
-!/main
-/main/*
-!/main/server.cfg
-!/z_server.bat
-
-*.dat
+*.zip
 *.log
+*.stat
+logs/
+demos/
 players/
+missingasset.csv
+hunkusage.dat

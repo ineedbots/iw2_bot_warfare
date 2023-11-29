@@ -1,141 +1,82 @@
 #include maps\mp\_utility;
 
 /*
-	Custom exports with engine mod
+	Waits for the built-ins to be defined
 */
-isBot()
+wait_for_builtins()
 {
-	return false; // no equal in libcod
+	for ( i = 0; i < 20; i++ )
+	{
+		if ( isDefined( level.bot_builtins ) )
+			return true;
+
+		if ( i < 18 )
+			waittillframeend;
+		else
+			wait 0.05;
+	}
+
+	return false;
 }
 
 /*
-	Custom exports with engine mod
+	Prints to console without dev script on
 */
-botAction( action )
+BotBuiltinPrintConsole( s )
 {
-	switch ( action )
+	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["printconsole"] ) )
 	{
-		case "+fire":
-			self fireweapon( true );
-			break;
-
-		case "-fire":
-			self fireweapon( false );
-			break;
-
-		case "+ads":
-			self adsaim( true );
-			break;
-
-		case "-ads":
-			self adsaim( false );
-			break;
-
-		case "-reload":
-			self reloadweapon( false );
-			break;
-
-		case "+reload":
-			self reloadweapon( true );
-			break;
-
-		case "-melee":
-			self meleeweapon( false );
-			break;
-
-		case "+melee":
-			self meleeweapon( true );
-			break;
-
-		case "+frag":
-			self thrownade( true );
-			break;
-
-		case "-frag":
-			self thrownade( false );
-			break;
-
-		case "-gocrouch":
-		case "-goprone":
-		case "-gostand":
-			self setbotstance( "stand" );
-			break;
-
-		case "+gocrouch":
-			self setbotstance( "crouch" );
-			break;
-
-		case "+goprone":
-			self setbotstance( "prone" );
-			break;
-
-		case "+gostand":
-			self setbotstance( "jump" );
-			break;
-
-		case "-smoke": // no equal in libcod
-		case "-activate":
-		case "-holdbreath":
-			break;
+		[[ level.bot_builtins["printconsole" ]]]( s );
 	}
 }
 
 /*
-	Custom exports with engine mod
+	Bot action, does a bot action
+	<client> botAction(<action string (+ or - then action like frag or smoke)>)
 */
-botMovement( up, right )
+BotBuiltinBotAction( action )
 {
-	// best i can do for libcod...
-	if ( up > 63 )
+	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["botaction"] ) )
 	{
-		self setwalkdir( "forward" );
-		return;
+		self [[ level.bot_builtins["botaction" ]]]( action );
 	}
-
-	if ( right > 63 )
-	{
-		self setwalkdir( "right" );
-		return;
-	}
-
-	if ( up < -63 )
-	{
-		self setwalkdir( "back" );
-		return;
-	}
-
-	if ( right < -63 )
-	{
-		self setwalkdir( "left" );
-		return;
-	}
-
-	self setwalkdir( "none" );
 }
 
 /*
-	Custom exports with engine mod
+	Clears the bot from movement and actions
+	<client> botStop()
 */
-botStop()
+BotBuiltinBotStop()
 {
-	self adsaim( false );
-	self reloadweapon( false );
-	self meleeweapon( false );
-	self fireweapon( false );
-	self thrownade( false );
-	self setbotstance( "stand" );
-	self setlean( "none" );
-	self setwalkdir( "none" );
-	self switchtoweaponid( 1 );
+	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["botstop"] ) )
+	{
+		self [[ level.bot_builtins["botstop" ]]]();
+	}
 }
 
 /*
-	Weapon
+	Sets the bot's movement
+	<client> botMovement(<int left>, <int forward>)
 */
-botWeapon( a )
+BotBuiltinBotMovement( left, forward )
 {
-	// libcod needs weapon name to id
-	self switchToWeapon( a );
+	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["botmovement"] ) )
+	{
+		self [[ level.bot_builtins["botmovement" ]]]( left, forward );
+	}
+}
+
+/*
+	Test if is a bot
+*/
+BotBuiltinIsBot()
+{
+	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["isbot"] ) )
+	{
+		return self [[ level.bot_builtins["isbot" ]]]();
+	}
+
+	return false;
 }
 
 /*
@@ -160,7 +101,7 @@ doHostCheck()
 
 	if ( getCvar( "bots_main_firstIsHost" ) != "0" )
 	{
-		print( "WARNING: bots_main_firstIsHost is enabled" );
+		BotBuiltinPrintConsole( "WARNING: bots_main_firstIsHost is enabled" );
 
 		if ( getCvar( "bots_main_firstIsHost" ) == "1" )
 		{
@@ -195,7 +136,7 @@ doHostCheck()
 */
 is_bot()
 {
-	return ( ( isDefined( self.pers["isBot"] ) && self.pers["isBot"] ) || ( isDefined( self.pers["isBotWarfare"] ) && self.pers["isBotWarfare"] ) || self isBot() );
+	return ( ( isDefined( self.pers["isBot"] ) && self.pers["isBot"] ) || ( isDefined( self.pers["isBotWarfare"] ) && self.pers["isBotWarfare"] ) || self BotBuiltinIsBot() );
 }
 
 /*
@@ -212,14 +153,6 @@ allowClassChoice()
 allowTeamChoice()
 {
 	return true;
-}
-
-/*
-	Bot changes to the weap
-*/
-BotChangeToWeapon( weap )
-{
-	self maps\mp\bots\_bot_internal::changeToWeap( weap );
 }
 
 /*
@@ -1283,7 +1216,7 @@ readWpsFromFile( mapname )
 	if ( f < 0 )
 		return waypoints;
 
-	print( "Attempting to read waypoints from " + filename );
+	BotBuiltinPrintConsole( "Attempting to read waypoints from " + filename );
 
 	for ( ;; )
 	{
@@ -1440,7 +1373,7 @@ load_waypoints()
 	if ( wps.size )
 	{
 		level.waypoints = wps;
-		print( "Loaded " + wps.size + " waypoints from file." );
+		BotBuiltinPrintConsole( "Loaded " + wps.size + " waypoints from file." );
 	}
 	else
 	{
@@ -1452,12 +1385,7 @@ load_waypoints()
 		}
 
 		if ( level.waypoints.size )
-			print( "Loaded " + level.waypoints.size + " waypoints from script." );
-	}
-
-	if ( !level.waypoints.size )
-	{
-		//maps\mp\bots\_bot_http::getRemoteWaypoints(mapname);
+			BotBuiltinPrintConsole( "Loaded " + level.waypoints.size + " waypoints from script." );
 	}
 
 	if ( !level.waypoints.size )
@@ -1467,7 +1395,12 @@ load_waypoints()
 		level.waypoints = wps;
 
 		if ( level.waypoints.size )
-			print( "Loaded mbot " + level.waypoints.size + " wps" );
+			BotBuiltinPrintConsole( "Loaded mbot " + level.waypoints.size + " wps" );
+	}
+
+	if ( !level.waypoints.size )
+	{
+		BotBuiltinPrintConsole( "No waypoints loaded!" );
 	}
 
 	level.waypointCount = level.waypoints.size;

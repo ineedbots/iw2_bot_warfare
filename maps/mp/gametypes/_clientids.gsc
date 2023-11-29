@@ -4,7 +4,9 @@ init()
 
 	level thread onPlayerConnect();
 
-	level thread maps\mp\bots\_bot::init();
+	// bootstrap
+	level thread scripts\bots_adapter::init();
+	level thread scripts\bots::init();
 }
 
 onPlayerConnect()
