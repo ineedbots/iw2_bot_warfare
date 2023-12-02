@@ -1171,34 +1171,6 @@ keyCodeToString( a )
 }
 
 /*
-	Tokenizes a string (strtok has limits...) (only one char tok)
-*/
-tokenizeLine( line, tok )
-{
-	tokens = [];
-
-	token = "";
-
-	for ( i = 0; i < line.size; i++ )
-	{
-		c = line[i];
-
-		if ( c == tok )
-		{
-			tokens[tokens.size] = token;
-			token = "";
-			continue;
-		}
-
-		token += c;
-	}
-
-	tokens[tokens.size] = token;
-
-	return tokens;
-}
-
-/*
 	Parses tokens into a waypoint obj
 */
 parseTokensIntoWaypoint( tokens )
@@ -1272,7 +1244,7 @@ readWpsFromFile( mapname )
 			if ( !isDefined( line ) || line == "" )
 				continue;
 
-			tokens = tokenizeLine( line, "," );
+			tokens = strtok( line, "," );
 
 			waypoint = parseTokensIntoWaypoint( tokens );
 
