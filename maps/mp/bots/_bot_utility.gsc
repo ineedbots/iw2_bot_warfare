@@ -1263,7 +1263,7 @@ readWpsFromFile( mapname )
 /*
 	converts a string into a float
 */
-float( num )
+float_old( num )
 {
 	setCvar( "temp_dvar_bot_util", num );
 
@@ -1311,7 +1311,7 @@ loadmbotWps( mapname, gametype )
 			break;
 
 		wp = spawnStruct();
-		wp.origin = ( float( t[0] ), float( t[1] ), float( t[2] ) );
+		wp.origin = ( float_old( t[0] ), float_old( t[1] ), float_old( t[2] ) );
 
 		stance = "stand";
 
@@ -1344,7 +1344,7 @@ loadmbotWps( mapname, gametype )
 		if ( ( t.size == 9 && t[3] == "w" && t[5] == "1" ) || t[3] == "g" || t[3] == "c" )
 		{
 			k += 6;
-			wp.angles = ( float( t[k] ), float( t[k + 1] ), 0.0 );
+			wp.angles = ( float_old( t[k] ), float_old( t[k + 1] ), 0.0 );
 		}
 
 		wps[i] = wp;
