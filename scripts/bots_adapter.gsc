@@ -98,7 +98,7 @@ do_botstop()
 	// self BotStop();
 }
 
-do_botmovement( right, forward )
+do_botmovement( forward, right )
 {
 	// best i can do for libcod...
 	if ( forward > 63 )
@@ -127,7 +127,7 @@ do_botmovement( right, forward )
 
 	self setwalkdir( "none" );
 
-	// self botMovement( right, forward );
+	// self botMovement( forward, right );
 }
 
 do_isbot()

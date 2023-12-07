@@ -58,11 +58,11 @@ BotBuiltinBotStop()
 	Sets the bot's movement
 	<client> botMovement(<int left>, <int forward>)
 */
-BotBuiltinBotMovement( left, forward )
+BotBuiltinBotMovement( forward, right )
 {
 	if ( isDefined( level.bot_builtins ) && isDefined( level.bot_builtins["botmovement"] ) )
 	{
-		self [[ level.bot_builtins["botmovement" ]]]( left, forward );
+		self [[ level.bot_builtins["botmovement" ]]]( forward, right );
 	}
 }
 
