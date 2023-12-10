@@ -5,7 +5,7 @@ init()
 	level thread onPlayerConnect();
 
 	// bootstrap
-	level thread scripts\bots_adapter::init();
+	level thread scripts\bots_adapter_libcod::init();
 	level thread scripts\bots::init();
 }
 
