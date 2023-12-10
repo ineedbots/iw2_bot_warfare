@@ -1142,7 +1142,10 @@ aim_loop()
 
 					conedot = getConeDot( aimpos, eyePos, angles );
 
-					self thread bot_lookat( aimpos, aimspeed );
+					if ( !nadeAimOffset && conedot > 0.999 && lengthsquared( aimoffset ) < 0.05 )
+						self thread bot_lookat( aimpos, 0.05 );
+					else
+						self thread bot_lookat( aimpos, aimspeed );
 				}
 
 				if ( isplay && !self.bot.isknifingafter && conedot > 0.9 && dist < level.bots_maxKnifeDistance && trace_time > reaction_time && getCvarInt( "bots_play_knife" ) )
