@@ -1102,7 +1102,7 @@ aim_loop()
 				}
 				else
 				{
-					if ( self canAds( dist, curweap ) )
+					if ( self canFire( curweap ) && self isInRange( dist, curweap ) && self canAds( dist, curweap ) )
 					{
 						if ( !self.bot.is_cur_sniper || !self.pers["bots"]["behavior"]["quickscope"] )
 							self thread pressAds();
