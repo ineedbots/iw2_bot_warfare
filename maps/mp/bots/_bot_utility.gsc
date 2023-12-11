@@ -557,7 +557,9 @@ IsWeaponClipOnly( weap )
 */
 getStance()
 {
-	height = self GetEyeHeight();
+	myEye = self getTagOrigin( "tag_eye" );
+
+	height = myEye[2] - self.origin[2];
 
 	if ( height > 50 )
 		return "stand";
@@ -602,9 +604,19 @@ WeaponIsFullAuto( weap )
 */
 GetEyeHeight()
 {
-	myEye = self GetEyePos();
+	stance = self GetStance();
 
-	return myEye[2] - self.origin[2];
+	if ( stance == "prone" )
+	{
+		return 11;
+	}
+
+	if ( stance == "crouch" )
+	{
+		return 40;
+	}
+
+	return 60;
 }
 
 /*
@@ -641,7 +653,7 @@ getTagOrigin( where )
 */
 GetEyePos()
 {
-	return self getTagOrigin( "tag_eye" );
+	return self.origin + ( 0, 0, self GetEyeHeight() );
 }
 
 /*
