@@ -6,3 +6,4 @@ demos/
 players/
 missingasset.csv
 hunkusage.dat
+*.cfg
