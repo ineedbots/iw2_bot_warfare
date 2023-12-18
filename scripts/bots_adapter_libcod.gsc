@@ -80,7 +80,7 @@ do_botaction( action )
 			break;
 	}
 
-	// self BotAction( action );
+	// self botaction( action );
 }
 
 do_botstop()
@@ -95,7 +95,7 @@ do_botstop()
 	self setwalkdir( "none" );
 	self switchtoweaponid( 1 ); // libcod needs weapon name to id
 
-	// self BotStop();
+	// self botstop();
 }
 
 do_botmovement( forward, right )
@@ -127,11 +127,11 @@ do_botmovement( forward, right )
 
 	self setwalkdir( "none" );
 
-	// self botMovement( forward, right );
+	// self botmovement( forward, right );
 }
 
 do_isbot()
 {
 	return false; // no equal in libcod
-	// self isBot();
+	// self isbot();
 }

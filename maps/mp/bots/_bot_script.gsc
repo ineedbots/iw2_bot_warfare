@@ -18,8 +18,8 @@ connected()
 {
 	self endon( "disconnect" );
 
-	self.killerLocation = undefined;
-	self.lastKiller = undefined;
+	self.killerlocation = undefined;
+	self.lastkiller = undefined;
 	self.bot_change_class = true;
 
 	self thread difficulty();
@@ -34,10 +34,10 @@ connected()
 */
 onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration )
 {
-	self.killerLocation = undefined;
-	self.lastKiller = undefined;
+	self.killerlocation = undefined;
+	self.lastkiller = undefined;
 
-	if ( !IsDefined( self ) || !isDefined( self.team ) )
+	if ( !isdefined( self ) || !isdefined( self.team ) )
 		return;
 
 	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
@@ -46,23 +46,23 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 	if ( iDamage <= 0 )
 		return;
 
-	if ( !IsDefined( eAttacker ) || !isDefined( eAttacker.team ) )
+	if ( !isdefined( eAttacker ) || !isdefined( eAttacker.team ) )
 		return;
 
 	if ( eAttacker == self )
 		return;
 
-	if ( level.teamBased && eAttacker.team == self.team )
+	if ( level.teambased && eAttacker.team == self.team )
 		return;
 
-	if ( !IsDefined( eInflictor ) || eInflictor.classname != "player" )
+	if ( !isdefined( eInflictor ) || eInflictor.classname != "player" )
 		return;
 
-	if ( !isAlive( eAttacker ) )
+	if ( !isalive( eAttacker ) )
 		return;
 
-	self.killerLocation = eAttacker.origin;
-	self.lastKiller = eAttacker;
+	self.killerlocation = eAttacker.origin;
+	self.lastkiller = eAttacker;
 }
 
 /*
@@ -70,10 +70,10 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 */
 onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset )
 {
-	if ( !IsDefined( self ) || !isDefined( self.team ) )
+	if ( !isdefined( self ) || !isdefined( self.team ) )
 		return;
 
-	if ( !isAlive( self ) )
+	if ( !isalive( self ) )
 		return;
 
 	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
@@ -82,19 +82,19 @@ onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoin
 	if ( iDamage <= 0 )
 		return;
 
-	if ( !IsDefined( eAttacker ) || !isDefined( eAttacker.team ) )
+	if ( !isdefined( eAttacker ) || !isdefined( eAttacker.team ) )
 		return;
 
 	if ( eAttacker == self )
 		return;
 
-	if ( level.teamBased && eAttacker.team == self.team )
+	if ( level.teambased && eAttacker.team == self.team )
 		return;
 
-	if ( !IsDefined( eInflictor ) || eInflictor.classname != "player" )
+	if ( !isdefined( eInflictor ) || eInflictor.classname != "player" )
 		return;
 
-	if ( !isAlive( eAttacker ) )
+	if ( !isalive( eAttacker ) )
 		return;
 
 	self bot_cry_for_help( eAttacker );
@@ -107,14 +107,14 @@ onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoin
 */
 bot_cry_for_help( attacker )
 {
-	if ( !level.teamBased )
+	if ( !level.teambased )
 	{
 		return;
 	}
 
-	theTime = GetTime();
+	theTime = gettime();
 
-	if ( IsDefined( self.help_time ) && theTime - self.help_time < 1000 )
+	if ( isdefined( self.help_time ) && theTime - self.help_time < 1000 )
 	{
 		return;
 	}
@@ -130,13 +130,13 @@ bot_cry_for_help( attacker )
 			continue;
 		}
 
-		if ( !isDefined( player.team ) )
+		if ( !isdefined( player.team ) )
 			continue;
 
 		if ( !player IsPlayerModelOK() )
 			continue;
 
-		if ( !IsAlive( player ) )
+		if ( !isalive( player ) )
 		{
 			continue;
 		}
@@ -154,16 +154,16 @@ bot_cry_for_help( attacker )
 		dist = player.pers["bots"]["skill"]["help_dist"];
 		dist *= dist;
 
-		if ( DistanceSquared( self.origin, player.origin ) > dist )
+		if ( distancesquared( self.origin, player.origin ) > dist )
 		{
 			continue;
 		}
 
-		if ( RandomInt( 100 ) < 50 )
+		if ( randomint( 100 ) < 50 )
 		{
 			self SetAttacker( attacker );
 
-			if ( RandomInt( 100 ) > 70 )
+			if ( randomint( 100 ) > 70 )
 			{
 				break;
 			}
@@ -176,7 +176,7 @@ bot_cry_for_help( attacker )
 */
 set_diff()
 {
-	rankVar = GetCvarInt( "bots_skill" );
+	rankVar = getcvarint( "bots_skill" );
 
 	switch ( rankVar )
 	{
@@ -188,36 +188,36 @@ set_diff()
 			break;
 
 		case 9:
-			self.pers["bots"]["skill"]["base"] = randomIntRange( 1, 7 );
-			self.pers["bots"]["skill"]["aim_time"] = 0.05 * randomIntRange( 1, 20 );
-			self.pers["bots"]["skill"]["init_react_time"] = 50 * randomInt( 100 );
-			self.pers["bots"]["skill"]["reaction_time"] = 50 * randomInt( 100 );
-			self.pers["bots"]["skill"]["no_trace_ads_time"] = 50 * randomInt( 100 );
-			self.pers["bots"]["skill"]["no_trace_look_time"] = 50 * randomInt( 100 );
-			self.pers["bots"]["skill"]["remember_time"] = 50 * randomInt( 100 );
-			self.pers["bots"]["skill"]["fov"] = randomFloatRange( -1, 1 );
+			self.pers["bots"]["skill"]["base"] = randomintrange( 1, 7 );
+			self.pers["bots"]["skill"]["aim_time"] = 0.05 * randomintrange( 1, 20 );
+			self.pers["bots"]["skill"]["init_react_time"] = 50 * randomint( 100 );
+			self.pers["bots"]["skill"]["reaction_time"] = 50 * randomint( 100 );
+			self.pers["bots"]["skill"]["no_trace_ads_time"] = 50 * randomint( 100 );
+			self.pers["bots"]["skill"]["no_trace_look_time"] = 50 * randomint( 100 );
+			self.pers["bots"]["skill"]["remember_time"] = 50 * randomint( 100 );
+			self.pers["bots"]["skill"]["fov"] = randomfloatrange( -1, 1 );
 
-			randomNum = randomIntRange( 500, 25000 );
+			randomNum = randomintrange( 500, 25000 );
 			self.pers["bots"]["skill"]["dist_start"] = randomNum;
 			self.pers["bots"]["skill"]["dist_max"] = randomNum * 2;
 
-			self.pers["bots"]["skill"]["spawn_time"] = 0.05 * randomInt( 20 );
-			self.pers["bots"]["skill"]["help_dist"] = randomIntRange( 500, 25000 );
-			self.pers["bots"]["skill"]["semi_time"] = randomFloatRange( 0.05, 1 );
-			self.pers["bots"]["skill"]["shoot_after_time"] = randomFloatRange( 0.05, 1 );
-			self.pers["bots"]["skill"]["aim_offset_time"] = randomFloatRange( 0.05, 1 );
-			self.pers["bots"]["skill"]["aim_offset_amount"] = randomFloatRange( 0.05, 1 );
-			self.pers["bots"]["skill"]["bone_update_interval"] = randomFloatRange( 0.05, 1 );
+			self.pers["bots"]["skill"]["spawn_time"] = 0.05 * randomint( 20 );
+			self.pers["bots"]["skill"]["help_dist"] = randomintrange( 500, 25000 );
+			self.pers["bots"]["skill"]["semi_time"] = randomfloatrange( 0.05, 1 );
+			self.pers["bots"]["skill"]["shoot_after_time"] = randomfloatrange( 0.05, 1 );
+			self.pers["bots"]["skill"]["aim_offset_time"] = randomfloatrange( 0.05, 1 );
+			self.pers["bots"]["skill"]["aim_offset_amount"] = randomfloatrange( 0.05, 1 );
+			self.pers["bots"]["skill"]["bone_update_interval"] = randomfloatrange( 0.05, 1 );
 			self.pers["bots"]["skill"]["bones"] = "j_head,j_spine4,j_ankle_ri,j_ankle_le";
 
-			self.pers["bots"]["behavior"]["strafe"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["nade"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["camp"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["follow"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["crouch"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["switch"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["class"] = randomInt( 100 );
-			self.pers["bots"]["behavior"]["jump"] = randomInt( 100 );
+			self.pers["bots"]["behavior"]["strafe"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["nade"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["camp"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["follow"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["crouch"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["switch"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["class"] = randomint( 100 );
+			self.pers["bots"]["behavior"]["jump"] = randomint( 100 );
 			break;
 
 		default:
@@ -235,7 +235,7 @@ difficulty()
 
 	for ( ;; )
 	{
-		if ( GetCvarInt( "bots_skill" ) != 9 )
+		if ( getcvarint( "bots_skill" ) != 9 )
 		{
 			switch ( self.pers["bots"]["skill"]["base"] )
 			{
@@ -477,7 +477,7 @@ teamWatch()
 		wait 0.1;
 
 		if ( self.team != "axis" && self.team != "allies" )
-			self notify( "menuresponse", game["menu_team"], getCvar( "bots_team" ) );
+			self notify( "menuresponse", game["menu_team"], getcvar( "bots_team" ) );
 
 		while ( isdefined( self.pers["team"] ) )
 			wait .05;
@@ -556,12 +556,12 @@ classWatch()
 
 		wait 0.5;
 
-		if ( !isDefined( self.pers["weapon"] ) || self.pers["weapon"] == "" || !isDefined( self.bot_change_class ) )
+		if ( !isdefined( self.pers["weapon"] ) || self.pers["weapon"] == "" || !isdefined( self.bot_change_class ) )
 			self notify( "menuresponse", game["menu_weapon_" + self.team], self chooseRandomClass() );
 
 		self.bot_change_class = true;
 
-		while ( isdefined( self.pers["team"] ) && isDefined( self.pers["weapon"] ) && self.pers["weapon"] != "" && isDefined( self.bot_change_class ) )
+		while ( isdefined( self.pers["team"] ) && isdefined( self.pers["weapon"] ) && self.pers["weapon"] != "" && isdefined( self.bot_change_class ) )
 			wait .05;
 	}
 }
@@ -577,7 +577,7 @@ onSpawned()
 	{
 		self waittill( "spawned_player" );
 
-		if ( randomInt( 100 ) <= self.pers["bots"]["behavior"]["class"] )
+		if ( randomint( 100 ) <= self.pers["bots"]["behavior"]["class"] )
 			self.bot_change_class = undefined;
 
 		self.bot_lock_goal = false;
