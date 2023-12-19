@@ -1,10 +1,10 @@
 init()
 {
-	level.bot_builtins["printconsole"] = ::do_printconsole;
-	level.bot_builtins["botaction"] = ::do_botaction;
-	level.bot_builtins["botstop"] = ::do_botstop;
-	level.bot_builtins["botmovement"] = ::do_botmovement;
-	level.bot_builtins["isbot"] = ::do_isbot;
+	level.bot_builtins[ "printconsole" ] = ::do_printconsole;
+	level.bot_builtins[ "botaction" ] = ::do_botaction;
+	level.bot_builtins[ "botstop" ] = ::do_botstop;
+	level.bot_builtins[ "botmovement" ] = ::do_botmovement;
+	level.bot_builtins[ "isbot" ] = ::do_isbot;
 }
 
 do_printconsole( s )

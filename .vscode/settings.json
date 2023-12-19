@@ -13,3 +13,6 @@
 		},
 		"vscode-codscript.use_builtin_completionItems": false
 }
+
+// use below to verify array indexing spacing style
+// egrep -ron "(\[\S|\S\])" --include \*.gsc ./ | egrep -v "\[\[" | egrep -v "\]\]" | egrep -v "\[\]"

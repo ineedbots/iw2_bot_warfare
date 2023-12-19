@@ -110,8 +110,8 @@ init()
 	if ( getcvar( "bots_play_aim" ) == "" )
 		setcvar( "bots_play_aim", true );
 
-	if ( !isdefined( game["botWarfare"] ) )
-		game["botWarfare"] = true;
+	if ( !isdefined( game[ "botWarfare" ] ) )
+		game[ "botWarfare" ] = true;
 
 	level.defuseobject = undefined;
 	level.bots_smokelist = List();
@@ -136,69 +136,69 @@ init()
 	level.players = [];
 
 	level.bots_fullautoguns = [];
-	level.bots_fullautoguns["greasegun"] = true;
-	level.bots_fullautoguns["thompson"] = true;
-	level.bots_fullautoguns["bar"] = true;
-	level.bots_fullautoguns["pps42"] = true;
-	level.bots_fullautoguns["sten"] = true;
-	level.bots_fullautoguns["bren"] = true;
-	level.bots_fullautoguns["mp44"] = true;
-	level.bots_fullautoguns["ppsh"] = true;
-	level.bots_fullautoguns["mp40"] = true;
+	level.bots_fullautoguns[ "greasegun" ] = true;
+	level.bots_fullautoguns[ "thompson" ] = true;
+	level.bots_fullautoguns[ "bar" ] = true;
+	level.bots_fullautoguns[ "pps42" ] = true;
+	level.bots_fullautoguns[ "sten" ] = true;
+	level.bots_fullautoguns[ "bren" ] = true;
+	level.bots_fullautoguns[ "mp44" ] = true;
+	level.bots_fullautoguns[ "ppsh" ] = true;
+	level.bots_fullautoguns[ "mp40" ] = true;
 
 	level.bots_weapon_clip_sizes = [];
-	level.bots_weapon_clip_sizes["m1carbine_mp"] = 15;
-	level.bots_weapon_clip_sizes["m1garand_mp"] = 8;
-	level.bots_weapon_clip_sizes["bar_mp"] = 20;
-	level.bots_weapon_clip_sizes["shotgun_mp"] = 6;
-	level.bots_weapon_clip_sizes["thompson_mp"] = 20;
-	level.bots_weapon_clip_sizes["springfield_mp"] = 5;
-	level.bots_weapon_clip_sizes["sten_mp"] = 32;
-	level.bots_weapon_clip_sizes["enfield_mp"] = 10;
-	level.bots_weapon_clip_sizes["bren_mp"] = 30;
-	level.bots_weapon_clip_sizes["enfield_scope_mp"] = 10;
-	level.bots_weapon_clip_sizes["svt40_mp"] = 10;
-	level.bots_weapon_clip_sizes["pps42_mp"] = 35;
-	level.bots_weapon_clip_sizes["ppsh_mp"] = 71;
-	level.bots_weapon_clip_sizes["g43_mp"] = 10;
-	level.bots_weapon_clip_sizes["mosin_nagant_mp"] = 5;
-	level.bots_weapon_clip_sizes["mosin_nagant_sniper_mp"] = 5;
-	level.bots_weapon_clip_sizes["mp40_mp"] = 32;
-	level.bots_weapon_clip_sizes["kar98k_mp"] = 5;
-	level.bots_weapon_clip_sizes["kar98k_sniper_mp"] = 5;
-	level.bots_weapon_clip_sizes["mp44_mp"] = 30;
-	level.bots_weapon_clip_sizes["colt_mp"] = 7;
-	level.bots_weapon_clip_sizes["webley_mp"] = 6;
-	level.bots_weapon_clip_sizes["luger_mp"] = 8;
-	level.bots_weapon_clip_sizes["tt30_mp"] = 8;
-	level.bots_weapon_clip_sizes["greasegun_mp"] = 32;
+	level.bots_weapon_clip_sizes[ "m1carbine_mp" ] = 15;
+	level.bots_weapon_clip_sizes[ "m1garand_mp" ] = 8;
+	level.bots_weapon_clip_sizes[ "bar_mp" ] = 20;
+	level.bots_weapon_clip_sizes[ "shotgun_mp" ] = 6;
+	level.bots_weapon_clip_sizes[ "thompson_mp" ] = 20;
+	level.bots_weapon_clip_sizes[ "springfield_mp" ] = 5;
+	level.bots_weapon_clip_sizes[ "sten_mp" ] = 32;
+	level.bots_weapon_clip_sizes[ "enfield_mp" ] = 10;
+	level.bots_weapon_clip_sizes[ "bren_mp" ] = 30;
+	level.bots_weapon_clip_sizes[ "enfield_scope_mp" ] = 10;
+	level.bots_weapon_clip_sizes[ "svt40_mp" ] = 10;
+	level.bots_weapon_clip_sizes[ "pps42_mp" ] = 35;
+	level.bots_weapon_clip_sizes[ "ppsh_mp" ] = 71;
+	level.bots_weapon_clip_sizes[ "g43_mp" ] = 10;
+	level.bots_weapon_clip_sizes[ "mosin_nagant_mp" ] = 5;
+	level.bots_weapon_clip_sizes[ "mosin_nagant_sniper_mp" ] = 5;
+	level.bots_weapon_clip_sizes[ "mp40_mp" ] = 32;
+	level.bots_weapon_clip_sizes[ "kar98k_mp" ] = 5;
+	level.bots_weapon_clip_sizes[ "kar98k_sniper_mp" ] = 5;
+	level.bots_weapon_clip_sizes[ "mp44_mp" ] = 30;
+	level.bots_weapon_clip_sizes[ "colt_mp" ] = 7;
+	level.bots_weapon_clip_sizes[ "webley_mp" ] = 6;
+	level.bots_weapon_clip_sizes[ "luger_mp" ] = 8;
+	level.bots_weapon_clip_sizes[ "tt30_mp" ] = 8;
+	level.bots_weapon_clip_sizes[ "greasegun_mp" ] = 32;
 
 	level.bots_weapon_class_names = [];
-	level.bots_weapon_class_names["m1carbine_mp"] = "rifle";
-	level.bots_weapon_class_names["m1garand_mp"] = "rifle";
-	level.bots_weapon_class_names["bar_mp"] = "lmg";
-	level.bots_weapon_class_names["shotgun_mp"] = "spread";
-	level.bots_weapon_class_names["thompson_mp"] = "smg";
-	level.bots_weapon_class_names["springfield_mp"] = "sniper";
-	level.bots_weapon_class_names["sten_mp"] = "smg";
-	level.bots_weapon_class_names["enfield_mp"] = "sniper";
-	level.bots_weapon_class_names["bren_mp"] = "lmg";
-	level.bots_weapon_class_names["enfield_scope_mp"] = "sniper";
-	level.bots_weapon_class_names["svt40_mp"] = "rifle";
-	level.bots_weapon_class_names["pps42_mp"] = "smg";
-	level.bots_weapon_class_names["ppsh_mp"] = "smg";
-	level.bots_weapon_class_names["g43_mp"] = "rifle";
-	level.bots_weapon_class_names["mosin_nagant_mp"] = "sniper";
-	level.bots_weapon_class_names["mosin_nagant_sniper_mp"] = "sniper";
-	level.bots_weapon_class_names["mp40_mp"] = "smg";
-	level.bots_weapon_class_names["kar98k_mp"] = "sniper";
-	level.bots_weapon_class_names["kar98k_sniper_mp"] = "sniper";
-	level.bots_weapon_class_names["mp44_mp"] = "rifle";
-	level.bots_weapon_class_names["colt_mp"] = "pistol";
-	level.bots_weapon_class_names["webley_mp"] = "pistol";
-	level.bots_weapon_class_names["luger_mp"] = "pistol";
-	level.bots_weapon_class_names["tt30_mp"] = "pistol";
-	level.bots_weapon_class_names["greasegun_mp"] = "smg";
+	level.bots_weapon_class_names[ "m1carbine_mp" ] = "rifle";
+	level.bots_weapon_class_names[ "m1garand_mp" ] = "rifle";
+	level.bots_weapon_class_names[ "bar_mp" ] = "lmg";
+	level.bots_weapon_class_names[ "shotgun_mp" ] = "spread";
+	level.bots_weapon_class_names[ "thompson_mp" ] = "smg";
+	level.bots_weapon_class_names[ "springfield_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "sten_mp" ] = "smg";
+	level.bots_weapon_class_names[ "enfield_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "bren_mp" ] = "lmg";
+	level.bots_weapon_class_names[ "enfield_scope_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "svt40_mp" ] = "rifle";
+	level.bots_weapon_class_names[ "pps42_mp" ] = "smg";
+	level.bots_weapon_class_names[ "ppsh_mp" ] = "smg";
+	level.bots_weapon_class_names[ "g43_mp" ] = "rifle";
+	level.bots_weapon_class_names[ "mosin_nagant_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "mosin_nagant_sniper_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "mp40_mp" ] = "smg";
+	level.bots_weapon_class_names[ "kar98k_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "kar98k_sniper_mp" ] = "sniper";
+	level.bots_weapon_class_names[ "mp44_mp" ] = "rifle";
+	level.bots_weapon_class_names[ "colt_mp" ] = "pistol";
+	level.bots_weapon_class_names[ "webley_mp" ] = "pistol";
+	level.bots_weapon_class_names[ "luger_mp" ] = "pistol";
+	level.bots_weapon_class_names[ "tt30_mp" ] = "pistol";
+	level.bots_weapon_class_names[ "greasegun_mp" ] = "smg";
 
 	level thread fixGamemodes();
 
@@ -234,7 +234,7 @@ handleBots()
 
 	for ( i = 0; i < bots.size; i++ )
 	{
-		kick( bots[i] getentitynumber() );
+		kick( bots[ i ] getentitynumber() );
 	}
 }
 
@@ -249,7 +249,7 @@ onPlayerDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 		self maps\mp\bots\_bot_script::onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
 	}
 
-	self [[level.prevcallbackplayerdamage]]( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
+	self [[ level.prevcallbackplayerdamage ]]( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset );
 }
 
 /*
@@ -263,7 +263,7 @@ onPlayerKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
 		self maps\mp\bots\_bot_script::onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
 	}
 
-	self [[level.prevcallbackplayerkilled]]( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
+	self [[ level.prevcallbackplayerkilled ]]( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration );
 }
 
 /*
@@ -372,7 +372,7 @@ watchVars()
 
 	for ( ;; )
 	{
-		self.team = self.pers["team"];
+		self.team = self.pers[ "team" ];
 
 		wait 0.05;
 	}
@@ -403,7 +403,7 @@ killTags()
 	if ( isdefined( self.tags ) )
 	{
 		for ( i = 0; i < self.tags.size; i++ )
-			self.tags[i] delete ();
+			self.tags[ i ] delete();
 
 		self.tags = undefined;
 		self.tagmap = undefined;
@@ -453,31 +453,31 @@ connected()
 {
 	self endon( "disconnect" );
 
-	level.players[level.players.size] = self;
+	level.players[ level.players.size ] = self;
 	self thread onDisconnectPlayer();
 
-	if ( !isdefined( self.pers["bot_host"] ) )
+	if ( !isdefined( self.pers[ "bot_host" ] ) )
 		self thread doHostCheck();
 
 	if ( !self is_bot() )
 		return;
 
-	if ( !isdefined( self.pers["isBot"] ) )
+	if ( !isdefined( self.pers[ "isBot" ] ) )
 	{
 		// fast restart...
-		self.pers["isBot"] = true;
+		self.pers[ "isBot" ] = true;
 	}
 
-	if ( !isdefined( self.pers["isBotWarfare"] ) )
+	if ( !isdefined( self.pers[ "isBotWarfare" ] ) )
 	{
-		self.pers["isBotWarfare"] = true;
+		self.pers[ "isBotWarfare" ] = true;
 		self thread added();
 	}
 
 	self thread maps\mp\bots\_bot_internal::connected();
 	self thread maps\mp\bots\_bot_script::connected();
 
-	level.bots[level.bots.size] = self;
+	level.bots[ level.bots.size ] = self;
 	self thread onDisconnect();
 
 	level notify( "bot_connected", self );
@@ -550,8 +550,8 @@ add_bot()
 
 	if ( isdefined( bot ) )
 	{
-		bot.pers["isBot"] = true;
-		bot.pers["isBotWarfare"] = true;
+		bot.pers[ "isBot" ] = true;
+		bot.pers[ "isBotWarfare" ] = true;
 		bot thread added();
 	}
 }
@@ -578,43 +578,43 @@ diffBots_loop()
 
 		for ( i = 0; i < playercount; i++ )
 		{
-			player = level.players[i];
+			player = level.players[ i ];
 
-			if ( !isdefined( player.pers["team"] ) )
+			if ( !isdefined( player.pers[ "team" ] ) )
 				continue;
 
 			if ( !player is_bot() )
 				continue;
 
-			if ( player.pers["team"] == "axis" )
+			if ( player.pers[ "team" ] == "axis" )
 			{
 				if ( axis_hard < var_axis_hard )
 				{
 					axis_hard++;
-					player.pers["bots"]["skill"]["base"] = 7;
+					player.pers[ "bots" ] [ "skill" ][ "base" ] = 7;
 				}
 				else if ( axis_med < var_axis_med )
 				{
 					axis_med++;
-					player.pers["bots"]["skill"]["base"] = 4;
+					player.pers[ "bots" ][ "skill" ][ "base" ] = 4;
 				}
 				else
-					player.pers["bots"]["skill"]["base"] = 1;
+					player.pers[ "bots" ][ "skill" ][ "base" ] = 1;
 			}
-			else if ( player.pers["team"] == "allies" )
+			else if ( player.pers[ "team" ] == "allies" )
 			{
 				if ( allies_hard < var_allies_hard )
 				{
 					allies_hard++;
-					player.pers["bots"]["skill"]["base"] = 7;
+					player.pers[ "bots" ][ "skill" ][ "base" ] = 7;
 				}
 				else if ( allies_med < var_allies_med )
 				{
 					allies_med++;
-					player.pers["bots"]["skill"]["base"] = 4;
+					player.pers[ "bots" ][ "skill" ][ "base" ] = 4;
 				}
 				else
-					player.pers["bots"]["skill"]["base"] = 1;
+					player.pers[ "bots" ][ "skill" ][ "base" ] = 1;
 			}
 		}
 	}
@@ -624,12 +624,12 @@ diffBots_loop()
 
 		for ( i = 0; i < playercount; i++ )
 		{
-			player = level.players[i];
+			player = level.players[ i ];
 
 			if ( !player is_bot() )
 				continue;
 
-			player.pers["bots"]["skill"]["base"] = var_skill;
+			player.pers[ "bots" ][ "skill" ][ "base" ] = var_skill;
 		}
 	}
 
@@ -639,12 +639,12 @@ diffBots_loop()
 
 	for ( i = 0; i < playercount; i++ )
 	{
-		player = level.players[i];
+		player = level.players[ i ];
 
 		if ( !player is_bot() )
 			continue;
 
-		player.pers["bots"]["skill"]["base"] = int( clamp( player.pers["bots"]["skill"]["base"], min_diff, max_diff ) );
+		player.pers[ "bots" ][ "skill" ][ "base" ] = int( clamp( player.pers[ "bots" ][ "skill" ][ "base" ], min_diff, max_diff ) );
 	}
 }
 
@@ -678,23 +678,23 @@ teamBots_loop()
 
 	for ( i = 0; i < playercount; i++ )
 	{
-		player = level.players[i];
+		player = level.players[ i ];
 
-		if ( !isdefined( player.pers["team"] ) )
+		if ( !isdefined( player.pers[ "team" ] ) )
 			continue;
 
 		if ( player is_bot() )
 		{
-			if ( player.pers["team"] == "allies" )
+			if ( player.pers[ "team" ] == "allies" )
 				alliesbots++;
-			else if ( player.pers["team"] == "axis" )
+			else if ( player.pers[ "team" ] == "axis" )
 				axisbots++;
 		}
 		else
 		{
-			if ( player.pers["team"] == "allies" )
+			if ( player.pers[ "team" ] == "allies" )
 				alliesplayers++;
-			else if ( player.pers["team"] == "axis" )
+			else if ( player.pers[ "team" ] == "axis" )
 				axisplayers++;
 		}
 	}
@@ -729,23 +729,23 @@ teamBots_loop()
 
 				for ( i = 0; i < playercount; i++ )
 				{
-					player = level.players[i];
+					player = level.players[ i ];
 
-					if ( !isdefined( player.pers["team"] ) )
+					if ( !isdefined( player.pers[ "team" ] ) )
 						continue;
 
 					if ( !player is_bot() )
 						continue;
 
-					if ( player.pers["team"] == toTeam )
+					if ( player.pers[ "team" ] == toTeam )
 						continue;
 
 					if ( toTeam == "allies" )
-						player thread [[level.allies]]();
+						player thread [[ level.allies ]]();
 					else if ( toTeam == "axis" )
-						player thread [[level.axis]]();
+						player thread [[ level.axis ]]();
 					else
-						player thread [[level.spectator]]();
+						player thread [[ level.spectator ]]();
 
 					break;
 				}
@@ -758,19 +758,19 @@ teamBots_loop()
 
 		for ( i = 0; i < playercount; i++ )
 		{
-			player = level.players[i];
+			player = level.players[ i ];
 
-			if ( !isdefined( player.pers["team"] ) )
+			if ( !isdefined( player.pers[ "team" ] ) )
 				continue;
 
 			if ( !player is_bot() )
 				continue;
 
-			if ( player.pers["team"] == "axis" )
+			if ( player.pers[ "team" ] == "axis" )
 			{
 				if ( axis > teamAmount )
 				{
-					player thread [[level.allies]]();
+					player thread [[ level.allies ]]();
 					break;
 				}
 			}
@@ -778,12 +778,12 @@ teamBots_loop()
 			{
 				if ( axis < teamAmount )
 				{
-					player thread [[level.axis]]();
+					player thread [[ level.axis ]]();
 					break;
 				}
-				else if ( player.pers["team"] != "allies" )
+				else if ( player.pers[ "team" ] != "allies" )
 				{
-					player thread [[level.allies]]();
+					player thread [[ level.allies ]]();
 					break;
 				}
 			}
@@ -840,11 +840,11 @@ addBots_loop()
 
 	for ( i = 0; i < playercount; i++ )
 	{
-		player = level.players[i];
+		player = level.players[ i ];
 
 		if ( player is_bot() )
 			bots++;
-		else if ( !isdefined( player.pers["team"] ) || ( player.pers["team"] != "axis" && player.pers["team"] != "allies" ) )
+		else if ( !isdefined( player.pers[ "team" ] ) || ( player.pers[ "team" ] != "axis" && player.pers[ "team" ] != "allies" ) )
 			spec++;
 		else
 			players++;
@@ -867,17 +867,17 @@ addBots_loop()
 
 		for ( i = 0; i < playercount; i++ )
 		{
-			player = level.players[i];
+			player = level.players[ i ];
 
 			if ( player is_bot() )
 				continue;
 
-			if ( !isdefined( player.pers["team"] ) )
+			if ( !isdefined( player.pers[ "team" ] ) )
 				continue;
 
-			if ( player.pers["team"] == "axis" )
+			if ( player.pers[ "team" ] == "axis" )
 				axisplayers++;
-			else if ( player.pers["team"] == "allies" )
+			else if ( player.pers[ "team" ] == "allies" )
 				alliesplayers++;
 		}
 
@@ -1003,7 +1003,7 @@ watchNade()
 		if ( timeSlow > 1 )
 		{
 			thread launchSmoke( lastOrigin );
-			self delete ();
+			self delete();
 		}
 
 		wait 0.05;
@@ -1019,7 +1019,7 @@ watchNades_loop()
 
 	for ( i = 0; i < nades.size; i++ )
 	{
-		nade = nades[i];
+		nade = nades[ i ];
 
 		if ( !isdefined( nade ) )
 			continue;
