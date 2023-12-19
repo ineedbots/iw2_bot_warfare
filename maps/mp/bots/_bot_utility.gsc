@@ -1431,7 +1431,7 @@ load_waypoints()
 		if ( !isdefined( level.waypoints[i].type ) )
 			level.waypoints[i].type = "crouch";
 
-		level.waypoints[i].childCount = undefined;
+		level.waypoints[i].childcount = undefined;
 	}
 }
 
