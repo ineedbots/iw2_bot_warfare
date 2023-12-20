@@ -38,28 +38,44 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 	self.lastkiller = undefined;
 
 	if ( !isdefined( self ) || !isdefined( self.team ) )
+	{
 		return;
+	}
 
 	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
+	{
 		return;
+	}
 
 	if ( iDamage <= 0 )
+	{
 		return;
+	}
 
 	if ( !isdefined( eAttacker ) || !isdefined( eAttacker.team ) )
+	{
 		return;
+	}
 
 	if ( eAttacker == self )
+	{
 		return;
+	}
 
 	if ( level.teambased && eAttacker.team == self.team )
+	{
 		return;
+	}
 
 	if ( !isdefined( eInflictor ) || eInflictor.classname != "player" )
+	{
 		return;
+	}
 
 	if ( !isalive( eAttacker ) )
+	{
 		return;
+	}
 
 	self.killerlocation = eAttacker.origin;
 	self.lastkiller = eAttacker;
@@ -71,31 +87,49 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 onDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset )
 {
 	if ( !isdefined( self ) || !isdefined( self.team ) )
+	{
 		return;
+	}
 
 	if ( !isalive( self ) )
+	{
 		return;
+	}
 
 	if ( sMeansOfDeath == "MOD_FALLING" || sMeansOfDeath == "MOD_SUICIDE" )
+	{
 		return;
+	}
 
 	if ( iDamage <= 0 )
+	{
 		return;
+	}
 
 	if ( !isdefined( eAttacker ) || !isdefined( eAttacker.team ) )
+	{
 		return;
+	}
 
 	if ( eAttacker == self )
+	{
 		return;
+	}
 
 	if ( level.teambased && eAttacker.team == self.team )
+	{
 		return;
+	}
 
 	if ( !isdefined( eInflictor ) || eInflictor.classname != "player" )
+	{
 		return;
+	}
 
 	if ( !isalive( eAttacker ) )
+	{
 		return;
+	}
 
 	self bot_cry_for_help( eAttacker );
 
@@ -131,10 +165,14 @@ bot_cry_for_help( attacker )
 		}
 
 		if ( !isdefined( player.team ) )
+		{
 			continue;
+		}
 
 		if ( !player IsPlayerModelOK() )
+		{
 			continue;
+		}
 
 		if ( !isalive( player ) )
 		{
@@ -472,15 +510,21 @@ teamWatch()
 	for ( ;; )
 	{
 		while ( !isdefined( self.pers[ "team" ] )  || !allowTeamChoice() )
+		{
 			wait .05;
+		}
 
 		wait 0.1;
 
 		if ( self.team != "axis" && self.team != "allies" )
+		{
 			self notify( "menuresponse", game[ "menu_team" ], getcvar( "bots_team" ) );
+		}
 
 		while ( isdefined( self.pers[ "team" ] ) )
+		{
 			wait .05;
+		}
 	}
 }
 
@@ -552,17 +596,23 @@ classWatch()
 	for ( ;; )
 	{
 		while ( !isdefined( self.pers[ "team" ] ) || !allowClassChoice() )
+		{
 			wait .05;
+		}
 
 		wait 0.5;
 
 		if ( !isdefined( self.pers[ "weapon" ] ) || self.pers[ "weapon" ] == "" || !isdefined( self.bot_change_class ) )
+		{
 			self notify( "menuresponse", game[ "menu_weapon_" + self.team ], self chooseRandomClass() );
+		}
 
 		self.bot_change_class = true;
 
 		while ( isdefined( self.pers[ "team" ] ) && isdefined( self.pers[ "weapon" ] ) && self.pers[ "weapon" ] != "" && isdefined( self.bot_change_class ) )
+		{
 			wait .05;
+		}
 	}
 }
 
@@ -578,7 +628,9 @@ onSpawned()
 		self waittill( "spawned_player" );
 
 		if ( randomint( 100 ) <= self.pers[ "bots" ][ "behavior" ][ "class" ] )
+		{
 			self.bot_change_class = undefined;
+		}
 
 		self.bot_lock_goal = false;
 		self.help_time = undefined;

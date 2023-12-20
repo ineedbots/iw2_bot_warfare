@@ -8,12 +8,18 @@ wait_for_builtins()
 	for ( i = 0; i < 20; i++ )
 	{
 		if ( isdefined( level.bot_builtins ) )
+		{
 			return true;
+		}
 
 		if ( i < 18 )
+		{
 			waittillframeend;
+		}
 		else
+		{
 			wait 0.05;
+		}
 	}
 
 	return false;
@@ -95,7 +101,9 @@ doHostCheck()
 	self.pers[ "bot_host" ] = false;
 
 	if ( self is_bot() )
+	{
 		return;
+	}
 
 	result = false;
 
@@ -109,7 +117,9 @@ doHostCheck()
 		}
 
 		if ( getcvar( "bots_main_firstIsHost" ) == self getguid() + "" )
+		{
 			result = true;
+		}
 	}
 
 	DvarGUID = getcvar( "bots_main_GUIDs" );
@@ -121,12 +131,16 @@ doHostCheck()
 		for ( i = 0; i < guids.size; i++ )
 		{
 			if ( self getguid() + "" == guids[ i ] )
+			{
 				result = true;
+			}
 		}
 	}
 
 	if ( !result )
+	{
 		return;
+	}
 
 	self.pers[ "bot_host" ] = true;
 }
@@ -209,7 +223,9 @@ BotGetRandom()
 BotGetTargetRandom()
 {
 	if ( !isdefined( self.bot.target ) )
+	{
 		return undefined;
+	}
 
 	return self.bot.target.rand;
 }
@@ -254,7 +270,9 @@ BotFreezeControls( what )
 	self.bot.isfrozen = what;
 
 	if ( what )
+	{
 		self notify( "kill_goal" );
+	}
 }
 
 /*
@@ -273,7 +291,9 @@ BotStopMoving( what )
 	self.bot.stop_move = what;
 
 	if ( what )
+	{
 		self notify( "kill_goal" );
+	}
 }
 
 /*
@@ -307,7 +327,9 @@ GetScriptGoal()
 SetScriptGoal( goal, dist )
 {
 	if ( !isdefined( dist ) )
+	{
 		dist = 16;
+	}
 
 	self.bot.script_goal = goal;
 	self.bot.script_goal_dist = dist;
@@ -387,7 +409,9 @@ ClearScriptEnemy()
 GetThreat()
 {
 	if ( !isdefined( self.bot.target ) )
+	{
 		return undefined;
+	}
 
 	return self.bot.target.entity;
 }
@@ -462,10 +486,14 @@ getValidGrenade()
 	for ( i = 0; i < grenadeTypes.size; i++ )
 	{
 		if ( !self hasweapon( grenadeTypes[ i ] ) )
+		{
 			continue;
+		}
 
 		if ( !self getAmmoCount( grenadeTypes[ i ] ) )
+		{
 			continue;
+		}
 
 		possibles[ possibles.size ] = grenadeTypes[ i ];
 	}
@@ -505,7 +533,9 @@ weaponClass( weap )
 	answer = level.bots_weapon_class_names[ weap ];
 
 	if ( !isdefined( answer ) )
+	{
 		answer = "";
+	}
 
 	return answer;
 }
@@ -518,7 +548,9 @@ WeaponClipSize( weap )
 	answer = level.bots_weapon_clip_sizes[ weap ];
 
 	if ( !isdefined( answer ) )
+	{
 		answer = 1;
+	}
 
 	return answer;
 }
@@ -529,9 +561,13 @@ WeaponClipSize( weap )
 getWeaponSlot( weap )
 {
 	if ( self getweaponslotweapon( "primary" ) == weap )
+	{
 		return "primary";
+	}
 	else
+	{
 		return "primaryb";
+	}
 }
 
 /*
@@ -562,10 +598,14 @@ getStance()
 	height = myEye[ 2 ] - self.origin[ 2 ];
 
 	if ( height > 50 )
+	{
 		return "stand";
+	}
 
 	if ( height < 20 )
+	{
 		return "prone";
+	}
 
 	return "crouch";
 }
@@ -576,7 +616,9 @@ getStance()
 getVelocity()
 {
 	if ( !isalive( self ) )
+	{
 		return ( 0, 0, 0 );
+	}
 
 	return self.velocity;
 }
@@ -625,10 +667,14 @@ getEyeHeight()
 getTagOrigin( where )
 {
 	if ( !isalive( self ) )
+	{
 		return ( 0, 0, 0 );
+	}
 
 	if ( !isdefined( self.bot_model_fix ) )
+	{
 		return self.origin;
+	}
 
 	if ( !isdefined( self.tags ) )
 	{
@@ -637,7 +683,9 @@ getTagOrigin( where )
 	}
 
 	if ( isdefined( self.tagmap[ where ] ) )
+	{
 		return self.tagmap[ where ].origin;
+	}
 
 	obj = spawn( "script_origin", ( 0, 0, 0 ) );
 	obj linkto( self, where, ( 0, 0, 0 ), ( 0, 0, 0 ) );
@@ -672,7 +720,9 @@ waittill_either_return_( str1, str2 )
 waittill_either_return( str1, str2 )
 {
 	if ( !isdefined( self waittill_either_return_( str1, str2 ) ) )
+	{
 		return str1;
+	}
 
 	return str2;
 }
@@ -692,7 +742,9 @@ waittill_either( not, not1 )
 waittill_string( msg, ent )
 {
 	if ( msg != "death" )
+	{
 		self endon( "death" );
+	}
 
 	ent endon( "die" );
 	self waittill( msg );
@@ -704,29 +756,37 @@ waittill_string( msg, ent )
 */
 waittill_any_timeout( timeOut, string1, string2, string3, string4, string5 )
 {
-	if ( ( !isdefined( string1 ) || string1 != "death" ) &&
-	    ( !isdefined( string2 ) || string2 != "death" ) &&
-	    ( !isdefined( string3 ) || string3 != "death" ) &&
-	    ( !isdefined( string4 ) || string4 != "death" ) &&
-	    ( !isdefined( string5 ) || string5 != "death" ) )
+	if ( ( !isdefined( string1 ) || string1 != "death" ) && ( !isdefined( string2 ) || string2 != "death" ) && ( !isdefined( string3 ) || string3 != "death" ) && ( !isdefined( string4 ) || string4 != "death" ) && ( !isdefined( string5 ) || string5 != "death" ) )
+	{
 		self endon( "death" );
+	}
 
 	ent = spawnstruct();
 
 	if ( isdefined( string1 ) )
+	{
 		self thread waittill_string( string1, ent );
+	}
 
 	if ( isdefined( string2 ) )
+	{
 		self thread waittill_string( string2, ent );
+	}
 
 	if ( isdefined( string3 ) )
+	{
 		self thread waittill_string( string3, ent );
+	}
 
 	if ( isdefined( string4 ) )
+	{
 		self thread waittill_string( string4, ent );
+	}
 
 	if ( isdefined( string5 ) )
+	{
 		self thread waittill_string( string5, ent );
+	}
 
 	ent thread _timeout( timeOut );
 
@@ -762,7 +822,9 @@ random( arr )
 	size = arr.size;
 
 	if ( !size )
+	{
 		return undefined;
+	}
 
 	return arr[ randomint( size ) ];
 }
@@ -779,7 +841,9 @@ array_remove( ents, remover )
 		index = ents[ i ];
 
 		if ( index != remover )
+		{
 			newents[ newents.size ] = index;
+		}
 	}
 
 	return newents;
@@ -804,7 +868,9 @@ GetHostPlayer()
 		player = level.players[ i ];
 
 		if ( !player is_host() )
+		{
 			continue;
+		}
 
 		return player;
 	}
@@ -820,36 +886,48 @@ bot_wait_for_host()
 	host = undefined;
 
 	while ( !isdefined( level ) || !isdefined( level.players ) )
+	{
 		wait 0.05;
+	}
 
 	for ( i = getcvarfloat( "bots_main_waitForHostTime" ); i > 0; i -= 0.05 )
 	{
 		host = GetHostPlayer();
 
 		if ( isdefined( host ) )
+		{
 			break;
+		}
 
 		wait 0.05;
 	}
 
 	if ( !isdefined( host ) )
+	{
 		return;
+	}
 
 	for ( i = getcvarfloat( "bots_main_waitForHostTime" ); i > 0; i -= 0.05 )
 	{
 		if ( isdefined( host.pers[ "team" ] ) )
+		{
 			break;
+		}
 
 		wait 0.05;
 	}
 
 	if ( !isdefined( host.pers[ "team" ] ) )
+	{
 		return;
+	}
 
 	for ( i = getcvarfloat( "bots_main_waitForHostTime" ); i > 0; i -= 0.05 )
 	{
 		if ( host.pers[ "team" ] == "allies" || host.pers[ "team" ] == "axis" )
+		{
 			break;
+		}
 
 		wait 0.05;
 	}
@@ -866,7 +944,9 @@ sqrt( num )
 
 	// "bit" starts at the highest power of four <= the argument.
 	while ( bit > num )
+	{
 		bit >>= 2;
+	}
 
 	while ( bit != 0 )
 	{
@@ -876,7 +956,9 @@ sqrt( num )
 			res = ( res >> 1 ) + bit;
 		}
 		else
+		{
 			res >>= 1;
+		}
 
 		bit >>= 2;
 	}
@@ -894,10 +976,14 @@ RaySphereIntersect( start, end, spherePos, radius )
 	r2 = radius * radius;
 
 	if ( distancesquared( start, spherePos ) < r2 )
+	{
 		return true;
+	}
 
 	if ( distancesquared( end, spherePos ) < r2 )
+	{
 		return true;
+	}
 
 	// check if the line made by start and end intersect the sphere
 	dp = end - start;
@@ -910,7 +996,9 @@ RaySphereIntersect( start, end, spherePos, radius )
 	bb4ac = b * b - 4.0 * a * c;
 
 	if ( abs( a ) < 0.0001 || bb4ac < 0 )
+	{
 		return false;
+	}
 
 	mu1 = ( 0 - b + sqrt( bb4ac ) ) / ( 2 * a );
 	//mu2 = (0-b - sqrt(bb4ac)) / (2 * a);
@@ -923,13 +1011,17 @@ RaySphereIntersect( start, end, spherePos, radius )
 
 	// check if both intersection points far
 	if ( distancesquared( start, ip1 ) > myDist/* && distancesquared(start, ip2) > myDist*/ )
+	{
 		return false;
+	}
 
 	dpAngles = vectortoangles( dp );
 
 	// check if the point is behind us
 	if ( getConeDot( ip1, start, dpAngles ) < 0/* || getConeDot(ip2, start, dpAngles) < 0*/ )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -953,7 +1045,9 @@ SmokeTrace( start, end, rad )
 		nade = level.bots_smokelist.data[ i ];
 
 		if ( !RaySphereIntersect( start, end, nade.origin, rad ) )
+		{
 			continue;
+		}
 
 		return false;
 	}
@@ -992,12 +1086,18 @@ RoundNum( x )
 	if ( abs( x ) - abs( y ) > 0.5 )
 	{
 		if ( x < 0 )
+		{
 			return y - 1;
+		}
 		else
+		{
 			return y + 1;
+		}
 	}
 	else
+	{
 		return y;
+	}
 }
 
 /*
@@ -1008,9 +1108,13 @@ RoundUp( floatVal )
 	i = int( floatVal );
 
 	if ( i != floatVal )
+	{
 		return i + 1;
+	}
 	else
+	{
 		return i;
+	}
 }
 
 /*
@@ -1022,7 +1126,9 @@ AngleClamp180( angle )
 	angle = ( angleFrac - int( angleFrac ) ) * 360.0;
 
 	if ( angle > 180.0 )
+	{
 		return angle - 360.0;
+	}
 
 	return angle;
 }
@@ -1033,7 +1139,9 @@ AngleClamp180( angle )
 max( a, b )
 {
 	if ( a > b )
+	{
 		return a;
+	}
 
 	return b;
 }
@@ -1044,7 +1152,9 @@ max( a, b )
 min( a, b )
 {
 	if ( a > b )
+	{
 		return b;
+	}
 
 	return a;
 }
@@ -1198,7 +1308,9 @@ parseTokensIntoWaypoint( tokens )
 	waypoint.children = [];
 
 	for ( j = 0; j < childToks.size; j++ )
+	{
 		waypoint.children[ j ] = int( childToks[ j ] );
+	}
 
 	type = tokens[ 2 ];
 	waypoint.type = type;
@@ -1210,7 +1322,9 @@ parseTokensIntoWaypoint( tokens )
 		anglesToks = strtok( anglesStr, " " );
 
 		if ( anglesToks.size >= 3 )
+		{
 			waypoint.angles = ( float_old( anglesToks[ 0 ] ), float_old( anglesToks[ 1 ] ), float_old( anglesToks[ 2 ] ) );
+		}
 	}
 
 	return waypoint;
@@ -1226,7 +1340,9 @@ readWpsFromFile( mapname )
 	f = openfile( filename, "read" );
 
 	if ( f < 0 )
+	{
 		return waypoints;
+	}
 
 	BotBuiltinPrintConsole( "Attempting to read waypoints from " + filename );
 
@@ -1235,12 +1351,16 @@ readWpsFromFile( mapname )
 		argc = freadln( f );
 
 		if ( argc <= 0 )
+		{
 			break;
+		}
 
 		waypointCount = int( fgetarg( f, 0 ) );
 
 		if ( waypointCount <= 0 )
+		{
 			break;
+		}
 
 		for ( i = 1; i <= waypointCount; i++ )
 		{
@@ -1256,7 +1376,9 @@ readWpsFromFile( mapname )
 			}
 
 			if ( !isdefined( line ) || line == "" )
+			{
 				continue;
+			}
 
 			tokens = strtok( line, "," );
 
@@ -1291,10 +1413,14 @@ loadmbotWps( mapname, gametype )
 	wps = [];
 
 	if ( f < 0 )
+	{
 		f = openfile( mapname + "_" + gametype + ".tmp", "read" );
+	}
 
 	if ( f < 0 )
+	{
 		return wps;
+	}
 
 	argc = freadln( f );
 
@@ -1320,7 +1446,9 @@ loadmbotWps( mapname, gametype )
 		t = strtok( s, " ," );
 
 		if ( !isdefined( t ) || t.size < 6 )
+		{
 			break;
+		}
 
 		wp = spawnstruct();
 		wp.origin = ( float_old( t[ 0 ] ), float_old( t[ 1 ] ), float_old( t[ 2 ] ) );
@@ -1328,20 +1456,30 @@ loadmbotWps( mapname, gametype )
 		stance = "stand";
 
 		if ( t[ 4 ] == "1" )
+		{
 			stance = "crouch";
+		}
 		else if ( t[ 4 ] == "2" )
+		{
 			stance = "prone";
+		}
 
 		wp.children = [];
 		k = 0;
 
 		for ( k = 0; k < int( t[ 5 ] ); k++ )
+		{
 			wp.children[ k ] = int( t[ 6 + k ] );
+		}
 
 		if ( t[ 3 ] == "l" || t[ 3 ] == "m" || t[ 3 ] == "f" || t[ 3 ] == "j" )
+		{
 			wp.type = "climb";
+		}
 		else if ( t[ 3 ] == "g" )
+		{
 			wp.type = "grenade";
+		}
 		else if ( t[ 3 ] == "c" )
 		{
 			wp.type = "crouch";
@@ -1351,7 +1489,9 @@ loadmbotWps( mapname, gametype )
 			wp.children[ 0 ] = wpc;
 		}
 		else
+		{
 			wp.type = stance;
+		}
 
 		if ( ( t.size == 9 && t[ 3 ] == "w" && t[ 5 ] == "1" ) || t[ 3 ] == "g" || t[ 3 ] == "c" )
 		{
@@ -1381,7 +1521,9 @@ load_waypoints()
 
 
 	if ( !isdefined( level.waypoints ) )
+	{
 		level.waypoints = [];
+	}
 
 	wps = readWpsFromFile( mapname );
 
@@ -1400,7 +1542,9 @@ load_waypoints()
 		}
 
 		if ( level.waypoints.size )
+		{
 			BotBuiltinPrintConsole( "Loaded " + level.waypoints.size + " waypoints from script." );
+		}
 	}
 
 	if ( !level.waypoints.size )
@@ -1410,7 +1554,9 @@ load_waypoints()
 		level.waypoints = wps;
 
 		if ( level.waypoints.size )
+		{
 			BotBuiltinPrintConsole( "Loaded mbot " + level.waypoints.size + " wps" );
+		}
 	}
 
 	if ( !level.waypoints.size )
@@ -1423,13 +1569,19 @@ load_waypoints()
 	for ( i = 0; i < level.waypointcount; i++ )
 	{
 		if ( !isdefined( level.waypoints[ i ].children ) || !isdefined( level.waypoints[ i ].children.size ) )
+		{
 			level.waypoints[ i ].children = [];
+		}
 
 		if ( !isdefined( level.waypoints[ i ].origin ) )
+		{
 			level.waypoints[ i ].origin = ( 0, 0, 0 );
+		}
 
 		if ( !isdefined( level.waypoints[ i ].type ) )
+		{
 			level.waypoints[ i ].type = "crouch";
+		}
 
 		level.waypoints[ i ].childcount = undefined;
 	}
@@ -1447,7 +1599,9 @@ nearAnyOfWaypoints( dist, waypoints )
 		waypoint = level.waypoints[ waypoints[ i ] ];
 
 		if ( distancesquared( waypoint.origin, self.origin ) > dist )
+		{
 			continue;
+		}
 
 		return true;
 	}
@@ -1469,7 +1623,9 @@ waypointsNear( waypoints, dist )
 		wp = level.waypoints[ waypoints[ i ] ];
 
 		if ( distancesquared( wp.origin, self.origin ) > dist )
+		{
 			continue;
+		}
 
 		answer[ answer.size ] = waypoints[ i ];
 	}
@@ -1491,7 +1647,9 @@ getNearestWaypointOfWaypoints( waypoints )
 		thisDist = distancesquared( self.origin, waypoint.origin );
 
 		if ( isdefined( answer ) && thisDist > closestDist )
+		{
 			continue;
+		}
 
 		answer = waypoints[ i ];
 		closestDist = thisDist;
@@ -1514,13 +1672,19 @@ getWaypointsOfType( type )
 		if ( type == "camp" )
 		{
 			if ( wp.type != "crouch" )
+			{
 				continue;
+			}
 
 			if ( wp.children.size != 1 )
+			{
 				continue;
+			}
 		}
 		else if ( type != wp.type )
+		{
 			continue;
+		}
 
 		answer[ answer.size ] = i;
 	}
@@ -1534,7 +1698,9 @@ getWaypointsOfType( type )
 getWaypointForIndex( i )
 {
 	if ( !isdefined( i ) )
+	{
 		return undefined;
+	}
 
 	return level.waypoints[ i ];
 }
@@ -1571,16 +1737,24 @@ waittill_any( string1, string2, string3, string4, string5 )
 	assert( isdefined( string1 ) );
 
 	if ( isdefined( string2 ) )
+	{
 		self endon( string2 );
+	}
 
 	if ( isdefined( string3 ) )
+	{
 		self endon( string3 );
+	}
 
 	if ( isdefined( string4 ) )
+	{
 		self endon( string4 );
+	}
 
 	if ( isdefined( string5 ) )
+	{
 		self endon( string5 );
+	}
 
 	self waittill( string1 );
 }
@@ -1601,7 +1775,9 @@ getBotToKick()
 	bots = getBotArray();
 
 	if ( !isdefined( bots ) || !isdefined( bots.size ) || bots.size <= 0 || !isdefined( bots[ 0 ] ) )
+	{
 		return undefined;
+	}
 
 	tokick = undefined;
 	axis = 0;
@@ -1614,14 +1790,22 @@ getBotToKick()
 		bot = bots[ i ];
 
 		if ( !isdefined( bot ) || !isdefined( bot.team ) )
+		{
 			continue;
+		}
 
 		if ( bot.team == "allies" )
+		{
 			allies++;
+		}
 		else if ( bot.team == "axis" )
+		{
 			axis++;
+		}
 		else // choose bots that are not on a team first
+		{
 			return bot;
+		}
 	}
 
 	// search for a bot on the other team
@@ -1635,7 +1819,9 @@ getBotToKick()
 		team = "allies";
 
 		if ( axis > allies )
+		{
 			team = "axis";
+		}
 	}
 	else
 	{
@@ -1648,22 +1834,32 @@ getBotToKick()
 		bot = bots[ i ];
 
 		if ( !isdefined( bot ) || !isdefined( bot.team ) )
+		{
 			continue;
+		}
 
 		if ( bot.team != team )
+		{
 			continue;
+		}
 
 		if ( !isdefined( bot.pers ) || !isdefined( bot.pers[ "bots" ] ) || !isdefined( bot.pers[ "bots" ][ "skill" ] ) || !isdefined( bot.pers[ "bots" ][ "skill" ][ "base" ] ) )
+		{
 			continue;
+		}
 
 		if ( isdefined( tokick ) && bot.pers[ "bots" ][ "skill" ][ "base" ] > tokick.pers[ "bots" ][ "skill" ][ "base" ] )
+		{
 			continue;
+		}
 
 		tokick = bot;
 	}
 
 	if ( isdefined( tokick ) )
+	{
 		return tokick;
+	}
 
 	// just kick lowest skill
 	for ( i = 0; i < bots.size; i++ )
@@ -1671,13 +1867,19 @@ getBotToKick()
 		bot = bots[ i ];
 
 		if ( !isdefined( bot ) || !isdefined( bot.team ) )
+		{
 			continue;
+		}
 
 		if ( !isdefined( bot.pers ) || !isdefined( bot.pers[ "bots" ] ) || !isdefined( bot.pers[ "bots" ][ "skill" ] ) || !isdefined( bot.pers[ "bots" ][ "skill" ][ "base" ] ) )
+		{
 			continue;
+		}
 
 		if ( isdefined( tokick ) && bot.pers[ "bots" ][ "skill" ][ "base" ] > tokick.pers[ "bots" ][ "skill" ][ "base" ] )
+		{
 			continue;
+		}
 
 		tokick = bot;
 	}
@@ -1698,7 +1900,9 @@ getBotArray()
 		player = level.players[ i ];
 
 		if ( !player is_bot() )
+		{
 			continue;
+		}
 
 		result[ result.size ] = player;
 	}
@@ -1724,7 +1928,9 @@ WaypointsToKDTree()
 _WaypointsToKDTree( waypoints, dem )
 {
 	if ( !waypoints.size )
+	{
 		return;
+	}
 
 	callbacksort = undefined;
 
@@ -1764,10 +1970,16 @@ _WaypointsToKDTree( waypoints, dem )
 	right = [];
 
 	for ( i = 0; i < sorted.size; i++ )
+	{
 		if ( i < median )
+		{
 			right[ right.size ] = sorted[ i ];
+		}
 		else if ( i > median )
+		{
 			left[ left.size ] = sorted[ i ];
+		}
+	}
 
 	self KDTreeInsert( sorted[ median ] );
 
@@ -1881,25 +2093,37 @@ _KDTreeInsert( node, data, dem, x0, y0, z0, x1, y1, z1 )
 	{
 		case 0:
 			if ( data.origin[ 0 ] < node.data.origin[ 0 ] )
+			{
 				node.left = self _KDTreeInsert( node.left, data, 1, x0, y0, z0, node.data.origin[ 0 ], y1, z1 );
+			}
 			else
+			{
 				node.right = self _KDTreeInsert( node.right, data, 1, node.data.origin[ 0 ], y0, z0, x1, y1, z1 );
+			}
 
 			break;
 
 		case 1:
 			if ( data.origin[ 1 ] < node.data.origin[ 1 ] )
+			{
 				node.left = self _KDTreeInsert( node.left, data, 2, x0, y0, z0, x1, node.data.origin[ 1 ], z1 );
+			}
 			else
+			{
 				node.right = self _KDTreeInsert( node.right, data, 2, x0, node.data.origin[ 1 ], z0, x1, y1, z1 );
+			}
 
 			break;
 
 		case 2:
 			if ( data.origin[ 2 ] < node.data.origin[ 2 ] )
+			{
 				node.left = self _KDTreeInsert( node.left, data, 0, x0, y0, z0, x1, y1, node.data.origin[ 2 ] );
+			}
 			else
+			{
 				node.right = self _KDTreeInsert( node.right, data, 0, x0, y0, node.data.origin[ 2 ], x1, y1, z1 );
+			}
 
 			break;
 	}
@@ -1913,7 +2137,9 @@ _KDTreeInsert( node, data, dem, x0, y0, z0, x1, y1, z1 )
 KDTreeNearest( origin )
 {
 	if ( !isdefined( self.root ) )
+	{
 		return undefined;
+	}
 
 	return self _KDTreeNearest( self.root, origin, self.root.data, distancesquared( self.root.data.origin, origin ), 0 );
 }
@@ -1965,20 +2191,32 @@ RectDistanceSquared( origin )
 	dz = 0;
 
 	if ( origin[ 0 ] < self.x0 )
+	{
 		dx = origin[ 0 ] - self.x0;
+	}
 	else if ( origin[ 0 ] > self.x1 )
+	{
 		dx = origin[ 0 ] - self.x1;
+	}
 
 	if ( origin[ 1 ] < self.y0 )
+	{
 		dy = origin[ 1 ] - self.y0;
+	}
 	else if ( origin[ 1 ] > self.y1 )
+	{
 		dy = origin[ 1 ] - self.y1;
+	}
 
 
 	if ( origin[ 2 ] < self.z0 )
+	{
 		dz = origin[ 2 ] - self.z0;
+	}
 	else if ( origin[ 2 ] > self.z1 )
+	{
 		dz = origin[ 2 ] - self.z1;
+	}
 
 	return dx * dx + dy * dy + dz * dz;
 }
@@ -2059,7 +2297,9 @@ HeapInsert( item )
 		current = int( current / 2 );
 
 		if ( ![[ self.compare ]]( item, self.data[ current - 1 ] ) )
+		{
 			break;
+		}
 
 		self.data[ last - 1 ] = self.data[ current - 1 ];
 		self.data[ current - 1 ] = item;
@@ -2075,15 +2315,23 @@ _HeapNextChild( node, hsize )
 	right = left + 1;
 
 	if ( left > hsize )
+	{
 		return -1;
+	}
 
 	if ( right > hsize )
+	{
 		return left;
+	}
 
 	if ( [[ self.compare ]]( self.data[ left - 1 ], self.data[ right - 1 ] ) )
+	{
 		return left;
+	}
 	else
+	{
 		return right;
+	}
 }
 
 /*
@@ -2094,7 +2342,9 @@ HeapRemove()
 	remove = self.data.size;
 
 	if ( !remove )
+	{
 		return remove;
+	}
 
 	move = self.data[ remove - 1 ];
 	self.data[ 0 ] = move;
@@ -2102,7 +2352,9 @@ HeapRemove()
 	remove--;
 
 	if ( !remove )
+	{
 		return remove;
+	}
 
 	last = 1;
 	next = self _HeapNextChild( 1, remove );
@@ -2110,7 +2362,9 @@ HeapRemove()
 	while ( next != -1 )
 	{
 		if ( [[ self.compare ]]( move, self.data[ next - 1 ] ) )
+		{
 			break;
+		}
 
 		self.data[ last - 1 ] = self.data[ next - 1 ];
 		self.data[ next - 1 ] = move;
@@ -2136,15 +2390,21 @@ ReverseHeapAStar( item, item2 )
 RemoveWaypointUsage( wp, team )
 {
 	if ( !isdefined( level.waypointusage ) )
+	{
 		return;
+	}
 
 	if ( !isdefined( level.waypointusage[ team ][ wp + "" ] ) )
+	{
 		return;
+	}
 
 	level.waypointusage[ team ][ wp + "" ]--;
 
 	if ( level.waypointusage[ team ][ wp + "" ] <= 0 )
+	{
 		level.waypointusage[ team ][ wp + "" ] = undefined;
+	}
 }
 
 /*
@@ -2158,12 +2418,16 @@ GetNearestWaypointWithSight( pos )
 	for ( i = 0; i < level.waypointcount; i++ )
 	{
 		if ( !bullettracepassed( pos + ( 0, 0, 15 ), level.waypoints[ i ].origin + ( 0, 0, 15 ), false, undefined ) )
+		{
 			continue;
+		}
 
 		curdis = distancesquared( level.waypoints[ i ].origin, pos );
 
 		if ( curdis > dist )
+		{
 			continue;
+		}
 
 		dist = curdis;
 		candidate = i;
@@ -2185,7 +2449,9 @@ getNearestWaypoint( pos )
 		curdis = distancesquared( level.waypoints[ i ].origin, pos );
 
 		if ( curdis > dist )
+		{
 			continue;
+		}
 
 		dist = curdis;
 		candidate = i;
@@ -2209,29 +2475,41 @@ AStarSearch( start, goal, team, greedy_path )
 	startWp = getNearestWaypoint( start );
 
 	if ( !isdefined( startWp ) )
+	{
 		return [];
+	}
 
 	_startwp = undefined;
 
 	if ( !bullettracepassed( start + ( 0, 0, 15 ), level.waypoints[ startWp ].origin + ( 0, 0, 15 ), false, undefined ) )
+	{
 		_startwp = GetNearestWaypointWithSight( start );
+	}
 
 	if ( isdefined( _startwp ) )
+	{
 		startWp = _startwp;
+	}
 
 
 	goalWp = getNearestWaypoint( goal );
 
 	if ( !isdefined( goalWp ) )
+	{
 		return [];
+	}
 
 	_goalWp = undefined;
 
 	if ( !bullettracepassed( goal + ( 0, 0, 15 ), level.waypoints[ goalWp ].origin + ( 0, 0, 15 ), false, undefined ) )
+	{
 		_goalWp = GetNearestWaypointWithSight( goal );
+	}
 
 	if ( isdefined( _goalWp ) )
+	{
 		goalWp = _goalWp;
+	}
 
 
 	node = spawnstruct();
@@ -2264,7 +2542,9 @@ AStarSearch( start, goal, team, greedy_path )
 				if ( isdefined( team ) && isdefined( level.waypointusage ) )
 				{
 					if ( !isdefined( level.waypointusage[ team ][ bestNode.index + "" ] ) )
+					{
 						level.waypointusage[ team ][ bestNode.index + "" ] = 0;
+					}
 
 					level.waypointusage[ team ][ bestNode.index + "" ]++;
 				}
@@ -2291,15 +2571,21 @@ AStarSearch( start, goal, team, greedy_path )
 				temppen = 1;
 
 				if ( isdefined( level.waypointusage[ team ][ child + "" ] ) )
-					temppen = level.waypointusage[ team ][ child + "" ]; //consider how many bots are taking this path
+				{
+					temppen = level.waypointusage[ team ][ child + "" ];   //consider how many bots are taking this path
+				}
 
 				if ( temppen > 1 )
+				{
 					penalty = temppen;
+				}
 			}
 
 			// have certain types of nodes more expensive
 			if ( childWp.type == "climb" || childWp.type == "prone" )
+			{
 				penalty += 4;
+			}
 
 			//calc the total path we have took
 			newg = bestNode.g + distancesquared( wp.origin, childWp.origin ) * penalty; //bots on same team's path are more expensive
@@ -2308,21 +2594,31 @@ AStarSearch( start, goal, team, greedy_path )
 			inopen = isdefined( openset[ child + "" ] );
 
 			if ( inopen && openset[ child + "" ].g <= newg )
+			{
 				continue;
+			}
 
 			inclosed = isdefined( closed[ child + "" ] );
 
 			if ( inclosed && closed[ child + "" ].g <= newg )
+			{
 				continue;
+			}
 
 			node = undefined;
 
 			if ( inopen )
+			{
 				node = openset[ child + "" ];
+			}
 			else if ( inclosed )
+			{
 				node = closed[ child + "" ];
+			}
 			else
+			{
 				node = spawnstruct();
+			}
 
 			node.parent = bestNode;
 			node.g = newg;
@@ -2332,7 +2628,9 @@ AStarSearch( start, goal, team, greedy_path )
 
 			//check if in closed, remove it
 			if ( inclosed )
+			{
 				closed[ child + "" ] = undefined;
+			}
 
 			//check if not in open, add it
 			if ( !inopen )

@@ -9,109 +9,177 @@ init()
 	level.bw_version = "2.1.0";
 
 	if ( getcvar( "bots_main" ) == "" )
+	{
 		setcvar( "bots_main", true );
+	}
 
 	if ( !getcvarint( "bots_main" ) )
+	{
 		return;
+	}
 
 	if ( !wait_for_builtins() )
+	{
 		println( "FATAL: NO BUILT-INS FOR BOTS" );
+	}
 
 	thread load_waypoints();
 	thread hook_callbacks();
 
 	if ( getcvar( "bots_main_GUIDs" ) == "" )
-		setcvar( "bots_main_GUIDs", "" ); //guids of players who will be given host powers, comma seperated
+	{
+		setcvar( "bots_main_GUIDs", "" );   //guids of players who will be given host powers, comma seperated
+	}
 
 	if ( getcvar( "bots_main_firstIsHost" ) == "" )
-		setcvar( "bots_main_firstIsHost", true ); //first player to connect is a host
+	{
+		setcvar( "bots_main_firstIsHost", true );   //first player to connect is a host
+	}
 
 	if ( getcvar( "bots_main_waitForHostTime" ) == "" )
-		setcvar( "bots_main_waitForHostTime", 10.0 ); //how long to wait to wait for the host player
+	{
+		setcvar( "bots_main_waitForHostTime", 10.0 );   //how long to wait to wait for the host player
+	}
 
 	if ( getcvar( "bots_main_kickBotsAtEnd" ) == "" )
-		setcvar( "bots_main_kickBotsAtEnd", false ); //kicks the bots at game end
+	{
+		setcvar( "bots_main_kickBotsAtEnd", false );   //kicks the bots at game end
+	}
 
 	if ( getcvar( "bots_manage_add" ) == "" )
-		setcvar( "bots_manage_add", 0 ); //amount of bots to add to the game
+	{
+		setcvar( "bots_manage_add", 0 );   //amount of bots to add to the game
+	}
 
 	if ( getcvar( "bots_manage_fill" ) == "" )
-		setcvar( "bots_manage_fill", 0 ); //amount of bots to maintain
+	{
+		setcvar( "bots_manage_fill", 0 );   //amount of bots to maintain
+	}
 
 	if ( getcvar( "bots_manage_fill_spec" ) == "" )
-		setcvar( "bots_manage_fill_spec", true ); //to count for fill if player is on spec team
+	{
+		setcvar( "bots_manage_fill_spec", true );   //to count for fill if player is on spec team
+	}
 
 	if ( getcvar( "bots_manage_fill_mode" ) == "" )
-		setcvar( "bots_manage_fill_mode", 0 ); //fill mode, 0 adds everyone, 1 just bots, 2 maintains at maps, 3 is 2 with 1
+	{
+		setcvar( "bots_manage_fill_mode", 0 );   //fill mode, 0 adds everyone, 1 just bots, 2 maintains at maps, 3 is 2 with 1
+	}
 
 	if ( getcvar( "bots_manage_fill_kick" ) == "" )
-		setcvar( "bots_manage_fill_kick", false ); //kick bots if too many
+	{
+		setcvar( "bots_manage_fill_kick", false );   //kick bots if too many
+	}
 
 	if ( getcvar( "bots_team" ) == "" )
-		setcvar( "bots_team", "autoassign" ); //which team for bots to join
+	{
+		setcvar( "bots_team", "autoassign" );   //which team for bots to join
+	}
 
 	if ( getcvar( "bots_team_amount" ) == "" )
-		setcvar( "bots_team_amount", 0 ); //amount of bots on axis team
+	{
+		setcvar( "bots_team_amount", 0 );   //amount of bots on axis team
+	}
 
 	if ( getcvar( "bots_team_force" ) == "" )
-		setcvar( "bots_team_force", false ); //force bots on team
+	{
+		setcvar( "bots_team_force", false );   //force bots on team
+	}
 
 	if ( getcvar( "bots_team_mode" ) == "" )
-		setcvar( "bots_team_mode", 0 ); //counts just bots when 1
+	{
+		setcvar( "bots_team_mode", 0 );   //counts just bots when 1
+	}
 
 	if ( getcvar( "bots_skill" ) == "" )
-		setcvar( "bots_skill", 0 ); //0 is random, 1 is easy 7 is hard, 8 is custom, 9 is completely random
+	{
+		setcvar( "bots_skill", 0 );   //0 is random, 1 is easy 7 is hard, 8 is custom, 9 is completely random
+	}
 
 	if ( getcvar( "bots_skill_axis_hard" ) == "" )
-		setcvar( "bots_skill_axis_hard", 0 ); //amount of hard bots on axis team
+	{
+		setcvar( "bots_skill_axis_hard", 0 );   //amount of hard bots on axis team
+	}
 
 	if ( getcvar( "bots_skill_axis_med" ) == "" )
+	{
 		setcvar( "bots_skill_axis_med", 0 );
+	}
 
 	if ( getcvar( "bots_skill_allies_hard" ) == "" )
+	{
 		setcvar( "bots_skill_allies_hard", 0 );
+	}
 
 	if ( getcvar( "bots_skill_allies_med" ) == "" )
+	{
 		setcvar( "bots_skill_allies_med", 0 );
+	}
 
 	if ( getcvar( "bots_skill_min" ) == "" )
+	{
 		setcvar( "bots_skill_min", 1 );
+	}
 
 	if ( getcvar( "bots_skill_max" ) == "" )
+	{
 		setcvar( "bots_skill_max", 7 );
+	}
 
 	if ( getcvar( "bots_loadout_rank" ) == "" ) // what rank the bots should be around, -1 is around the players, 0 is all random
+	{
 		setcvar( "bots_loadout_rank", -1 );
+	}
 
 	if ( getcvar( "bots_play_move" ) == "" ) //bots move
+	{
 		setcvar( "bots_play_move", true );
+	}
 
 	if ( getcvar( "bots_play_knife" ) == "" ) //bots knife
+	{
 		setcvar( "bots_play_knife", true );
+	}
 
 	if ( getcvar( "bots_play_fire" ) == "" ) //bots fire
+	{
 		setcvar( "bots_play_fire", true );
+	}
 
 	if ( getcvar( "bots_play_nade" ) == "" ) //bots grenade
+	{
 		setcvar( "bots_play_nade", true );
+	}
 
 	if ( getcvar( "bots_play_obj" ) == "" ) //bots play the obj
+	{
 		setcvar( "bots_play_obj", true );
+	}
 
 	if ( getcvar( "bots_play_camp" ) == "" ) //bots camp and follow
+	{
 		setcvar( "bots_play_camp", true );
+	}
 
 	if ( getcvar( "bots_play_jumpdrop" ) == "" ) //bots jump and dropshot
+	{
 		setcvar( "bots_play_jumpdrop", true );
+	}
 
 	if ( getcvar( "bots_play_ads" ) == "" ) //bot ads
+	{
 		setcvar( "bots_play_ads", true );
+	}
 
 	if ( getcvar( "bots_play_aim" ) == "" )
+	{
 		setcvar( "bots_play_aim", true );
+	}
 
 	if ( !isdefined( game[ "botWarfare" ] ) )
+	{
 		game[ "botWarfare" ] = true;
+	}
 
 	level.defuseobject = undefined;
 	level.bots_smokelist = List();
@@ -210,7 +278,9 @@ init()
 	level.teambased = true;
 
 	if ( getcvar( "g_gametype" ) == "dm" )
+	{
 		level.teambased = false;
+	}
 }
 
 /*
@@ -223,12 +293,16 @@ handleBots()
 	level addBots();
 
 	while ( !level.mapended )
+	{
 		wait 0.05;
+	}
 
 	setcvar( "bots_manage_add", getBotArray().size );
 
 	if ( !getcvarint( "bots_main_kickBotsAtEnd" ) )
+	{
 		return;
+	}
 
 	bots = getBotArray();
 
@@ -333,7 +407,9 @@ watchWeapons()
 		self thread watchAmmoUsage( weap );
 
 		while ( weap == self getcurrentweapon() )
+		{
 			wait 0.05;
+		}
 
 		self notify( "weapon_change", self getcurrentweapon() );
 	}
@@ -354,12 +430,18 @@ watchAmmoUsage( weap )
 		aCount = self getweaponslotclipammo( slot );
 
 		while ( aCount == self getweaponslotclipammo( slot ) )
+		{
 			wait 0.05;
+		}
 
 		if ( self getweaponslotclipammo( slot ) < aCount )
+		{
 			self notify( "weapon_fired" );
+		}
 		else
+		{
 			self notify( "reload" );
+		}
 	}
 }
 
@@ -403,7 +485,9 @@ killTags()
 	if ( isdefined( self.tags ) )
 	{
 		for ( i = 0; i < self.tags.size; i++ )
+		{
 			self.tags[ i ] delete();
+		}
 
 		self.tags = undefined;
 		self.tagmap = undefined;
@@ -457,10 +541,14 @@ connected()
 	self thread onDisconnectPlayer();
 
 	if ( !isdefined( self.pers[ "bot_host" ] ) )
+	{
 		self thread doHostCheck();
+	}
 
 	if ( !self is_bot() )
+	{
 		return;
+	}
 
 	if ( !isdefined( self.pers[ "isBot" ] ) )
 	{
@@ -501,25 +589,39 @@ watchBotDebugEvent()
 			big_str = "Bot Warfare debug: " + self.name + ": " + msg;
 
 			if ( isdefined( str ) && isstring( str ) )
+			{
 				big_str += ", " + str;
+			}
 
 			if ( isdefined( b ) && isstring( b ) )
+			{
 				big_str += ", " + b;
+			}
 
 			if ( isdefined( c ) && isstring( c ) )
+			{
 				big_str += ", " + c;
+			}
 
 			if ( isdefined( d ) && isstring( d ) )
+			{
 				big_str += ", " + d;
+			}
 
 			if ( isdefined( e ) && isstring( e ) )
+			{
 				big_str += ", " + e;
+			}
 
 			if ( isdefined( f ) && isstring( f ) )
+			{
 				big_str += ", " + f;
+			}
 
 			if ( isdefined( g ) && isstring( g ) )
+			{
 				big_str += ", " + g;
+			}
 
 			BotBuiltinPrintConsole( big_str );
 		}
@@ -581,10 +683,14 @@ diffBots_loop()
 			player = level.players[ i ];
 
 			if ( !isdefined( player.pers[ "team" ] ) )
+			{
 				continue;
+			}
 
 			if ( !player is_bot() )
+			{
 				continue;
+			}
 
 			if ( player.pers[ "team" ] == "axis" )
 			{
@@ -599,7 +705,9 @@ diffBots_loop()
 					player.pers[ "bots" ][ "skill" ][ "base" ] = 4;
 				}
 				else
+				{
 					player.pers[ "bots" ][ "skill" ][ "base" ] = 1;
+				}
 			}
 			else if ( player.pers[ "team" ] == "allies" )
 			{
@@ -614,7 +722,9 @@ diffBots_loop()
 					player.pers[ "bots" ][ "skill" ][ "base" ] = 4;
 				}
 				else
+				{
 					player.pers[ "bots" ][ "skill" ][ "base" ] = 1;
+				}
 			}
 		}
 	}
@@ -627,7 +737,9 @@ diffBots_loop()
 			player = level.players[ i ];
 
 			if ( !player is_bot() )
+			{
 				continue;
+			}
 
 			player.pers[ "bots" ][ "skill" ][ "base" ] = var_skill;
 		}
@@ -642,7 +754,9 @@ diffBots_loop()
 		player = level.players[ i ];
 
 		if ( !player is_bot() )
+		{
 			continue;
+		}
 
 		player.pers[ "bots" ][ "skill" ][ "base" ] = int( clamp( player.pers[ "bots" ][ "skill" ][ "base" ], min_diff, max_diff ) );
 	}
@@ -681,21 +795,31 @@ teamBots_loop()
 		player = level.players[ i ];
 
 		if ( !isdefined( player.pers[ "team" ] ) )
+		{
 			continue;
+		}
 
 		if ( player is_bot() )
 		{
 			if ( player.pers[ "team" ] == "allies" )
+			{
 				alliesbots++;
+			}
 			else if ( player.pers[ "team" ] == "axis" )
+			{
 				axisbots++;
+			}
 		}
 		else
 		{
 			if ( player.pers[ "team" ] == "allies" )
+			{
 				alliesplayers++;
+			}
 			else if ( player.pers[ "team" ] == "axis" )
+			{
 				axisplayers++;
+			}
 		}
 	}
 
@@ -719,7 +843,9 @@ teamBots_loop()
 					toTeam = "axis";
 
 					if ( axis > allies )
+					{
 						toTeam = "allies";
+					}
 				}
 			}
 
@@ -732,20 +858,32 @@ teamBots_loop()
 					player = level.players[ i ];
 
 					if ( !isdefined( player.pers[ "team" ] ) )
+					{
 						continue;
+					}
 
 					if ( !player is_bot() )
+					{
 						continue;
+					}
 
 					if ( player.pers[ "team" ] == toTeam )
+					{
 						continue;
+					}
 
 					if ( toTeam == "allies" )
+					{
 						player thread [[ level.allies ]]();
+					}
 					else if ( toTeam == "axis" )
+					{
 						player thread [[ level.axis ]]();
+					}
 					else
+					{
 						player thread [[ level.spectator ]]();
+					}
 
 					break;
 				}
@@ -761,10 +899,14 @@ teamBots_loop()
 			player = level.players[ i ];
 
 			if ( !isdefined( player.pers[ "team" ] ) )
+			{
 				continue;
+			}
 
 			if ( !player is_bot() )
+			{
 				continue;
+			}
 
 			if ( player.pers[ "team" ] == "axis" )
 			{
@@ -816,7 +958,9 @@ addBots_loop()
 		setcvar( "bots_manage_add", 0 );
 
 		if ( botsToAdd > 64 )
+		{
 			botsToAdd = 64;
+		}
 
 		for ( ; botsToAdd > 0; botsToAdd-- )
 		{
@@ -828,7 +972,9 @@ addBots_loop()
 	fillMode = getcvarint( "bots_manage_fill_mode" );
 
 	if ( fillMode == 2 || fillMode == 3 )
+	{
 		setcvar( "bots_manage_fill", getGoodMapAmount() );
+	}
 
 	fillAmount = getcvarint( "bots_manage_fill" );
 
@@ -843,11 +989,17 @@ addBots_loop()
 		player = level.players[ i ];
 
 		if ( player is_bot() )
+		{
 			bots++;
+		}
 		else if ( !isdefined( player.pers[ "team" ] ) || ( player.pers[ "team" ] != "axis" && player.pers[ "team" ] != "allies" ) )
+		{
 			spec++;
+		}
 		else
+		{
 			players++;
+		}
 	}
 
 	if ( !randomint( 999 ) )
@@ -870,15 +1022,23 @@ addBots_loop()
 			player = level.players[ i ];
 
 			if ( player is_bot() )
+			{
 				continue;
+			}
 
 			if ( !isdefined( player.pers[ "team" ] ) )
+			{
 				continue;
+			}
 
 			if ( player.pers[ "team" ] == "axis" )
+			{
 				axisplayers++;
+			}
 			else if ( player.pers[ "team" ] == "allies" )
+			{
 				alliesplayers++;
+			}
 		}
 
 		result = fillAmount - abs( axisplayers - alliesplayers ) + bots;
@@ -886,11 +1046,17 @@ addBots_loop()
 		if ( players == 0 )
 		{
 			if ( bots < fillAmount )
+			{
 				result = fillAmount - 1;
+			}
 			else if ( bots > fillAmount )
+			{
 				result = fillAmount + 1;
+			}
 			else
+			{
 				result = fillAmount;
+			}
 		}
 
 		bots = result;
@@ -899,19 +1065,27 @@ addBots_loop()
 	amount = bots;
 
 	if ( fillMode == 0 || fillMode == 2 )
+	{
 		amount += players;
+	}
 
 	if ( getcvarint( "bots_manage_fill_spec" ) )
+	{
 		amount += spec;
+	}
 
 	if ( amount < fillAmount )
+	{
 		setcvar( "bots_manage_add", 1 );
+	}
 	else if ( amount > fillAmount && getcvarint( "bots_manage_fill_kick" ) )
 	{
 		tempBot = getBotToKick();
 
 		if ( isdefined( tempBot ) )
+		{
 			kick( tempBot getentitynumber() );
+		}
 	}
 }
 
@@ -995,9 +1169,13 @@ watchNade()
 		if ( gettime() - creationTime > 4000 )
 		{
 			if ( lengthsquared( velocity ) <= 0.05 )
+			{
 				timeSlow += 0.05;
+			}
 			else
+			{
 				timeSlow = 0;
+			}
 		}
 
 		if ( timeSlow > 1 )
@@ -1022,10 +1200,14 @@ watchNades_loop()
 		nade = nades[ i ];
 
 		if ( !isdefined( nade ) )
+		{
 			continue;
+		}
 
 		if ( isdefined( nade.bot_audit ) )
+		{
 			continue;
+		}
 
 		nade.bot_audit = true;
 
@@ -1060,12 +1242,16 @@ watchGameEnded()
 		if ( isdefined( level.roundended ) )
 		{
 			if ( level.roundended )
+			{
 				break;
+			}
 		}
 		else if ( isdefined( level.mapended ) )
 		{
 			if ( level.mapended )
+			{
 				break;
+			}
 		}
 	}
 
