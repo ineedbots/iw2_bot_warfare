@@ -14,8 +14,11 @@
 		"vscode-codscript.use_builtin_completionItems": false
 }
 
+// use below to verify no single line blocks with no braces
+// $ egrep -ron "^\s*(if|while|for|switch).*\)\s*[\r\n]+\s*[^\s{]" --include \*.gsc ./
+
 // use below to verify array indexing spacing style
-// egrep -ron "(\[\S|\S\])" --include \*.gsc ./ | egrep -v "\[\[" | egrep -v "\]\]" | egrep -v "\[\]"
+// $ egrep -ron "(\[\S|\S\])" --include \*.gsc ./ | egrep -v "\[\[" | egrep -v "\]\]" | egrep -v "\[\]"
 
 // python script for casing fixes i did
 /*

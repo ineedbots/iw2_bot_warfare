@@ -1372,7 +1372,9 @@ readWpsFromFile( mapname )
 				line += fgetarg( f, h );
 
 				if ( h < argc - 1 )
+				{
 					line += ",";
+				}
 			}
 
 			if ( !isdefined( line ) || line == "" )
