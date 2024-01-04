@@ -1,4 +1,4 @@
-main(mapname)
+main( mapname )
 {
 }
 
