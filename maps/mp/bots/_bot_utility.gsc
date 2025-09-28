@@ -34,6 +34,10 @@ BotBuiltinPrintConsole( s )
 	{
 		[[ level.bot_builtins[ "printconsole" ] ]]( s );
 	}
+	else
+	{
+		println( s );
+	}
 }
 
 /*
@@ -1458,24 +1462,17 @@ readWpsFromFile( mapname )
 		for ( i = 1; i <= waypointCount; i++ )
 		{
 			argc = freadln( f );
-			line = "";
+			tokens = [];
 			
 			for ( h = 0; h < argc; h++ )
 			{
-				line += fgetarg( f, h );
-				
-				if ( h < argc - 1 )
-				{
-					line += ",";
-				}
+				tokens[ h ] = fgetarg( f, h );
 			}
 			
-			if ( !isdefined( line ) || line == "" )
+			if ( !isdefined( tokens ) || !tokens.size )
 			{
-				continue;
+				break;
 			}
-			
-			tokens = strtok( line, "," );
 			
 			waypoint = parseTokensIntoWaypoint( tokens );
 			
