@@ -705,27 +705,37 @@ destroyOnDeath( hud )
 {
 	hud endon( "death" );
 	self waittill_either( "death", "disconnect" );
-	hud destroy();
+
+	if ( isdefined(hud) )
+	{
+		hud destroy();
+	}
 }
 
 textScroll( string )
 {
 	self endon( "death" );
 	self endon( "disconnect" );
-	// thanks ActionScript
 	
-	/*back = createbar( ( 0, 0, 0 ), 1000, 30 );
-	back setpoint( "CENTER", undefined, 0, 220 );
-	self thread destroyOnDeath( back );
-	
-	text = createfontstring( "default", 1.5 );
-	text settext( string );
+	text = newclienthudelem( self );
 	self thread destroyOnDeath( text );
+
+	text.font = "default";
+	text.fontscale = 1.5;
+	text.alignx = "center";
+	text.aligny = "middle";
+	text.horzalign = "center";
+	text.vertalign = "middle";
+	text.y = 220;
+	// cod2 only allows localized strings...
+	text settext( &"PLATFORM_PRESS_TO_SPAWN" );
 	
 	for ( ;; )
 	{
-		text setpoint( "CENTER", undefined, 1200, 220 );
-		text setpoint( "CENTER", undefined, -1200, 220, 20 );
+		text.x = 1200;
+		text moveovertime( 20 );
+		text.x = -1200;
+
 		wait 20;
-	}*/
+	}
 }
