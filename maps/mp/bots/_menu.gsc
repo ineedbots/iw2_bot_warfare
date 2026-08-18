@@ -67,6 +67,7 @@ init()
 		return;
 	}
 	
+	precacheshader( "white" );
 	thread watchPlayers();
 }
 
@@ -755,7 +756,7 @@ createRectangle( align, relative, x, y, width, height, color, sort, alpha, shade
 	barElemBG.color = color;
 	barElemBG.alpha = alpha;
 	barElemBG setparent( level.uiparent );
-	//barElemBG setshader( shader, width, height );
+	barElemBG setshader( shader, width, height );
 	barElemBG.hidden = false;
 	barElemBG setpoint( align, relative, x, y );
 	return barElemBG;
