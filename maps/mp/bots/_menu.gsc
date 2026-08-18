@@ -32,8 +32,22 @@ setpoint(a, b, x, y)
 {
 }
 
-createfontstring(a, b)
+createfontstring( font, fontScale )
 {
+	fontElem = newclienthudelem( self );
+	fontElem.elemType = "font";
+	fontElem.font = font;
+	fontElem.fontscale = fontScale;
+	fontElem.x = 0;
+	fontElem.y = 0;
+	fontElem.width = 0;
+	fontElem.height = int( 12 * fontScale );
+	fontElem.xOffset = 0;
+	fontElem.yOffset = 0;
+	fontElem.children = [];
+	fontElem setparent( level.uiparent );
+	fontElem.hidden = false;
+	return fontElem;
 }
 
 destroyelem()
@@ -239,7 +253,7 @@ watchPlayerOpenMenu()
 			{
 				self ExitMenu();
 				
-				if ( level.inprematchperiod || level.gameended )
+				if ( level.gameended )
 				{
 					self freezecontrols( true );
 				}
@@ -430,7 +444,7 @@ OpenSub( menu, menu2 )
 		{
 			self.menutext[ i ] = self createfontstring( "default", 1.6 );
 			self.menutext[ i ] setpoint( "CENTER", "CENTER", -300 + ( i * 100 ), -226 );
-			self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+			// self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 			
 			if ( logOldi )
 			{
@@ -482,7 +496,7 @@ OpenSub( menu, menu2 )
 		{
 			self.menutexty[ i ] = self createfontstring( "default", 1.6 );
 			self.menutexty[ i ] setpoint( "CENTER", "CENTER", self.menutext[ self.curs[ "Main" ][ "X" ] ].x, -160 + ( i * 20 ) );
-			self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+			//self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 			self.menutexty[ i ].alpha = 1;
 			self.menutexty[ i ].sort = 999;
 		}
@@ -556,7 +570,7 @@ ShowOptionOn( variable )
 	
 	for ( time = 0;; time += 0.05 )
 	{
-		if ( !self isonground() && isalive( self ) && !level.inprematchperiod && !level.gameended )
+		if ( !self isonground() && isalive( self ) && !level.gameended )
 		{
 			self freezecontrols( false );
 		}
@@ -591,7 +605,7 @@ ShowOptionOn( variable )
 				{
 					if ( isdefined( self.menutext[ i ] ) )
 					{
-						self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+						// self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 					}
 				}
 			}
@@ -618,7 +632,7 @@ ShowOptionOn( variable )
 				{
 					if ( isdefined( self.menutexty[ i ] ) )
 					{
-						self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+						//self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 					}
 				}
 			}
@@ -707,7 +721,7 @@ ExitMenu()
 initHudElem( txt, xl, yl )
 {
 	hud = newclienthudelem( self );
-	hud settext( txt );
+	//hud settext( txt );
 	hud.alignx = "center";
 	hud.aligny = "bottom";
 	hud.horzalign = "center";
@@ -716,7 +730,7 @@ initHudElem( txt, xl, yl )
 	hud.y = yl;
 	hud.foreground = true;
 	hud.fontscale = 1.4;
-	hud.font = "objective";
+	hud.font = "default";
 	hud.alpha = 1;
 	hud.glow = 0;
 	hud.glowcolor = ( 0, 0, 0 );
@@ -741,7 +755,7 @@ createRectangle( align, relative, x, y, width, height, color, sort, alpha, shade
 	barElemBG.color = color;
 	barElemBG.alpha = alpha;
 	barElemBG setparent( level.uiparent );
-	barElemBG setshader( shader, width, height );
+	//barElemBG setshader( shader, width, height );
 	barElemBG.hidden = false;
 	barElemBG setpoint( align, relative, x, y );
 	return barElemBG;
