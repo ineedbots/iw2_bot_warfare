@@ -28,6 +28,9 @@ init()
 		map( getcvar( "mapname" ) );
 		return;
 	}
+
+	// cod2 only allows localized strings...
+	precachestring( &"^1SecondaryOffhand - ^2Add Waypoint; ^3MeleeButton - ^4Link Waypoint; ^5FragButton - ^6delete Waypoint; ^7UseButton + AttackButton - ^8Save" );
 	
 	setcvar( "bots_main", 0 );
 	setcvar( "bots_main_menu", 0 );
@@ -37,9 +40,10 @@ init()
 	setcvar( "bots_manage_fill_kick", 1 );
 	setcvar( "bots_manage_fill_spec", 1 );
 
-	setcvar( "smoke", 0 );
-	setcvar( "frag", 0 );
-	setcvar( "speed", 0 );
+	setcvar( "smoke", 0 ); // bind 2 "set smoke 1; wait 50; set smoke 0"
+	setcvar( "frag", 0 ); // bind 3 "set frag 1; wait 50; set frag 0"
+	setcvar( "speed", 0 ); // bind 4 "togglep speed 0 1"
+	// use con_minicon
 	
 	if ( getcvar( "bots_main_debug_distance" ) == "" )
 	{
@@ -121,7 +125,7 @@ beginDebug()
 	self thread watchSaveWaypointsCommand();
 	self thread sayExtras();
 	
-	self thread textScroll( "^1SecondaryOffhand - ^2Add Waypoint; ^3MeleeButton - ^4Link Waypoint; ^5FragButton - ^6delete Waypoint; ^7UseButton + AttackButton - ^8Save" );
+	self thread textScroll( &"^1SecondaryOffhand - ^2Add Waypoint; ^3MeleeButton - ^4Link Waypoint; ^5FragButton - ^6delete Waypoint; ^7UseButton + AttackButton - ^8Save" );
 }
 
 sayExtras()
@@ -727,8 +731,7 @@ textScroll( string )
 	text.horzalign = "center";
 	text.vertalign = "middle";
 	text.y = 220;
-	// cod2 only allows localized strings...
-	text settext( &"PLATFORM_PRESS_TO_SPAWN" );
+	text settext( string );
 	
 	for ( ;; )
 	{
