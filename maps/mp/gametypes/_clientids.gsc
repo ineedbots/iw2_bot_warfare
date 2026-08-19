@@ -5,7 +5,7 @@ init()
 	level thread onPlayerConnect();
 	
 	// bootstrap
-	//level thread scripts\mp\bots_adapter_libcod::init();
+	level thread scripts\mp\bots_adapter_libcod::init();
 	level thread scripts\mp\bots_wp_editor::init();
 	level thread scripts\mp\bots::init();
 	//level thread scripts\mp\bots_chat::init();
