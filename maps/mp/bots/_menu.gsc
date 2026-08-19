@@ -8,23 +8,6 @@
 #include maps\mp\_utility;
 #include maps\mp\bots\_bot_utility;
 
-
-secondaryoffhandbuttonpressed()
-{
-	return getcvarint( "smoke" );
-}
-
-fragbuttonpressed()
-{
-	return getcvarint( "frag" );
-}
-
-adsbuttonpressed()
-{
-	return getcvarint( "speed" ) || self playerads() > 0.05;
-}
-
-
 init()
 {
 	if ( getcvar( "bots_main_menu" ) == "" )
@@ -190,7 +173,7 @@ doGreetings()
 	wait 1;
 	self iprintln( "Welcome to Bot Warfare " + self.name + "!" );
 	wait 5;
-	self iprintln( "Press [{+frag}] + [{+smoke}] to open menu!" );
+	self iprintln( "Press [{+attack}] + [{+activate}] + [{+melee}] to open menu!" );
 }
 
 watchPlayerOpenMenu()
@@ -200,7 +183,7 @@ watchPlayerOpenMenu()
 	
 	for ( ;; )
 	{
-		while ( !self fragbuttonpressed() || !self secondaryoffhandbuttonpressed() )
+		while ( !self attackbuttonpressed() || !self meleebuttonpressed() || !self usebuttonpressed() )
 		{
 			wait 0.05;
 		}
@@ -233,7 +216,7 @@ watchPlayerOpenMenu()
 			}
 		}
 		
-		while ( self fragbuttonpressed() && self secondaryoffhandbuttonpressed() )
+		while ( self attackbuttonpressed() && self meleebuttonpressed() && self usebuttonpressed() )
 		{
 			wait 0.05;
 		}
@@ -327,7 +310,7 @@ RightMenu()
 	
 	for ( ;; )
 	{
-		while ( !self adsbuttonpressed() )
+		while ( !self usebuttonpressed() )
 		{
 			wait 0.05;
 		}
@@ -360,7 +343,7 @@ RightMenu()
 			}
 		}
 		
-		while ( self adsbuttonpressed() )
+		while ( self usebuttonpressed() )
 		{
 			wait 0.05;
 		}

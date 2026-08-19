@@ -4,5 +4,4 @@ Bot Warfare for CoD2, in progress...
 
 TODO:
   - _bot_script
-  - _menu
   - _bot_chat
