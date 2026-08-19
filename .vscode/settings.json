@@ -11,5 +11,6 @@
 			"comments": true,
 			"strings": true
 		},
+		"editor.wordBasedSuggestions": "allDocuments",
 		"vscode-codscript.use_builtin_completionItems": false
 }

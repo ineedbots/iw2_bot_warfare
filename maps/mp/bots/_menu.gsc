@@ -24,36 +24,6 @@ adsbuttonpressed()
 	return getcvarint( "speed" ) || self playerads() > 0.05;
 }
 
-setparent( parent )
-{
-}
-
-setpoint(a, b, x, y)
-{
-}
-
-createfontstring( font, fontScale )
-{
-	fontElem = newclienthudelem( self );
-	fontElem.elemType = "font";
-	fontElem.font = font;
-	fontElem.fontscale = fontScale;
-	fontElem.x = 0;
-	fontElem.y = 0;
-	fontElem.width = 0;
-	fontElem.height = int( 12 * fontScale );
-	fontElem.xOffset = 0;
-	fontElem.yOffset = 0;
-	fontElem.children = [];
-	fontElem setparent( level.uiparent );
-	fontElem.hidden = false;
-	return fontElem;
-}
-
-destroyelem()
-{
-}
-
 
 init()
 {
@@ -68,6 +38,8 @@ init()
 	}
 	
 	precacheshader( "white" );
+	precachestring( &"Bot Warfare" );
+	
 	thread watchPlayers();
 }
 
@@ -120,47 +92,6 @@ init_menu()
 	self thread doGreetings();
 }
 
-destroyFixed()
-{
-	if ( !isdefined( self ) )
-	{
-		return;
-	}
-	
-	self destroy();
-}
-
-removeChildFixed( element )
-{
-	temp = [];
-	
-	for ( i = 0; i < self.children.size ; i++ )
-	{
-		if ( isdefined( self.children[ i ] ) && self.children[ i ] != element )
-		{
-			self.children[ i ].index = temp.size;
-			temp[ temp.size ] = self.children[ i ];
-		}
-	}
-	
-	self.children = temp;
-}
-
-destroyElemFixed()
-{
-	if ( !isdefined( self ) )
-	{
-		return;
-	}
-	
-	if ( isdefined( self.parent ) )
-	{
-		self.parent removeChildFixed( self );
-	}
-	
-	self destroyelem();
-}
-
 kill_menu()
 {
 	self notify( "bots_kill_menu" );
@@ -179,7 +110,7 @@ watchDisconnect()
 			{
 				if ( isdefined( self.menutexty[ i ] ) )
 				{
-					self.menutexty[ i ] destroyElemFixed();
+					self.menutexty[ i ] destroy();
 				}
 			}
 		}
@@ -190,7 +121,7 @@ watchDisconnect()
 			{
 				if ( isdefined( self.menutext[ i ] ) )
 				{
-					self.menutext[ i ] destroyElemFixed();
+					self.menutext[ i ] destroy();
 				}
 			}
 		}
@@ -199,18 +130,18 @@ watchDisconnect()
 		{
 			if ( isdefined( self.menu[ "X" ][ "Shader" ] ) )
 			{
-				self.menu[ "X" ][ "Shader" ] destroyElemFixed();
+				self.menu[ "X" ][ "Shader" ] destroy();
 			}
 			
 			if ( isdefined( self.menu[ "X" ][ "Scroller" ] ) )
 			{
-				self.menu[ "X" ][ "Scroller" ] destroyElemFixed();
+				self.menu[ "X" ][ "Scroller" ] destroy();
 			}
 		}
 		
 		if ( isdefined( self.menuversionhud ) )
 		{
-			self.menuversionhud destroyFixed();
+			self.menuversionhud destroy();
 		}
 	}
 }
@@ -418,7 +349,7 @@ OpenSub( menu, menu2 )
 			{
 				if ( isdefined( self.menutext[ i ] ) )
 				{
-					self.menutext[ i ] destroyElemFixed();
+					self.menutext[ i ] destroy();
 				}
 			}
 		}
@@ -427,18 +358,18 @@ OpenSub( menu, menu2 )
 		{
 			if ( isdefined( self.menu[ "X" ][ "Shader" ] ) )
 			{
-				self.menu[ "X" ][ "Shader" ] destroyElemFixed();
+				self.menu[ "X" ][ "Shader" ] destroy();
 			}
 			
 			if ( isdefined( self.menu[ "X" ][ "Scroller" ] ) )
 			{
-				self.menu[ "X" ][ "Scroller" ] destroyElemFixed();
+				self.menu[ "X" ][ "Scroller" ] destroy();
 			}
 		}
 		
 		if ( isdefined( self.menuversionhud ) )
 		{
-			self.menuversionhud destroyFixed();
+			self.menuversionhud destroy();
 		}
 		
 		for ( i = 0 ; i < self.option[ "Name" ][ self.submenu ].size ; i++ )
@@ -476,7 +407,7 @@ OpenSub( menu, menu2 )
 		
 		self CursMove( "X" );
 		
-		self.menuversionhud = initHudElem( "Bot Warfare " + level.bw_version, 0, 0 );
+		self.menuversionhud = initHudElem( &"Bot Warfare", 0, 0 );
 		
 		self.menuopen = true;
 	}
@@ -488,7 +419,7 @@ OpenSub( menu, menu2 )
 			{
 				if ( isdefined( self.menutexty[ i ] ) )
 				{
-					self.menutexty[ i ] destroyElemFixed();
+					self.menutexty[ i ] destroy();
 				}
 			}
 		}
@@ -664,7 +595,7 @@ ExitSub()
 		{
 			if ( isdefined( self.menutexty[ i ] ) )
 			{
-				self.menutexty[ i ] destroyElemFixed();
+				self.menutexty[ i ] destroy();
 			}
 		}
 	}
@@ -689,7 +620,7 @@ ExitMenu()
 		{
 			if ( isdefined( self.menutext[ i ] ) )
 			{
-				self.menutext[ i ] destroyElemFixed();
+				self.menutext[ i ] destroy();
 			}
 		}
 	}
@@ -698,18 +629,18 @@ ExitMenu()
 	{
 		if ( isdefined( self.menu[ "X" ][ "Shader" ] ) )
 		{
-			self.menu[ "X" ][ "Shader" ] destroyElemFixed();
+			self.menu[ "X" ][ "Shader" ] destroy();
 		}
 		
 		if ( isdefined( self.menu[ "X" ][ "Scroller" ] ) )
 		{
-			self.menu[ "X" ][ "Scroller" ] destroyElemFixed();
+			self.menu[ "X" ][ "Scroller" ] destroy();
 		}
 	}
 	
 	if ( isdefined( self.menuversionhud ) )
 	{
-		self.menuversionhud destroyFixed();
+		self.menuversionhud destroy();
 	}
 	
 	self.menuopen = false;
@@ -719,10 +650,192 @@ ExitMenu()
 	self setclientcvar( "sc_blur", "2" );
 }
 
+setpoint( point, relativePoint, xOffset, yOffset, moveTime )
+{
+	if ( !isdefined( moveTime ) )
+	{
+		moveTime = 0;
+	}
+	
+	if ( moveTime )
+	{
+		self moveovertime( moveTime );
+	}
+	
+	if ( !isdefined( xOffset ) )
+	{
+		xOffset = 0;
+	}
+	
+	self.xOffset = xOffset;
+	
+	if ( !isdefined( yOffset ) )
+	{
+		yOffset = 0;
+	}
+	
+	self.yOffset = yOffset;
+	
+	self.point = point;
+	
+	self.alignX = "center";
+	self.alignY = "middle";
+	
+	if ( issubstr( point, "TOP" ) )
+	{
+		self.alignY = "top";
+	}
+	
+	if ( issubstr( point, "BOTTOM" ) )
+	{
+		self.alignY = "bottom";
+	}
+	
+	if ( issubstr( point, "LEFT" ) )
+	{
+		self.alignX = "left";
+	}
+	
+	if ( issubstr( point, "RIGHT" ) )
+	{
+		self.alignX = "right";
+	}
+	
+	if ( !isdefined( relativePoint ) )
+	{
+		relativePoint = point;
+	}
+	
+	self.relativePoint = relativePoint;
+	
+	relativeX = "center";
+	relativeY = "middle";
+	
+	if ( issubstr( relativePoint, "TOP" ) )
+	{
+		relativeY = "top";
+	}
+	
+	if ( issubstr( relativePoint, "BOTTOM" ) )
+	{
+		relativeY = "bottom";
+	}
+	
+	if ( issubstr( relativePoint, "LEFT" ) )
+	{
+		relativeX = "left";
+	}
+	
+	if ( issubstr( relativePoint, "RIGHT" ) )
+	{
+		relativeX = "right";
+	}
+	
+	self.horzAlign = relativeX;
+	self.vertAlign = relativeY;
+	
+	element = spawnstruct();
+	element.horzAlign = "left";
+	element.vertAlign = "top";
+	element.alignX = "left";
+	element.alignY = "top";
+	element.x = 0;
+	element.y = 0;
+	element.width = 0;
+	element.height = 0;
+	
+	if ( relativeX == element.alignX )
+	{
+		offsetX = 0;
+		xFactor = 0;
+	}
+	else if ( relativeX == "center" || element.alignX == "center" )
+	{
+		offsetX = int( element.width / 2 );
+		
+		if ( relativeX == "left" || element.alignX == "right" )
+		{
+			xFactor = -1;
+		}
+		else
+		{
+			xFactor = 1;
+		}
+	}
+	else
+	{
+		offsetX = element.width;
+		
+		if ( relativeX == "left" )
+		{
+			xFactor = -1;
+		}
+		else
+		{
+			xFactor = 1;
+		}
+	}
+	
+	self.x = element.x + ( offsetX * xFactor );
+	
+	if ( relativeY == element.alignY )
+	{
+		offsetY = 0;
+		yFactor = 0;
+	}
+	else if ( relativeY == "middle" || element.alignY == "middle" )
+	{
+		offsetY = int( element.height / 2 );
+		
+		if ( relativeY == "top" || element.alignY == "bottom" )
+		{
+			yFactor = -1;
+		}
+		else
+		{
+			yFactor = 1;
+		}
+	}
+	else
+	{
+		offsetY = element.height;
+		
+		if ( relativeY == "top" )
+		{
+			yFactor = -1;
+		}
+		else
+		{
+			yFactor = 1;
+		}
+	}
+	
+	self.y = element.y + ( offsetY * yFactor );
+	
+	self.x += self.xOffset;
+	self.y += self.yOffset;
+}
+
+createfontstring( font, fontScale )
+{
+	fontElem = newclienthudelem( self );
+	fontElem.elemType = "font";
+	fontElem.font = font;
+	fontElem.fontscale = fontScale;
+	fontElem.x = 0;
+	fontElem.y = 0;
+	fontElem.width = 0;
+	fontElem.height = int( 12 * fontScale );
+	fontElem.xOffset = 0;
+	fontElem.yOffset = 0;
+	fontElem.hidden = false;
+	return fontElem;
+}
+
 initHudElem( txt, xl, yl )
 {
 	hud = newclienthudelem( self );
-	//hud settext( txt );
+	hud settext( txt );
 	hud.alignx = "center";
 	hud.aligny = "bottom";
 	hud.horzalign = "center";
@@ -751,11 +864,9 @@ createRectangle( align, relative, x, y, width, height, color, sort, alpha, shade
 	barElemBG.relative = relative;
 	barElemBG.xoffset = 0;
 	barElemBG.yoffset = 0;
-	barElemBG.children = [];
 	barElemBG.sort = sort;
 	barElemBG.color = color;
 	barElemBG.alpha = alpha;
-	barElemBG setparent( level.uiparent );
 	barElemBG setshader( shader, width, height );
 	barElemBG.hidden = false;
 	barElemBG setpoint( align, relative, x, y );
