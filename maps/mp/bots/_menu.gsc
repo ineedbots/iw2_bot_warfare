@@ -173,7 +173,7 @@ doGreetings()
 	wait 1;
 	self iprintln( "Welcome to Bot Warfare " + self.name + "!" );
 	wait 5;
-	self iprintln( "Press [{+attack}] + [{+activate}] + [{+melee}] to open menu!" );
+	self iprintln( "Press [{+attack}] + [{+activate}] + [{+melee_breath}] to open menu!" );
 }
 
 watchPlayerOpenMenu()
