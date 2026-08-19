@@ -235,17 +235,20 @@ MenuSelect()
 			wait 0.05;
 		}
 		
-		if ( self.menuopen )
+		if ( !self attackbuttonpressed() && !self usebuttonpressed() )
 		{
-			self playlocalsound( "mouse_click" );
-			
-			if ( self.submenu == "Main" )
+			if ( self.menuopen )
 			{
-				self thread [[ self.option[ "Function" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ] ]]( self.option[ "Arg1" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ], self.option[ "Arg2" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ] );
-			}
-			else
-			{
-				self thread [[ self.option[ "Function" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ] ]]( self.option[ "Arg1" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ], self.option[ "Arg2" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ] );
+				self playlocalsound( "mouse_click" );
+				
+				if ( self.submenu == "Main" )
+				{
+					self thread [[ self.option[ "Function" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ] ]]( self.option[ "Arg1" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ], self.option[ "Arg2" ][ self.submenu ][ self.curs[ "Main" ][ "X" ] ] );
+				}
+				else
+				{
+					self thread [[ self.option[ "Function" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ] ]]( self.option[ "Arg1" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ], self.option[ "Arg2" ][ self.submenu ][ self.curs[ self.submenu ][ "Y" ] ] );
+				}
 			}
 		}
 		
@@ -268,31 +271,34 @@ LeftMenu()
 			wait 0.05;
 		}
 		
-		if ( self.menuopen )
+		if ( !self meleebuttonpressed() && !self usebuttonpressed() )
 		{
-			self playlocalsound( "mouse_over" );
-			
-			if ( self.submenu == "Main" )
+			if ( self.menuopen )
 			{
-				self.curs[ "Main" ][ "X" ]--;
+				self playlocalsound( "mouse_over" );
 				
-				if ( self.curs[ "Main" ][ "X" ] < 0 )
+				if ( self.submenu == "Main" )
 				{
-					self.curs[ "Main" ][ "X" ] = self.option[ "Name" ][ self.submenu ].size - 1;
+					self.curs[ "Main" ][ "X" ]--;
+					
+					if ( self.curs[ "Main" ][ "X" ] < 0 )
+					{
+						self.curs[ "Main" ][ "X" ] = self.option[ "Name" ][ self.submenu ].size - 1;
+					}
+					
+					self CursMove( "X" );
 				}
-				
-				self CursMove( "X" );
-			}
-			else
-			{
-				self.curs[ self.submenu ][ "Y" ]--;
-				
-				if ( self.curs[ self.submenu ][ "Y" ] < 0 )
+				else
 				{
-					self.curs[ self.submenu ][ "Y" ] = self.option[ "Name" ][ self.submenu ].size - 1;
+					self.curs[ self.submenu ][ "Y" ]--;
+					
+					if ( self.curs[ self.submenu ][ "Y" ] < 0 )
+					{
+						self.curs[ self.submenu ][ "Y" ] = self.option[ "Name" ][ self.submenu ].size - 1;
+					}
+					
+					self CursMove( "Y" );
 				}
-				
-				self CursMove( "Y" );
 			}
 		}
 		
@@ -315,31 +321,34 @@ RightMenu()
 			wait 0.05;
 		}
 		
-		if ( self.menuopen )
+		if ( !self attackbuttonpressed() && !self meleebuttonpressed() )
 		{
-			self playlocalsound( "mouse_over" );
-			
-			if ( self.submenu == "Main" )
+			if ( self.menuopen )
 			{
-				self.curs[ "Main" ][ "X" ]++;
+				self playlocalsound( "mouse_over" );
 				
-				if ( self.curs[ "Main" ][ "X" ] > self.option[ "Name" ][ self.submenu ].size - 1 )
+				if ( self.submenu == "Main" )
 				{
-					self.curs[ "Main" ][ "X" ] = 0;
+					self.curs[ "Main" ][ "X" ]++;
+					
+					if ( self.curs[ "Main" ][ "X" ] > self.option[ "Name" ][ self.submenu ].size - 1 )
+					{
+						self.curs[ "Main" ][ "X" ] = 0;
+					}
+					
+					self CursMove( "X" );
 				}
-				
-				self CursMove( "X" );
-			}
-			else
-			{
-				self.curs[ self.submenu ][ "Y" ]++;
-				
-				if ( self.curs[ self.submenu ][ "Y" ] > self.option[ "Name" ][ self.submenu ].size - 1 )
+				else
 				{
-					self.curs[ self.submenu ][ "Y" ] = 0;
+					self.curs[ self.submenu ][ "Y" ]++;
+					
+					if ( self.curs[ self.submenu ][ "Y" ] > self.option[ "Name" ][ self.submenu ].size - 1 )
+					{
+						self.curs[ self.submenu ][ "Y" ] = 0;
+					}
+					
+					self CursMove( "Y" );
 				}
-				
-				self CursMove( "Y" );
 			}
 		}
 		
