@@ -39,6 +39,43 @@ init()
 	
 	precacheshader( "white" );
 	precachestring( &"Bot Warfare" );
+	precachestring( &"Toggle bots can ads" );
+	precachestring( &"Toggle bots can jump and dropshot" );
+	precachestring( &"Toggle bots can camp" );
+	precachestring( &"Toggle bots play the objective" );
+	precachestring( &"Toggle bots can nade" );
+	precachestring( &"Toggle bots can fire" );
+	precachestring( &"Toggle bots can knife" );
+	precachestring( &"Toggle bots can move" );
+	precachestring( &"Bot settings" );
+	precachestring( &"Decrease amount of med bots on allies team" );
+	precachestring( &"Increase amount of med bots on allies team" );
+	precachestring( &"Decrease amount of hard bots on allies team" );
+	precachestring( &"Increase amount of hard bots on allies team" );
+	precachestring( &"Decrease amount of med bots on axis team" );
+	precachestring( &"Increase amount of med bots on axis team" );
+	precachestring( &"Decrease amount of hard bots on axis team" );
+	precachestring( &"Increase amount of hard bots on axis team" );
+	precachestring( &"Change bot difficulty" );
+	precachestring( &"Toggle bot_team_bot" );
+	precachestring( &"Toggle forcing bots on team" );
+	precachestring( &"Decrease bots to be on axis team" );
+	precachestring( &"Increase bots to be on axis team" );
+	precachestring( &"Change bot team" );
+	precachestring( &"Teams and difficulty" );
+	precachestring( &"Toggle count players for fill on spectator" );
+	precachestring( &"Decrease bots to keep in-game" );
+	precachestring( &"Increase bots to keep in-game" );
+	precachestring( &"Change bot_fill_mode" );
+	precachestring( &"Toggle auto bot kicking" );
+	precachestring( &"Kick all bots" );
+	precachestring( &"Kick a bot" );
+	precachestring( &"Add 17 bot" );
+	precachestring( &"Add 11 bot" );
+	precachestring( &"Add 7 bot" );
+	precachestring( &"Add 3 bot" );
+	precachestring( &"Add 1 bot" );
+	precachestring( &"Manage bots" );
 	
 	thread watchPlayers();
 }
@@ -376,7 +413,7 @@ OpenSub( menu, menu2 )
 		{
 			self.menutext[ i ] = self createfontstring( "default", 1.6 );
 			self.menutext[ i ] setpoint( "CENTER", "CENTER", -300 + ( i * 100 ), -226 );
-			// self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+			self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 			
 			if ( logOldi )
 			{
@@ -428,7 +465,7 @@ OpenSub( menu, menu2 )
 		{
 			self.menutexty[ i ] = self createfontstring( "default", 1.6 );
 			self.menutexty[ i ] setpoint( "CENTER", "CENTER", self.menutext[ self.curs[ "Main" ][ "X" ] ].x, -160 + ( i * 20 ) );
-			//self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+			self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 			self.menutexty[ i ].alpha = 1;
 			self.menutexty[ i ].sort = 999;
 		}
@@ -537,7 +574,7 @@ ShowOptionOn( variable )
 				{
 					if ( isdefined( self.menutext[ i ] ) )
 					{
-						// self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+						self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 					}
 				}
 			}
@@ -564,7 +601,7 @@ ShowOptionOn( variable )
 				{
 					if ( isdefined( self.menutexty[ i ] ) )
 					{
-						//self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
+						self.menutexty[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 					}
 				}
 			}
@@ -875,18 +912,18 @@ createRectangle( align, relative, x, y, width, height, color, sort, alpha, shade
 
 AddOptions()
 {
-	self AddMenu( "Main", 0, "Manage bots", ::OpenSub, "man_bots", "" );
+	self AddMenu( "Main", 0, &"Manage bots", ::OpenSub, "man_bots", "" );
 	self AddBack( "man_bots", "Main" );
 	
 	_temp = "";
 	_tempcvar = getcvarint( "bots_manage_add" );
-	self AddMenu( "man_bots", 0, "Add 1 bot", ::man_bots, "add", 1 + _tempcvar );
-	self AddMenu( "man_bots", 1, "Add 3 bot", ::man_bots, "add", 3 + _tempcvar );
-	self AddMenu( "man_bots", 2, "Add 7 bot", ::man_bots, "add", 7 + _tempcvar );
-	self AddMenu( "man_bots", 3, "Add 11 bot", ::man_bots, "add", 11 + _tempcvar );
-	self AddMenu( "man_bots", 4, "Add 17 bot", ::man_bots, "add", 17 + _tempcvar );
-	self AddMenu( "man_bots", 5, "Kick a bot", ::man_bots, "kick", 1 );
-	self AddMenu( "man_bots", 6, "Kick all bots", ::man_bots, "kick", getBotArray().size );
+	self AddMenu( "man_bots", 0, &"Add 1 bot", ::man_bots, "add", 1 + _tempcvar );
+	self AddMenu( "man_bots", 1, &"Add 3 bot", ::man_bots, "add", 3 + _tempcvar );
+	self AddMenu( "man_bots", 2, &"Add 7 bot", ::man_bots, "add", 7 + _tempcvar );
+	self AddMenu( "man_bots", 3, &"Add 11 bot", ::man_bots, "add", 11 + _tempcvar );
+	self AddMenu( "man_bots", 4, &"Add 17 bot", ::man_bots, "add", 17 + _tempcvar );
+	self AddMenu( "man_bots", 5, &"Kick a bot", ::man_bots, "kick", 1 );
+	self AddMenu( "man_bots", 6, &"Kick all bots", ::man_bots, "kick", getBotArray().size );
 	
 	_tempcvar = getcvarint( "bots_manage_fill_kick" );
 	
@@ -899,7 +936,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "man_bots", 7, "Toggle auto bot kicking: " + _temp, ::man_bots, "autokick", _tempcvar );
+	self AddMenu( "man_bots", 7, &"Toggle auto bot kicking", ::man_bots, "autokick", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_manage_fill_mode" );
 	
@@ -934,11 +971,11 @@ AddOptions()
 			break;
 	}
 	
-	self AddMenu( "man_bots", 8, "Change bot_fill_mode: " + _temp, ::man_bots, "fillmode", _tempcvar );
+	self AddMenu( "man_bots", 8, &"Change bot_fill_mode", ::man_bots, "fillmode", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_manage_fill" );
-	self AddMenu( "man_bots", 9, "Increase bots to keep in-game: " + _tempcvar, ::man_bots, "fillup", _tempcvar );
-	self AddMenu( "man_bots", 10, "Decrease bots to keep in-game: " + _tempcvar, ::man_bots, "filldown", _tempcvar );
+	self AddMenu( "man_bots", 9, &"Increase bots to keep in-game", ::man_bots, "fillup", _tempcvar );
+	self AddMenu( "man_bots", 10, &"Decrease bots to keep in-game", ::man_bots, "filldown", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_manage_fill_spec" );
 	
@@ -951,19 +988,19 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "man_bots", 11, "Count players for fill on spectator: " + _temp, ::man_bots, "fillspec", _tempcvar );
+	self AddMenu( "man_bots", 11, &"Toggle count players for fill on spectator", ::man_bots, "fillspec", _tempcvar );
 	
 	//
 	
-	self AddMenu( "Main", 1, "Teams and difficulty", ::OpenSub, "man_team", "" );
+	self AddMenu( "Main", 1, &"Teams and difficulty", ::OpenSub, "man_team", "" );
 	self AddBack( "man_team", "Main" );
 	
 	_tempcvar = getcvar( "bots_team" );
-	self AddMenu( "man_team", 0, "Change bot team: " + _tempcvar, ::bot_teams, "team", _tempcvar );
+	self AddMenu( "man_team", 0, &"Change bot team", ::bot_teams, "team", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_team_amount" );
-	self AddMenu( "man_team", 1, "Increase bots to be on axis team: " + _tempcvar, ::bot_teams, "teamup", _tempcvar );
-	self AddMenu( "man_team", 2, "Decrease bots to be on axis team: " + _tempcvar, ::bot_teams, "teamdown", _tempcvar );
+	self AddMenu( "man_team", 1, &"Increase bots to be on axis team", ::bot_teams, "teamup", _tempcvar );
+	self AddMenu( "man_team", 2, &"Decrease bots to be on axis team", ::bot_teams, "teamdown", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_team_force" );
 	
@@ -976,7 +1013,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "man_team", 3, "Toggle forcing bots on team: " + _temp, ::bot_teams, "teamforce", _tempcvar );
+	self AddMenu( "man_team", 3, &"Toggle forcing bots on team", ::bot_teams, "teamforce", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_team_mode" );
 	
@@ -989,7 +1026,7 @@ AddOptions()
 		_temp = "everyone";
 	}
 	
-	self AddMenu( "man_team", 4, "Toggle bot_team_bot: " + _temp, ::bot_teams, "teammode", _tempcvar );
+	self AddMenu( "man_team", 4, &"Toggle bot_team_bot", ::bot_teams, "teammode", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_skill" );
 	
@@ -1040,54 +1077,28 @@ AddOptions()
 			break;
 	}
 	
-	self AddMenu( "man_team", 5, "Change bot difficulty: " + _temp, ::bot_teams, "skill", _tempcvar );
+	self AddMenu( "man_team", 5, &"Change bot difficulty", ::bot_teams, "skill", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_skill_axis_hard" );
-	self AddMenu( "man_team", 6, "Increase amount of hard bots on axis team: " + _tempcvar, ::bot_teams, "axishardup", _tempcvar );
-	self AddMenu( "man_team", 7, "Decrease amount of hard bots on axis team: " + _tempcvar, ::bot_teams, "axisharddown", _tempcvar );
+	self AddMenu( "man_team", 6, &"Increase amount of hard bots on axis team", ::bot_teams, "axishardup", _tempcvar );
+	self AddMenu( "man_team", 7, &"Decrease amount of hard bots on axis team", ::bot_teams, "axisharddown", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_skill_axis_med" );
-	self AddMenu( "man_team", 8, "Increase amount of med bots on axis team: " + _tempcvar, ::bot_teams, "axismedup", _tempcvar );
-	self AddMenu( "man_team", 9, "Decrease amount of med bots on axis team: " + _tempcvar, ::bot_teams, "axismeddown", _tempcvar );
+	self AddMenu( "man_team", 8, &"Increase amount of med bots on axis team", ::bot_teams, "axismedup", _tempcvar );
+	self AddMenu( "man_team", 9, &"Decrease amount of med bots on axis team", ::bot_teams, "axismeddown", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_skill_allies_hard" );
-	self AddMenu( "man_team", 10, "Increase amount of hard bots on allies team: " + _tempcvar, ::bot_teams, "allieshardup", _tempcvar );
-	self AddMenu( "man_team", 11, "Decrease amount of hard bots on allies team: " + _tempcvar, ::bot_teams, "alliesharddown", _tempcvar );
+	self AddMenu( "man_team", 10, &"Increase amount of hard bots on allies team", ::bot_teams, "allieshardup", _tempcvar );
+	self AddMenu( "man_team", 11, &"Decrease amount of hard bots on allies team", ::bot_teams, "alliesharddown", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_skill_allies_med" );
-	self AddMenu( "man_team", 12, "Increase amount of med bots on allies team: " + _tempcvar, ::bot_teams, "alliesmedup", _tempcvar );
-	self AddMenu( "man_team", 13, "Decrease amount of med bots on allies team: " + _tempcvar, ::bot_teams, "alliesmeddown", _tempcvar );
+	self AddMenu( "man_team", 12, &"Increase amount of med bots on allies team", ::bot_teams, "alliesmedup", _tempcvar );
+	self AddMenu( "man_team", 13, &"Decrease amount of med bots on allies team", ::bot_teams, "alliesmeddown", _tempcvar );
 	
 	//
 	
-	self AddMenu( "Main", 2, "Bot settings", ::OpenSub, "set1", "" );
+	self AddMenu( "Main", 2, &"Bot settings", ::OpenSub, "set1", "" );
 	self AddBack( "set1", "Main" );
-	
-	_tempcvar = getcvarint( "bots_loadout_reasonable" );
-	
-	if ( _tempcvar )
-	{
-		_temp = "true";
-	}
-	else
-	{
-		_temp = "false";
-	}
-	
-	self AddMenu( "set1", 0, "Bots use only good class setups: " + _temp, ::bot_func, "reasonable", _tempcvar );
-	
-	_tempcvar = getcvarint( "bots_loadout_allow_op" );
-	
-	if ( _tempcvar )
-	{
-		_temp = "true";
-	}
-	else
-	{
-		_temp = "false";
-	}
-	
-	self AddMenu( "set1", 1, "Bots can use op and annoying class setups: " + _temp, ::bot_func, "op", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_move" );
 	
@@ -1100,7 +1111,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 2, "Bots can move: " + _temp, ::bot_func, "move", _tempcvar );
+	self AddMenu( "set1", 0, &"Toggle bots can move", ::bot_func, "move", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_knife" );
 	
@@ -1113,7 +1124,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 3, "Bots can knife: " + _temp, ::bot_func, "knife", _tempcvar );
+	self AddMenu( "set1", 1, &"Toggle bots can knife", ::bot_func, "knife", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_fire" );
 	
@@ -1126,7 +1137,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 4, "Bots can fire: " + _temp, ::bot_func, "fire", _tempcvar );
+	self AddMenu( "set1", 2, &"Toggle bots can fire", ::bot_func, "fire", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_nade" );
 	
@@ -1139,7 +1150,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 5, "Bots can nade: " + _temp, ::bot_func, "nade", _tempcvar );
+	self AddMenu( "set1", 3, &"Toggle bots can nade", ::bot_func, "nade", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_obj" );
 	
@@ -1152,7 +1163,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 6, "Bots play the objective: " + _temp, ::bot_func, "obj", _tempcvar );
+	self AddMenu( "set1", 4, &"Toggle bots play the objective", ::bot_func, "obj", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_camp" );
 	
@@ -1165,7 +1176,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 7, "Bots can camp: " + _temp, ::bot_func, "camp", _tempcvar );
+	self AddMenu( "set1", 5, &"Toggle bots can camp", ::bot_func, "camp", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_jumpdrop" );
 	
@@ -1178,33 +1189,7 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 8, "Bots can jump and dropshot: " + _temp, ::bot_func, "jump", _tempcvar );
-	
-	_tempcvar = getcvarint( "bots_play_target_other" );
-	
-	if ( _tempcvar )
-	{
-		_temp = "true";
-	}
-	else
-	{
-		_temp = "false";
-	}
-	
-	self AddMenu( "set1", 9, "Bots can target other script objects: " + _temp, ::bot_func, "targetother", _tempcvar );
-	
-	_tempcvar = getcvarint( "bots_play_killstreak" );
-	
-	if ( _tempcvar )
-	{
-		_temp = "true";
-	}
-	else
-	{
-		_temp = "false";
-	}
-	
-	self AddMenu( "set1", 10, "Bots can use killstreaks: " + _temp, ::bot_func, "killstreak", _tempcvar );
+	self AddMenu( "set1", 6, &"Toggle bots can jump and dropshot", ::bot_func, "jump", _tempcvar );
 	
 	_tempcvar = getcvarint( "bots_play_ads" );
 	
@@ -1217,23 +1202,13 @@ AddOptions()
 		_temp = "false";
 	}
 	
-	self AddMenu( "set1", 11, "Bots can ads: " + _temp, ::bot_func, "ads", _tempcvar );
+	self AddMenu( "set1", 7, &"Toggle bots can ads", ::bot_func, "ads", _tempcvar );
 }
 
 bot_func( a, b )
 {
 	switch ( a )
 	{
-		case "reasonable":
-			setcvar( "bots_loadout_reasonable", !b );
-			self iprintln( "Bots using reasonable setups: " + !b );
-			break;
-			
-		case "op":
-			setcvar( "bots_loadout_allow_op", !b );
-			self iprintln( "Bots using op setups: " + !b );
-			break;
-			
 		case "move":
 			setcvar( "bots_play_move", !b );
 			self iprintln( "Bots move: " + !b );
@@ -1267,16 +1242,6 @@ bot_func( a, b )
 		case "jump":
 			setcvar( "bots_play_jumpdrop", !b );
 			self iprintln( "Bots jump: " + !b );
-			break;
-			
-		case "targetother":
-			setcvar( "bots_play_target_other", !b );
-			self iprintln( "Bots target other: " + !b );
-			break;
-			
-		case "killstreak":
-			setcvar( "bots_play_killstreak", !b );
-			self iprintln( "Bots use killstreaks: " + !b );
 			break;
 			
 		case "ads":
