@@ -412,7 +412,7 @@ OpenSub( menu, menu2 )
 		for ( i = 0 ; i < self.option[ "Name" ][ self.submenu ].size ; i++ )
 		{
 			self.menutext[ i ] = self createfontstring( "default", 1.6 );
-			self.menutext[ i ] setpoint( "CENTER", "CENTER", -300 + ( i * 100 ), -226 );
+			self.menutext[ i ] setpoint( "CENTER", "CENTER", -300 + ( i * 150 ), -226 );
 			self.menutext[ i ] settext( self.option[ "Name" ][ self.submenu ][ i ] );
 			
 			if ( logOldi )
@@ -420,11 +420,11 @@ OpenSub( menu, menu2 )
 				self.oldi = i;
 			}
 			
-			if ( self.menutext[ i ].x > 300 )
+			if ( self.menutext[ i ].x > 450 )
 			{
 				logOldi = false;
 				x = i - self.oldi;
-				self.menutext[ i ] setpoint( "CENTER", "CENTER", ( ( ( -300 ) - ( i * 100 ) ) + ( i * 100 ) ) + ( x * 100 ), -196 );
+				self.menutext[ i ] setpoint( "CENTER", "CENTER", ( ( ( -300 ) - ( i * 150 ) ) + ( i * 150 ) ) + ( x * 150 ), -196 );
 			}
 			
 			self.menutext[ i ].alpha = 1;
