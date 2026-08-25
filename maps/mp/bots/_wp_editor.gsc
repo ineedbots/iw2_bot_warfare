@@ -371,8 +371,8 @@ watchSaveWaypointsCommand()
 			println( level.waypointcount );
 
 			// cod2 fprintln always ends the write with a comma...
-			//f = openfile( filename, "write" );
-			f = -1;
+			f = openfile( filename, "write" );
+			// besure to fix it in post ig
 			
 			if ( f >= 0 )
 			{

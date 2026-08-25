@@ -675,6 +675,13 @@ start_bot_threads()
 	self thread follow_target();
 	self thread bot_listen_to_steps();
 	self thread bot_uav_think();
+	
+	// camp and follow
+	if ( getcvarint( "bots_play_camp" ) )
+	{
+		self thread bot_think_follow();
+		self thread bot_think_camp();
+	}
 
 	if ( getcvarint( "bots_play_nade" ) )
 	{
@@ -683,6 +690,12 @@ start_bot_threads()
 
 	if ( getcvarint( "bots_play_obj" ) )
 	{
+		// self thread bot_hq();
+
+		// self thread bot_sd_defenders();
+		// self thread bot_sd_attackers();
+
+		// self thread bot_cap();
 	}
 }
 
@@ -1232,4 +1245,306 @@ bot_weapon_think()
 	{
 		self bot_weapon_think_loop( data );
 	}
+}
+
+/*
+	Bot logic for bot determining to follow another player.
+*/
+bot_think_follow_loop()
+{
+	follows = [];
+	distSq = self.pers[ "bots" ][ "skill" ][ "help_dist" ] * self.pers[ "bots" ][ "skill" ][ "help_dist" ];
+	
+	for ( i = level.players.size - 1; i >= 0; i-- )
+	{
+		player = level.players[ i ];
+		
+		if ( !player IsPlayerModelOK() )
+		{
+			continue;
+		}
+		
+		if ( player == self )
+		{
+			continue;
+		}
+		
+		if ( !isalive( player ) )
+		{
+			continue;
+		}
+		
+		if ( player.team != self.team )
+		{
+			continue;
+		}
+		
+		if ( distancesquared( player.origin, self.origin ) > distSq )
+		{
+			continue;
+		}
+		
+		follows[ follows.size ] = player;
+	}
+	
+	toFollow = random( follows );
+	
+	if ( !isdefined( toFollow ) )
+	{
+		return;
+	}
+	
+	time = randomintrange( 10, 20 );
+	
+	self BotNotifyBotEvent( "follow", "start", toFollow, time );
+	
+	self thread killFollowAfterTime( time );
+	self followPlayer( toFollow );
+	
+	self BotNotifyBotEvent( "follow", "stop", toFollow, time );
+}
+
+/*
+	Bot logic for bot determining to follow another player.
+*/
+bot_think_follow()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	
+	for ( ;; )
+	{
+		wait randomintrange( 3, 5 );
+		
+		if ( self HasScriptGoal() || self.bot_lock_goal || self HasScriptAimPos() )
+		{
+			continue;
+		}
+		
+		if ( randomint( 100 ) > self.pers[ "bots" ][ "behavior" ][ "follow" ] )
+		{
+			continue;
+		}
+		
+		if ( !level.teambased )
+		{
+			continue;
+		}
+		
+		self bot_think_follow_loop();
+	}
+}
+
+/*
+	Kills follow when new goal
+*/
+watchForFollowNewGoal()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "kill_follow_bot" );
+	
+	for ( ;; )
+	{
+		self waittill( "new_goal" );
+		
+		if ( !isdefined( self.bot_was_follow_script_update ) )
+		{
+			break;
+		}
+	}
+	
+	self ClearScriptAimPos();
+	self notify( "kill_follow_bot" );
+}
+
+/*
+	Kills follow when time
+*/
+killFollowAfterTime( time )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "kill_follow_bot" );
+	
+	wait time;
+	
+	self ClearScriptGoal();
+	self ClearScriptAimPos();
+	self notify( "kill_follow_bot" );
+}
+
+/*
+	Determine bot to follow a player
+*/
+followPlayer( who )
+{
+	self endon( "kill_follow_bot" );
+	
+	self thread watchForFollowNewGoal();
+	
+	for ( ;; )
+	{
+		wait 0.05;
+		
+		if ( !isdefined( who ) || !isalive( who ) )
+		{
+			break;
+		}
+		
+		self SetScriptAimPos( who.origin + ( 0, 0, 42 ) );
+		myGoal = self GetScriptGoal();
+		
+		if ( isdefined( myGoal ) && distancesquared( myGoal, who.origin ) < 64 * 64 )
+		{
+			continue;
+		}
+		
+		self.bot_was_follow_script_update = true;
+		self SetScriptGoal( who.origin, 32 );
+		waittillframeend;
+		self.bot_was_follow_script_update = undefined;
+		
+		self waittill_either( "goal", "bad_path" );
+	}
+	
+	self ClearScriptGoal();
+	self ClearScriptAimPos();
+	
+	self notify( "kill_follow_bot" );
+}
+
+/*
+	Bot logic for bot determining to camp.
+*/
+bot_think_camp_loop()
+{
+	campSpot = getWaypointForIndex( random( self waypointsNear( getWaypointsOfType( "camp" ), 1024 ) ) );
+	
+	if ( !isdefined( campSpot ) )
+	{
+		return;
+	}
+	
+	self SetScriptGoal( campSpot.origin, 16 );
+	
+	time = randomintrange( 30, 90 );
+	
+	self BotNotifyBotEvent( "camp", "go", campSpot, time );
+	
+	ret = self waittill_any_return( "new_goal", "goal", "bad_path" );
+	
+	if ( ret != "new_goal" )
+	{
+		self ClearScriptGoal();
+	}
+	
+	if ( ret != "goal" )
+	{
+		return;
+	}
+	
+	self BotNotifyBotEvent( "camp", "start", campSpot, time );
+	
+	self thread killCampAfterTime( time );
+	self CampAtSpot( campSpot.origin, campSpot.origin + anglestoforward( campSpot.angles ) * 2048 );
+	
+	self BotNotifyBotEvent( "camp", "stop", campSpot, time );
+}
+
+/*
+	Bot logic for bot determining to camp.
+*/
+bot_think_camp()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	
+	for ( ;; )
+	{
+		wait randomintrange( 4, 7 );
+		
+		if ( self HasScriptGoal() || self.bot_lock_goal || self HasScriptAimPos() )
+		{
+			continue;
+		}
+		
+		if ( randomint( 100 ) > self.pers[ "bots" ][ "behavior" ][ "camp" ] )
+		{
+			continue;
+		}
+		
+		self bot_think_camp_loop();
+	}
+}
+
+/*
+	Kills the camping thread when time
+*/
+killCampAfterTime( time )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "kill_camp_bot" );
+	
+	timeleft = 90; // cod2
+	
+	while ( time > 0 && timeleft >= 60 )
+	{
+		wait 1;
+		timeleft = 90;
+		time--;
+	}
+	
+	wait 0.05;
+
+	self ClearScriptGoal();
+	self ClearScriptAimPos();
+	
+	self notify( "kill_camp_bot" );
+}
+
+/*
+	Kills the camping thread when ent gone
+*/
+killCampAfterEntGone( ent )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "kill_camp_bot" );
+	
+	for ( ;; )
+	{
+		wait 0.05;
+		
+		if ( !isdefined( ent ) )
+		{
+			break;
+		}
+	}
+	
+	self ClearScriptGoal();
+	self ClearScriptAimPos();
+	
+	self notify( "kill_camp_bot" );
+}
+
+/*
+	Camps at the spot
+*/
+CampAtSpot( origin, anglePos )
+{
+	self endon( "kill_camp_bot" );
+	
+	self SetScriptGoal( origin, 64 );
+	
+	if ( isdefined( anglePos ) )
+	{
+		self SetScriptAimPos( anglePos );
+	}
+	
+	self waittill( "new_goal" );
+	self ClearScriptAimPos();
+	
+	self notify( "kill_camp_bot" );
 }

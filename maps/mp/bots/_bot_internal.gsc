@@ -1326,7 +1326,7 @@ aim_loop()
 					
 					if ( self.bot.is_cur_sniper )
 					{
-						if ( self.pers[ "bots" ][ "behavior" ][ "quickscope" ] && self.bot.last_fire_time != -1 && gettime() - self.bot.last_fire_time < 1000 )
+						if ( self.pers[ "bots" ][ "behavior" ][ "quickscope" ] && self.bot.last_fire_time != -1 && gettime() - self.bot.last_fire_time < 1250 )
 						{
 							stopAdsOverride = true;
 						}
@@ -1389,7 +1389,7 @@ aim_loop()
 			
 			if ( self.bot.is_cur_sniper )
 			{
-				if ( self.pers[ "bots" ][ "behavior" ][ "quickscope" ] && self.bot.last_fire_time != -1 && gettime() - self.bot.last_fire_time < 1000 )
+				if ( self.pers[ "bots" ][ "behavior" ][ "quickscope" ] && self.bot.last_fire_time != -1 && gettime() - self.bot.last_fire_time < 1250 )
 				{
 					stopAdsOverride = true;
 				}
