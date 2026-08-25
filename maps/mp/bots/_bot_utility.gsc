@@ -508,9 +508,9 @@ isInUse()
 }
 
 /*
-	Returns a random grenade in the bot's inventory.
+	Get grenades
 */
-getValidGrenade()
+getGrenadeTypes()
 {
 	grenadeTypes = [];
 	grenadeTypes[ 0 ] = "frag_grenade_american_mp";
@@ -521,7 +521,16 @@ getValidGrenade()
 	grenadeTypes[ 5 ] = "smoke_grenade_russian_mp";
 	grenadeTypes[ 6 ] = "frag_grenade_german_mp";
 	grenadeTypes[ 7 ] = "smoke_grenade_german_mp";
-	
+
+	return grenadeTypes;
+}
+
+/*
+	Returns a random grenade in the bot's inventory.
+*/
+getValidGrenade()
+{
+	grenadeTypes = getGrenadeTypes();
 	possibles = [];
 	
 	for ( i = 0; i < grenadeTypes.size; i++ )

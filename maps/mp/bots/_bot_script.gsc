@@ -685,7 +685,7 @@ start_bot_threads()
 
 	if ( getcvarint( "bots_play_nade" ) )
 	{
-		// self thread bot_use_grenade_think();
+		self thread bot_use_grenade_think();
 	}
 
 	if ( getcvarint( "bots_play_obj" ) )
@@ -1547,4 +1547,182 @@ CampAtSpot( origin, anglePos )
 	self ClearScriptAimPos();
 	
 	self notify( "kill_camp_bot" );
+}
+
+/*
+	Bots thinking of using grenades
+*/
+bot_use_grenade_think_loop( data )
+{
+	if ( data.dofastcontinue )
+	{
+		data.dofastcontinue = false;
+	}
+	else
+	{
+		wait randomintrange( 4, 7 );
+		
+		chance = self.pers[ "bots" ][ "behavior" ][ "nade" ] / 2;
+		
+		if ( chance > 20 )
+		{
+			chance = 20;
+		}
+		
+		if ( randomint( 100 ) > chance )
+		{
+			return;
+		}
+	}
+	
+	nade = self getValidGrenade();
+	
+	if ( !isdefined( nade ) )
+	{
+		return;
+	}
+	
+	if ( self hasThreat() || self HasScriptAimPos() )
+	{
+		return;
+	}
+	
+	if ( self BotIsFrozen() )
+	{
+		return;
+	}
+	
+	if ( self IsBotFragging() || self IsBotSmoking() )
+	{
+		return;
+	}
+	
+	if ( self isPlantingOrDefusing() )
+	{
+		return;
+	}
+	
+	loc = undefined;
+	
+	if ( !self nearAnyOfWaypoints( 128, getWaypointsOfType( "grenade" ) ) )
+	{
+		nadeWp = getWaypointForIndex( random( self waypointsNear( getWaypointsOfType( "grenade" ), 1024 ) ) );
+		
+		myEye = self geteye();
+		
+		if ( !isdefined( nadeWp ) || self HasScriptGoal() || self.bot_lock_goal )
+		{
+			traceForward = bullettrace( myEye, myEye + anglestoforward( self getplayerangles() ) * 900, false, self );
+			
+			loc = traceForward[ "position" ];
+			dist = distancesquared( self.origin, loc );
+			
+			if ( dist < level.bots_mingrenadedistance || dist > level.bots_maxgrenadedistance )
+			{
+				return;
+			}
+			
+			if ( !bullettracepassed( self.origin + ( 0, 0, 5 ), self.origin + ( 0, 0, 2048 ), false, self ) )
+			{
+				return;
+			}
+			
+			if ( !bullettracepassed( loc + ( 0, 0, 5 ), loc + ( 0, 0, 2048 ), false, self ) )
+			{
+				return;
+			}
+			
+			loc += ( 0, 0, dist / 3000 );
+		}
+		else
+		{
+			self BotNotifyBotEvent( "nade", "go", nadeWp, nade );
+			
+			self SetScriptGoal( nadeWp.origin, 16 );
+			
+			ret = self waittill_any_return( "new_goal", "goal", "bad_path" );
+			
+			if ( ret != "new_goal" )
+			{
+				self ClearScriptGoal();
+			}
+			
+			if ( ret != "goal" )
+			{
+				return;
+			}
+			
+			data.dofastcontinue = true;
+			return;
+		}
+	}
+	else
+	{
+		nadeWp = getWaypointForIndex( self getNearestWaypointOfWaypoints( getWaypointsOfType( "grenade" ) ) );
+		loc = nadeWp.origin + anglestoforward( nadeWp.angles ) * 2048;
+	}
+	
+	if ( !isdefined( loc ) )
+	{
+		return;
+	}
+	
+	self BotNotifyBotEvent( "nade", "start", loc, nade );
+	
+	self SetScriptAimPos( loc );
+	self BotStopMoving( true );
+	wait 1;
+	
+	time = 0.5;
+	
+	self botThrowGrenade( nade, time );
+	
+	self ClearScriptAimPos();
+	self BotStopMoving( false );
+}
+
+/*
+	Bots throw the grenade
+*/
+botThrowGrenade( nade, time )
+{
+	self endon( "disconnect" );
+	self endon( "death" );
+	level endon( "game_ended" );
+	
+	if ( !self getammocount( nade ) )
+	{
+		return false;
+	}
+	
+	if ( isSecondaryGrenade( nade ) )
+	{
+		self thread BotPressSmoke( time );
+	}
+	else
+	{
+		self thread BotPressFrag( time );
+	}
+	
+	ret = self waittill_any_timeout( 5, "grenade_fire" );
+	
+	return ( ret == "grenade_fire" );
+}
+
+/*
+	Bots thinking of using grenades
+*/
+bot_use_grenade_think()
+{
+	self endon( "disconnect" );
+	self endon( "death" );
+	level endon( "game_ended" );
+	
+	data = spawnstruct();
+	data.dofastcontinue = false;
+	
+	for ( ;; )
+	{
+		self bot_use_grenade_think_loop( data );
+	}
 }

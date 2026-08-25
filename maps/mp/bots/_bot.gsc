@@ -388,6 +388,7 @@ onPlayerConnect()
 		player thread connected();
 		player thread onDeath();
 		player thread watchWeapons();
+		player thread watchGrenades();
 		player thread watchVelocity();
 		player thread watchVars();
 		player thread doPlayerModelFix();
@@ -403,6 +404,39 @@ doPlayerModelFix()
 	self waittill( "spawned_player" );
 	wait 0.05;
 	self.bot_model_fix = true;
+}
+
+/*
+	CoD2
+*/
+watchGrenades()
+{
+	self endon( "disconnect" );
+	
+	grenadeTypes = getGrenadeTypes();
+	grenadeAmmoCount = [];
+	
+	for ( i = 0; i < grenadeTypes.size; i++ )
+	{
+		grenadeAmmoCount[ i ] = 0;
+	}
+	
+	for ( ;; )
+	{
+		wait 0.05;
+		
+		for ( i = 0; i < grenadeTypes.size; i++ )
+		{
+			frac = self getAmmoCount( grenadeTypes[ i ] );
+			oldFrac = grenadeAmmoCount[ i ];
+			grenadeAmmoCount[ i ] = frac;
+			
+			if ( frac < oldFrac && isalive( self ) )
+			{
+				self notify( "grenade_fire", undefined, grenadeTypes[ i ] );
+			}
+		}
+	}
 }
 
 /*
