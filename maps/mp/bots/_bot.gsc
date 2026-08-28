@@ -369,6 +369,8 @@ hook_callbacks()
 */
 fixGamemodes()
 {
+	level.gametype = getcvar( "g_gametype" );
+	
 	for ( i = 0; i < 19; i++ )
 	{
 		wait 0.05;
@@ -630,7 +632,7 @@ connected()
 	level.bots[ level.bots.size ] = self;
 	self thread onDisconnect();
 	self thread watchBotDebugEvent();
-
+	
 	waittillframeend; // wait for waittills to process
 	level notify( "bot_connected", self );
 }

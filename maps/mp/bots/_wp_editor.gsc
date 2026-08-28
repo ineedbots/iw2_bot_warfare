@@ -28,7 +28,7 @@ init()
 		map( getcvar( "mapname" ) );
 		return;
 	}
-
+	
 	// cod2 only allows localized strings...
 	precachestring( &"^1SecondaryOffhand - ^2Add Waypoint; ^3MeleeButton - ^4Link Waypoint; ^5FragButton - ^6delete Waypoint; ^7UseButton + AttackButton - ^8Save" );
 	
@@ -39,7 +39,7 @@ init()
 	setcvar( "bots_manage_add", 0 );
 	setcvar( "bots_manage_fill_kick", 1 );
 	setcvar( "bots_manage_fill_spec", 1 );
-
+	
 	setcvar( "smoke", 0 ); // bind 2 "set smoke 1; wait 50; set smoke 0"
 	setcvar( "frag", 0 ); // bind 3 "set frag 1; wait 50; set frag 0"
 	setcvar( "speed", 0 ); // bind 4 "togglep speed 0 1"
@@ -113,7 +113,7 @@ beginDebug()
 	level.autolink = false;
 	self.closest = -1;
 	self.command = undefined;
-
+	
 	self.bot_model_fix = true;
 	
 	self freezecontrols( false );
@@ -369,7 +369,7 @@ watchSaveWaypointsCommand()
 			
 			println( "********* Start Bot Warfare WPDump *********" );
 			println( level.waypointcount );
-
+			
 			// cod2 fprintln always ends the write with a comma...
 			f = openfile( filename, "write" );
 			// besure to fix it in post ig
@@ -416,7 +416,7 @@ watchSaveWaypointsCommand()
 					fprintln( f, str + "\n" );
 				}
 			}
-
+			
 			if ( f >= 0 )
 			{
 				closefile( f );
@@ -709,8 +709,8 @@ destroyOnDeath( hud )
 {
 	hud endon( "death" );
 	self waittill_either( "death", "disconnect" );
-
-	if ( isdefined(hud) )
+	
+	if ( isdefined( hud ) )
 	{
 		hud destroy();
 	}
@@ -723,7 +723,7 @@ textScroll( string )
 	
 	text = newclienthudelem( self );
 	self thread destroyOnDeath( text );
-
+	
 	text.font = "default";
 	text.fontscale = 1.5;
 	text.alignx = "center";
@@ -738,7 +738,7 @@ textScroll( string )
 		text.x = 1200;
 		text moveovertime( 20 );
 		text.x = -1200;
-
+		
 		wait 20;
 	}
 }

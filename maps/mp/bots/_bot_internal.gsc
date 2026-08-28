@@ -170,6 +170,20 @@ bot_skip_killcam()
 }
 
 /*
+	CoD2, hq for example will spawn twice without a death inbetween
+*/
+doubleSpawnFix()
+{
+	self endon( "disconnect" );
+	self endon( "death" );
+	
+	self waittill( "spawned_player" );
+	
+	waittillframeend;
+	self suicide();
+}
+
+/*
 	When the bot spawns.
 */
 onPlayerSpawned()
@@ -179,6 +193,7 @@ onPlayerSpawned()
 	for ( ;; )
 	{
 		self waittill( "spawned_player" );
+		self thread doubleSpawnFix();
 		
 		self resetBotVars();
 		self thread onWeaponChange();
@@ -673,8 +688,8 @@ updateAimOffset( obj )
 		if ( diffAimAmount > 0 )
 		{
 			obj.aim_offset_base = ( randomfloatrange( 0 - diffAimAmount, diffAimAmount ),
-						randomfloatrange( 0 - diffAimAmount, diffAimAmount ),
-						randomfloatrange( 0 - diffAimAmount, diffAimAmount ) );
+				randomfloatrange( 0 - diffAimAmount, diffAimAmount ),
+				randomfloatrange( 0 - diffAimAmount, diffAimAmount ) );
 		}
 		else
 		{
@@ -868,15 +883,15 @@ target_loop()
 			}
 			
 			canTargetPlayer = ( ( player checkTraceForBone( myEye, "j_head" ) ||
-						player checkTraceForBone( myEye, "j_ankle_le" ) ||
-						player checkTraceForBone( myEye, "j_ankle_ri" ) )
-						
-					&& ( SmokeTrace( myEye, player.origin, level.smokeradius ) ||
-						daDist < level.bots_maxknifedistance * 4 )
-						
-					&& ( getConeDot( player.origin, self.origin, myAngles ) >= myFov ||
-						( isObjDef && obj.trace_time ) ) );
-						
+				player checkTraceForBone( myEye, "j_ankle_le" ) ||
+				player checkTraceForBone( myEye, "j_ankle_ri" ) )
+				
+				&& ( SmokeTrace( myEye, player.origin, level.smokeradius ) ||
+				daDist < level.bots_maxknifedistance * 4 )
+				
+				&& ( getConeDot( player.origin, self.origin, myAngles ) >= myFov ||
+				( isObjDef && obj.trace_time ) ) );
+				
 			if ( isdefined( self.bot.target_this_frame ) && self.bot.target_this_frame == player )
 			{
 				self.bot.target_this_frame = undefined;

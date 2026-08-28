@@ -670,7 +670,7 @@ start_bot_threads()
 	
 	self thread doReloadCancel();
 	self thread bot_weapon_think();
-
+	
 	self thread bot_revenge_think();
 	self thread follow_target();
 	self thread bot_listen_to_steps();
@@ -682,19 +682,19 @@ start_bot_threads()
 		self thread bot_think_follow();
 		self thread bot_think_camp();
 	}
-
+	
 	if ( getcvarint( "bots_play_nade" ) )
 	{
 		self thread bot_use_grenade_think();
 	}
-
+	
 	if ( getcvarint( "bots_play_obj" ) )
 	{
-		// self thread bot_hq();
-
+		self thread bot_hq();
+		
 		// self thread bot_sd_defenders();
 		// self thread bot_sd_attackers();
-
+		
 		// self thread bot_cap();
 	}
 }
@@ -1497,7 +1497,7 @@ killCampAfterTime( time )
 	}
 	
 	wait 0.05;
-
+	
 	self ClearScriptGoal();
 	self ClearScriptAimPos();
 	
@@ -1725,4 +1725,373 @@ bot_use_grenade_think()
 	{
 		self bot_use_grenade_think_loop( data );
 	}
+}
+
+/*
+	CoD2
+*/
+getRadioEnemies( radio, myTeam )
+{
+	enemys = radio.axis;
+	
+	if ( myTeam == "axis" )
+	{
+		enemys = radio.allies;
+	}
+	
+	if ( !isdefined( enemys ) )
+	{
+		enemys = 0;
+	}
+	
+	return enemys;
+}
+
+/*
+	CoD2
+*/
+touchingRadio( radio )
+{
+	if ( ( ( distance( self.origin, radio.origin ) ) <= radio.radius ) && ( distance( ( 0, 0, self.origin[2] ), ( 0, 0, radio.origin[2] ) ) <= level.zradioradius ) )
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+/*
+	Bots play headquarters
+*/
+bot_hq_loop()
+{
+	myTeam = self.pers[ "team" ];
+	otherTeam = getotherteam( myTeam );
+	radio = undefined;
+	
+	for ( i = 0; i < level.radio.size; i++ )
+	{
+		if ( level.radio[ i ].hidden )
+		{
+			continue;
+		}
+		
+		radio = level.radio[ i ];
+		break;
+	}
+	
+	if ( !isdefined( radio ) )
+	{
+		return;
+	}
+	
+	origin = ( radio.origin[ 0 ], radio.origin[ 1 ], radio.origin[ 2 ] + 5 );
+	
+	// if neut or enemy
+	if ( radio.team != myTeam )
+	{
+		// capture it
+		
+		self BotNotifyBotEvent( "hq", "go", "cap" );
+		
+		self.bot_lock_goal = true;
+		self SetScriptGoal( origin, 64 );
+		self thread bot_hq_go_cap( radio );
+		
+		event = self waittill_any_return( "goal", "bad_path", "new_goal" );
+		
+		if ( event != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+		
+		if ( event != "goal" )
+		{
+			self.bot_lock_goal = false;
+			return;
+		}
+		
+		if ( radio.hidden || !self touchingRadio( radio ) )
+		{
+			self.bot_lock_goal = false;
+			return;
+		}
+		
+		self BotNotifyBotEvent( "hq", "start", "cap" );
+		
+		self SetScriptGoal( self.origin, 64 );
+		
+		while ( !radio.hidden && self touchingRadio( radio ) && radio.team != myTeam )
+		{
+			wait 0.5;
+			
+			if ( getRadioEnemies( radio, myTeam ) )
+			{
+				break; // no prog made, enemy must be capping
+			}
+			
+			self thread bot_do_random_action_for_objective( radio );
+		}
+		
+		self ClearScriptGoal();
+		self.bot_lock_goal = false;
+		
+		self BotNotifyBotEvent( "hq", "stop", "cap" );
+	}
+	else // we own it
+	{
+		if ( getRadioEnemies( radio, myTeam ) ) // underattack
+		{
+			self BotNotifyBotEvent( "hq", "start", "defend" );
+			
+			self.bot_lock_goal = true;
+			self SetScriptGoal( origin, 64 );
+			self thread bot_hq_watch_flashing( radio );
+			
+			if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+			{
+				self ClearScriptGoal();
+			}
+			
+			self.bot_lock_goal = false;
+			
+			self BotNotifyBotEvent( "hq", "stop", "defend" );
+			return;
+		}
+		
+		if ( self HasScriptGoal() )
+		{
+			return;
+		}
+		
+		if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+		{
+			return;
+		}
+		
+		self SetScriptGoal( origin, 256 );
+		
+		if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+	}
+}
+
+/*
+	Bots play headquarters
+*/
+bot_hq()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	
+	if ( level.gametype != "hq" )
+	{
+		return;
+	}
+	
+	for ( ;; )
+	{
+		wait( randomintrange( 3, 5 ) );
+		
+		if ( self.bot_lock_goal )
+		{
+			continue;
+		}
+		
+		if ( !isdefined( level.radio ) || !level.radio.size )
+		{
+			continue;
+		}
+		
+		self bot_hq_loop();
+	}
+}
+
+/*
+	Waits until not touching the trigger and it is the current radio.
+*/
+bot_hq_go_cap( radio )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait randomintrange( 2, 4 );
+		
+		if ( self touchingRadio( radio ) )
+		{
+			break;
+		}
+		
+		if ( radio.hidden )
+		{
+			break;
+		}
+	}
+	
+	if ( radio.hidden )
+	{
+		self notify( "bad_path" );
+	}
+	else
+	{
+		self notify( "goal" );
+	}
+}
+
+/*
+	Waits while the radio is under attack.
+*/
+bot_hq_watch_flashing( radio )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	myteam = self.team;
+	
+	for ( ;; )
+	{
+		wait 0.5;
+		
+		if ( !getRadioEnemies( radio, myteam ) )
+		{
+			break;
+		}
+		
+		if ( radio.hidden )
+		{
+			break;
+		}
+	}
+	
+	self notify( "bad_path" );
+}
+
+/*
+	Bots do random stance
+*/
+BotRandomStance()
+{
+	if ( randomint( 100 ) < 80 )
+	{
+		self BotSetStance( "prone" );
+	}
+	else if ( randomint( 100 ) < 60 )
+	{
+		self BotSetStance( "crouch" );
+	}
+	else
+	{
+		self BotSetStance( "stand" );
+	}
+}
+
+/*
+	Bots will look at a random thing
+*/
+BotLookAtRandomThing( obj_target )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	
+	if ( self HasScriptAimPos() )
+	{
+		return;
+	}
+	
+	rand = randomint( 100 );
+	
+	nearestEnemy = undefined;
+	
+	for ( i = 0; i < level.players.size; i++ )
+	{
+		player = level.players[ i ];
+		
+		if ( !isdefined( player ) || !isdefined( player.team ) )
+		{
+			continue;
+		}
+		
+		if ( !isalive( player ) )
+		{
+			continue;
+		}
+		
+		if ( level.teambased && self.team == player.team )
+		{
+			continue;
+		}
+		
+		if ( !isdefined( nearestEnemy ) || distancesquared( self.origin, player.origin ) < distancesquared( self.origin, nearestEnemy.origin ) )
+		{
+			nearestEnemy = player;
+		}
+	}
+	
+	origin = ( 0, 0, self getEyeHeight() );
+	
+	if ( isdefined( nearestEnemy ) && distancesquared( self.origin, nearestEnemy.origin ) < 1024 * 1024 && rand < 40 )
+	{
+		origin += ( nearestEnemy.origin[ 0 ], nearestEnemy.origin[ 1 ], self.origin[ 2 ] );
+	}
+	else if ( isdefined( obj_target ) && rand < 50 )
+	{
+		origin += ( obj_target.origin[ 0 ], obj_target.origin[ 1 ], self.origin[ 2 ] );
+	}
+	else if ( rand < 85 )
+	{
+		origin += self.origin + anglestoforward( ( 0, self.angles[ 1 ] - 180, 0 ) ) * 1024;
+	}
+	else
+	{
+		origin += self.origin + anglestoforward( ( 0, randomint( 360 ), 0 ) ) * 1024;
+	}
+	
+	self SetScriptAimPos( origin );
+	wait 2;
+	self ClearScriptAimPos();
+}
+
+/*
+	Bots will do stuff while waiting for objective
+*/
+bot_do_random_action_for_objective( obj_target )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self notify( "bot_do_random_action_for_objective" );
+	self endon( "bot_do_random_action_for_objective" );
+	
+	if ( !isdefined( self.bot_random_obj_action ) )
+	{
+		self.bot_random_obj_action = true;
+		
+		if ( randomint( 100 ) < 75 )
+		{
+			self thread BotLookAtRandomThing( obj_target );
+		}
+	}
+	else
+	{
+		if ( self getStance() != "prone" && randomint( 100 ) < 15 )
+		{
+			self BotSetStance( "prone" );
+		}
+		else if ( randomint( 100 ) < 5 )
+		{
+			self thread BotLookAtRandomThing( obj_target );
+		}
+	}
+	
+	wait 2;
+	self.bot_random_obj_action = undefined;
 }

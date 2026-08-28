@@ -521,7 +521,7 @@ getGrenadeTypes()
 	grenadeTypes[ 5 ] = "smoke_grenade_russian_mp";
 	grenadeTypes[ 6 ] = "frag_grenade_german_mp";
 	grenadeTypes[ 7 ] = "smoke_grenade_german_mp";
-
+	
 	return grenadeTypes;
 }
 
@@ -646,6 +646,27 @@ getAmmoCount( weap )
 IsWeaponClipOnly( weap )
 {
 	return issubstr( weap, "grenade_" );
+}
+
+/*
+	Set the bot's stance
+*/
+BotSetStance( stance )
+{
+	switch ( stance )
+	{
+		case "stand":
+			self maps\mp\bots\_bot_internal::stand();
+			break;
+			
+		case "crouch":
+			self maps\mp\bots\_bot_internal::crouch();
+			break;
+			
+		case "prone":
+			self maps\mp\bots\_bot_internal::prone();
+			break;
+	}
 }
 
 /*
@@ -1036,6 +1057,25 @@ bot_wait_for_host()
 		}
 		
 		wait 0.05;
+	}
+}
+
+/*
+	CoD2
+*/
+getotherteam( team )
+{
+	if ( team == "axis" )
+	{
+		return "allies";
+	}
+	else if ( team == "allies" )
+	{
+		return "axis";
+	}
+	else
+	{
+		return "none";
 	}
 }
 
