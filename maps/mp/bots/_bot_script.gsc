@@ -695,7 +695,7 @@ start_bot_threads()
 		// self thread bot_sd_defenders();
 		// self thread bot_sd_attackers();
 		
-		// self thread bot_cap();
+		self thread bot_cap();
 	}
 }
 
@@ -2094,4 +2094,357 @@ bot_do_random_action_for_objective( obj_target )
 	
 	wait 2;
 	self.bot_random_obj_action = undefined;
+}
+
+/*
+	CoD2
+*/
+getFlagCarrier( flag )
+{
+	for ( i = 0; i < level.players.size; i++ )
+	{
+		if ( !isdefined( level.players[ i ].flag ) )
+		{
+			continue;
+		}
+		
+		if ( level.players[ i ].flag != flag )
+		{
+			continue;
+		}
+		
+		return level.players[ i ];
+	}
+	
+	return undefined;
+}
+
+/*
+	Bots play capture the flag
+*/
+bot_cap_loop()
+{
+	allied_flag = getent( "allied_flag", "targetname" );
+	
+	if ( !isdefined( allied_flag ) )
+	{
+		return;
+	}
+	
+	axis_flag = getent( "axis_flag", "targetname" );
+	
+	if ( !isdefined( axis_flag ) )
+	{
+		return;
+	}
+	
+	myTeam = self.pers[ "team" ];
+	otherTeam = getotherteam( myTeam );
+	
+	myflag = allied_flag;
+	theirflag = axis_flag;
+	
+	if ( myTeam == "axis" )
+	{
+		myflag = axis_flag;
+		theirflag = allied_flag;
+	}
+	
+	if ( !myflag.atbase )
+	{
+		carrier = getFlagCarrier( myflag );
+		
+		if ( !isdefined( carrier ) ) // someone doesnt has our flag
+		{
+			if ( !isdefined( getFlagCarrier( theirflag ) ) && distancesquared( self.origin, theirflag.origin ) < distancesquared( self.origin, myflag.origin ) ) // no one has their flag and its closer
+			{
+				self BotNotifyBotEvent( "cap", "start", "their_flag", theirflag );
+				
+				self bot_cap_get_flag( theirflag );
+				
+				self BotNotifyBotEvent( "cap", "stop", "their_flag", theirflag );
+			}
+			else // go get it
+			{
+				self BotNotifyBotEvent( "cap", "start", "my_flag", myflag );
+				
+				self bot_cap_get_flag( myflag );
+				
+				self BotNotifyBotEvent( "cap", "stop", "my_flag", myflag );
+			}
+			
+			return;
+		}
+		else
+		{
+			if ( theirflag.atbase && randomint( 100 ) < 50 )
+			{
+				// take their flag
+				self BotNotifyBotEvent( "cap", "start", "their_flag", theirflag );
+				
+				self bot_cap_get_flag( theirflag );
+				
+				self BotNotifyBotEvent( "cap", "stop", "their_flag", theirflag );
+			}
+			else
+			{
+				if ( self HasScriptGoal() )
+				{
+					return;
+				}
+				
+				if ( !isdefined( theirflag.bots ) )
+				{
+					theirflag.bots = 0;
+				}
+				
+				origin = theirflag.home_origin;
+				
+				if ( theirflag.bots > 2 || randomint( 100 ) < 45 )
+				{
+					// kill carrier
+					origin = carrier.origin;
+					
+					self SetScriptGoal( origin, 64 );
+					self thread bot_escort_flag( myflag, carrier );
+					
+					if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+					{
+						self ClearScriptGoal();
+					}
+					
+					return;
+				}
+				
+				self thread bot_inc_bots( theirflag );
+				
+				// camp their zone
+				if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+				{
+					wait 4;
+					self notify( "bot_inc_bots" );
+					theirflag.bots--;
+					return;
+				}
+				
+				self SetScriptGoal( origin, 256 );
+				self thread bot_inc_bots( theirflag );
+				self thread bot_escort_flag( myflag, carrier );
+				
+				if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+				{
+					self ClearScriptGoal();
+				}
+			}
+		}
+	}
+	else // our flag is ok
+	{
+		if ( isdefined( self.flag ) ) // if have flag
+		{
+			// go cap
+			origin = myflag.home_origin;
+			
+			self BotNotifyBotEvent( "cap", "start", "cap" );
+			
+			self.bot_lock_goal = true;
+			self SetScriptGoal( origin, 32 );
+			
+			self thread bot_get_flag( myflag );
+			evt = self waittill_any_return( "goal", "bad_path", "new_goal" );
+			
+			wait 1;
+			
+			if ( evt != "new_goal" )
+			{
+				self ClearScriptGoal();
+			}
+			
+			self.bot_lock_goal = false;
+			
+			self BotNotifyBotEvent( "cap", "stop", "cap" );
+			return;
+		}
+		
+		carrier = getFlagCarrier( theirflag );
+		
+		if ( !isdefined( carrier ) ) // if no one has enemy flag
+		{
+			self BotNotifyBotEvent( "cap", "start", "their_flag", theirflag );
+			
+			self bot_cap_get_flag( theirflag );
+			
+			self BotNotifyBotEvent( "cap", "stop", "their_flag", theirflag );
+			return;
+		}
+		
+		// escort them
+		
+		if ( self HasScriptGoal() )
+		{
+			return;
+		}
+		
+		origin = carrier.origin;
+		
+		if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+		{
+			return;
+		}
+		
+		self SetScriptGoal( origin, 256 );
+		self thread bot_escort_flag( theirflag, carrier );
+		
+		if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+	}
+}
+
+/*
+	Bots play capture the flag
+*/
+bot_cap()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	
+	if ( level.gametype != "ctf" )
+	{
+		return;
+	}
+	
+	for ( ;; )
+	{
+		wait( randomintrange( 3, 5 ) );
+		
+		if ( self.bot_lock_goal )
+		{
+			continue;
+		}
+		
+		self bot_cap_loop();
+	}
+}
+
+/*
+	Increments the number of bots approching the obj, decrements when needed
+	Used for preventing too many bots going to one obj, or unreachable objs
+*/
+bot_inc_bots( obj, unreach )
+{
+	level endon( "game_ended" );
+	self endon( "bot_inc_bots" );
+	
+	if ( !isdefined( obj ) )
+	{
+		return;
+	}
+	
+	if ( !isdefined( obj.bots ) )
+	{
+		obj.bots = 0;
+	}
+	
+	obj.bots++;
+	
+	ret = self waittill_any_return( "death", "disconnect", "bad_path", "goal", "new_goal" );
+	
+	if ( isdefined( obj ) && ( ret != "bad_path" || !isdefined( unreach ) ) )
+	{
+		obj.bots--;
+	}
+}
+
+/*
+	Watches while the obj is being carried, calls 'goal' when complete
+*/
+bot_escort_flag( flag, carrier )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait 0.5;
+		
+		if ( !isdefined( flag ) )
+		{
+			break;
+		}
+		
+		flagCarrier = getFlagCarrier( flag );
+		
+		if ( !isdefined( flagCarrier ) || carrier == flagCarrier )
+		{
+			break;
+		}
+	}
+	
+	self notify( "goal" );
+}
+
+/*
+	Watches while the obj is not being carried, calls 'goal' when complete
+*/
+bot_get_flag( flag )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait 0.5;
+		
+		if ( !isdefined( flag ) )
+		{
+			break;
+		}
+		
+		if ( isdefined( getFlagCarrier( flag ) ) )
+		{
+			break;
+		}
+	}
+	
+	self notify( "goal" );
+}
+
+/*
+	Bots go and get the flag
+*/
+bot_cap_get_flag( flag )
+{
+	origin = flag.origin;
+	
+	// go get it
+	
+	self.bot_lock_goal = true;
+	self SetScriptGoal( origin, 32 );
+	
+	self thread bot_get_flag( flag );
+	
+	evt = self waittill_any_return( "goal", "bad_path", "new_goal" );
+	
+	if ( evt != "new_goal" )
+	{
+		self ClearScriptGoal();
+	}
+	
+	if ( evt != "goal" )
+	{
+		self.bot_lock_goal = false;
+		return;
+	}
+	
+	self ClearScriptGoal();
+	self.bot_lock_goal = false;
 }
