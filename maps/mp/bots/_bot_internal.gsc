@@ -1359,7 +1359,7 @@ aim_loop()
 				
 				if ( trace_time > reaction_time )
 				{
-					if ( ( !canADS || adsAmount >= 1.0 || self GetStance() == "prone" ) && ( conedot > 0.99 || dist < level.bots_maxknifedistance ) && getcvarint( "bots_play_fire" ) )
+					if ( ( !canADS || adsAmount >= 1.0 || self getStance() == "prone" ) && ( conedot > 0.99 || dist < level.bots_maxknifedistance ) && getcvarint( "bots_play_fire" ) )
 					{
 						self botFire();
 					}
@@ -1420,7 +1420,7 @@ aim_loop()
 			}
 		}
 		
-		if ( ( !canADS || adsAmount >= 1.0 || self GetStance() == "prone" ) && ( conedot > 0.95 || dist < level.bots_maxknifedistance ) && getcvarint( "bots_play_fire" ) )
+		if ( ( !canADS || adsAmount >= 1.0 || self getStance() == "prone" ) && ( conedot > 0.95 || dist < level.bots_maxknifedistance ) && getcvarint( "bots_play_fire" ) )
 		{
 			self botFire();
 		}
@@ -1630,7 +1630,7 @@ walk_loop()
 		
 		if ( isplayer( self.bot.target.entity ) && self.bot.target.trace_time && self canFire( curweap ) && self isInRange( self.bot.target.dist, curweap ) )
 		{
-			if ( self GetStance() == "prone" || ( self.bot.is_cur_sniper && self playerads() > 0 ) )
+			if ( self getStance() == "prone" || ( self.bot.is_cur_sniper && self playerads() > 0 ) )
 			{
 				return;
 			}

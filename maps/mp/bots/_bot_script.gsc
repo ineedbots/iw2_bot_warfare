@@ -692,8 +692,8 @@ start_bot_threads()
 	{
 		self thread bot_hq();
 		
-		// self thread bot_sd_defenders();
-		// self thread bot_sd_attackers();
+		self thread bot_sd_defenders();
+		self thread bot_sd_attackers();
 		
 		self thread bot_cap();
 	}
@@ -1487,12 +1487,12 @@ killCampAfterTime( time )
 	self endon( "disconnect" );
 	self endon( "kill_camp_bot" );
 	
-	timeleft = 90; // cod2
+	timeleft = getTimeRemaining() / 1000;
 	
 	while ( time > 0 && timeleft >= 60 )
 	{
 		wait 1;
-		timeleft = 90;
+		timeleft = getTimeRemaining() / 1000;
 		time--;
 	}
 	
@@ -2447,4 +2447,508 @@ bot_cap_get_flag( flag )
 	
 	self ClearScriptGoal();
 	self.bot_lock_goal = false;
+}
+
+/*
+	Gets the object thats the closest in the array
+*/
+bot_array_nearest_origin( array )
+{
+	result = undefined;
+	
+	for ( i = 0; i < array.size; i++ )
+	{
+		if ( !isdefined( result ) || distancesquared( self.origin, array[ i ].origin ) < distancesquared( self.origin, result.origin ) )
+		{
+			result = array[ i ];
+		}
+	}
+	
+	return result;
+}
+
+/*
+	bots will defend their site from a planter/defuser
+*/
+bot_defend_site( site )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait 0.5;
+		
+		if ( !isdefined( site.planting ) && !isdefined( site.defusing ) )
+		{
+			break;
+		}
+	}
+	
+	self notify( "bad_path" );
+}
+
+/*
+	Bots will go defuse the bomb
+*/
+bot_go_defuse( plant )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait 1;
+		
+		if ( !level.bombplanted )
+		{
+			break;
+		}
+		
+		if ( self istouching( plant ) )
+		{
+			break;
+		}
+	}
+	
+	if ( !level.bombplanted )
+	{
+		self notify( "bad_path" );
+	}
+	else
+	{
+		self notify( "goal" );
+	}
+}
+
+/*
+	Bots will go plant the bomb
+*/
+bot_go_plant( plant )
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	self endon( "goal" );
+	self endon( "bad_path" );
+	self endon( "new_goal" );
+	
+	for ( ;; )
+	{
+		wait 1;
+		
+		if ( level.bombplanted )
+		{
+			break;
+		}
+		
+		if ( self istouching( plant ) )
+		{
+			break;
+		}
+	}
+	
+	if ( level.bombplanted )
+	{
+		self notify( "bad_path" );
+	}
+	else
+	{
+		self notify( "goal" );
+	}
+}
+
+/*
+	Waits for the bot to stop moving
+*/
+bot_wait_stop_move()
+{
+	while ( !self isonground() || lengthsquared( self getVelocity() ) > 1 )
+	{
+		wait 0.25;
+	}
+}
+
+/*
+	Bots play sd defenders
+*/
+bot_sd_defenders_loop( data )
+{
+	myTeam = self.pers[ "team" ];
+	otherTeam = getotherteam( myTeam );
+	
+	// bomb not planted, lets protect our sites
+	if ( !level.bombplanted )
+	{
+		timeleft = getTimeRemaining() / 1000;
+		
+		if ( timeleft >= 90 )
+		{
+			return;
+		}
+		
+		// pick a site to protect
+		sites = getentarray( "bombzone", "targetname" );
+		
+		if ( !sites.size )
+		{
+			return;
+		}
+		
+		if ( data.rand > 50 )
+		{
+			site = self bot_array_nearest_origin( sites );
+		}
+		else
+		{
+			site = random( sites );
+		}
+		
+		if ( !isdefined( site ) )
+		{
+			return;
+		}
+		
+		origin = ( site.origin[ 0 ] + 50, site.origin[ 1 ] + 50, site.origin[ 2 ] + 5 );
+		
+		if ( isdefined( site.planting ) ) // somebody is planting
+		{
+			self BotNotifyBotEvent( "sd", "start", "planter", site );
+			
+			self.bot_lock_goal = true;
+			self SetScriptGoal( origin, 64 );
+			
+			self thread bot_defend_site( site );
+			
+			if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+			{
+				self ClearScriptGoal();
+			}
+			
+			self.bot_lock_goal = false;
+			
+			self BotNotifyBotEvent( "sd", "stop", "planter", site );
+			return;
+		}
+		
+		// else hang around the site
+		if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+		{
+			return;
+		}
+		
+		self.bot_lock_goal = true;
+		self SetScriptGoal( origin, 256 );
+		
+		if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+		
+		self.bot_lock_goal = false;
+		return;
+	}
+	
+	// bomb is planted, we need to defuse
+	defuse = getent( "bombtrigger", "targetname" );
+	
+	if ( !isdefined( defuse ) )
+	{
+		return;
+	}
+	
+	if ( !isdefined( defuse.bots ) )
+	{
+		defuse.bots = 0;
+	}
+	
+	origin = ( defuse.origin[ 0 ], defuse.origin[ 1 ], defuse.origin[ 2 ] + 5 );
+	
+	// someone is going to go defuse ,lets just hang around
+	if ( defuse.bots > 1 )
+	{
+		if ( self HasScriptGoal() )
+		{
+			return;
+		}
+		
+		if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+		{
+			return;
+		}
+		
+		self SetScriptGoal( origin, 256 );
+		self thread bot_go_defuse( defuse );
+		
+		if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+		
+		return;
+	}
+	
+	// lets defuse
+	self BotNotifyBotEvent( "sd", "go", "defuse" );
+	
+	self.bot_lock_goal = true;
+	self SetScriptGoal( origin, 1 );
+	self thread bot_inc_bots( defuse );
+	self thread bot_go_defuse( defuse );
+	
+	event = self waittill_any_return( "goal", "bad_path", "new_goal" );
+	
+	if ( event != "new_goal" )
+	{
+		self ClearScriptGoal();
+	}
+	
+	if ( event != "goal" || !level.bombplanted || isdefined( defuse.defusing ) || !self istouching( defuse ) || self hasThreat() )
+	{
+		self.bot_lock_goal = false;
+		return;
+	}
+	
+	self BotNotifyBotEvent( "sd", "start", "defuse" );
+	
+	self BotRandomStance();
+	self SetScriptGoal( self.origin, 64 );
+	self bot_wait_stop_move();
+	
+	waitTime = level.defusetime + 2.5;
+	self thread BotPressUse( waitTime );
+	wait waitTime;
+	
+	self ClearScriptGoal();
+	self.bot_lock_goal = false;
+	
+	self BotNotifyBotEvent( "sd", "stop", "defuse" );
+}
+
+/*
+	Bots play sd defenders
+*/
+bot_sd_defenders()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	
+	if ( level.gametype != "sd" )
+	{
+		return;
+	}
+	
+	if ( self.team == game[ "attackers" ] )
+	{
+		return;
+	}
+	
+	data = spawnstruct();
+	data.rand = self BotGetRandom();
+	
+	for ( ;; )
+	{
+		wait( randomintrange( 3, 5 ) );
+		
+		if ( self.bot_lock_goal )
+		{
+			continue;
+		}
+		
+		if ( self isPlantingOrDefusing() )
+		{
+			continue;
+		}
+		
+		self bot_sd_defenders_loop( data );
+	}
+}
+
+/*
+	Bots play sd attackers
+*/
+bot_sd_attackers_loop( data )
+{
+	if ( data.first )
+	{
+		data.first = false;
+	}
+	else
+	{
+		wait( randomintrange( 3, 5 ) );
+	}
+	
+	if ( self.bot_lock_goal )
+	{
+		return;
+	}
+	
+	myTeam = self.pers[ "team" ];
+	otherTeam = getotherteam( myTeam );
+	
+	// bomb planted
+	if ( level.bombplanted )
+	{
+		site = getent( "bombtrigger", "targetname" );
+		
+		if ( !isdefined( site ) )
+		{
+			return;
+		}
+		
+		origin = ( site.origin[ 0 ], site.origin[ 1 ], site.origin[ 2 ] + 5 );
+		
+		if ( isdefined( site.defusing ) ) // somebody is defusing
+		{
+			self BotNotifyBotEvent( "sd", "start", "defuser" );
+			
+			self.bot_lock_goal = true;
+			
+			self SetScriptGoal( origin, 64 );
+			
+			self thread bot_defend_site( site );
+			
+			if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+			{
+				self ClearScriptGoal();
+			}
+			
+			self.bot_lock_goal = false;
+			
+			self BotNotifyBotEvent( "sd", "stop", "defuser" );
+			return;
+		}
+		
+		// else hang around the site
+		if ( distancesquared( origin, self.origin ) <= 1024 * 1024 )
+		{
+			return;
+		}
+		
+		self.bot_lock_goal = true;
+		self SetScriptGoal( origin, 256 );
+		
+		if ( self waittill_any_return( "goal", "bad_path", "new_goal" ) != "new_goal" )
+		{
+			self ClearScriptGoal();
+		}
+		
+		self.bot_lock_goal = false;
+		return;
+	}
+	
+	timeleft = getTimeRemaining() / 1000;
+	timepassed = getTimePassed() / 1000;
+	
+	// check if to plant
+	if ( timepassed < 120 && timeleft >= 90 && randomint( 100 ) < 98 )
+	{
+		return;
+	}
+	
+	sites = getentarray( "bombzone", "targetname" );
+	
+	if ( !sites.size )
+	{
+		return;
+	}
+	
+	if ( data.rand > 50 )
+	{
+		plant = self bot_array_nearest_origin( sites );
+	}
+	else
+	{
+		plant = random( sites );
+	}
+	
+	if ( !isdefined( plant ) )
+	{
+		return;
+	}
+	
+	other = undefined;
+	
+	for ( i = 0; i < sites.size; i++ )
+	{
+		if ( sites[ i ] != plant )
+		{
+			other = sites[ i ];
+			break;
+		}
+	}
+	
+	origin = ( plant.origin[ 0 ] + 50, plant.origin[ 1 ] + 50, plant.origin[ 2 ] + 5 );
+	
+	self BotNotifyBotEvent( "sd", "go", "plant", plant );
+	
+	self.bot_lock_goal = true;
+	self SetScriptGoal( origin, 1 );
+	self thread bot_go_plant( plant );
+	
+	event = self waittill_any_return( "goal", "bad_path", "new_goal" );
+	
+	if ( event != "new_goal" )
+	{
+		self ClearScriptGoal();
+	}
+	
+	if ( event != "goal" || level.bombplanted || ( isdefined( other ) && isdefined( other.planting ) ) || !self istouching( plant ) || self hasThreat() || isdefined( plant.planting ) )
+	{
+		self.bot_lock_goal = false;
+		return;
+	}
+	
+	self BotNotifyBotEvent( "sd", "start", "plant", plant );
+	
+	self BotRandomStance();
+	self SetScriptGoal( self.origin, 64 );
+	self bot_wait_stop_move();
+	
+	waitTime = level.planttime + 2.5;
+	self thread BotPressUse( waitTime );
+	wait waitTime;
+	
+	self ClearScriptGoal();
+	self.bot_lock_goal = false;
+	
+	self BotNotifyBotEvent( "sd", "stop", "plant", plant );
+}
+
+/*
+	Bots play sd attackers
+*/
+bot_sd_attackers()
+{
+	self endon( "death" );
+	self endon( "disconnect" );
+	level endon( "game_ended" );
+	
+	if ( level.gametype != "sd" )
+	{
+		return;
+	}
+	
+	if ( self.team != game[ "attackers" ] )
+	{
+		return;
+	}
+	
+	data = spawnstruct();
+	data.rand = self BotGetRandom();
+	data.first = true;
+	
+	for ( ;; )
+	{
+		self bot_sd_attackers_loop( data );
+	}
 }

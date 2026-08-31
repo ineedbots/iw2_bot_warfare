@@ -694,6 +694,37 @@ getStance()
 /*
 	CoD2
 */
+getTimePassed()
+{
+	if ( !isdefined( level.starttime ) )
+	{
+		return 0;
+	}
+	
+	return ( gettime() - level.starttime );
+}
+
+/*
+	CoD2
+*/
+getTimeRemaining()
+{
+	if ( isdefined( level.roundlength ) )
+	{
+		return level.roundlength * 60 * 1000 - getTimePassed();
+	}
+	
+	if ( !isdefined( level.timelimit ) )
+	{
+		return 0;
+	}
+	
+	return level.timelimit * 60 * 1000 - getTimePassed();
+}
+
+/*
+	CoD2
+*/
 getVelocity()
 {
 	if ( !isalive( self ) )
@@ -727,7 +758,7 @@ WeaponIsFullAuto( weap )
 */
 getEyeHeight()
 {
-	stance = self GetStance();
+	stance = self getStance();
 	
 	if ( stance == "prone" )
 	{

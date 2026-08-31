@@ -171,10 +171,29 @@ do_botaction( action )
 		case "+gostand":
 			self setbotstance( "jump" );
 			break;
-			
-		case "-smoke": // no equal in libcod
+		
 		case "-activate":
+			// self activate( false ); // no equal in libcod
+			break;
+		
+		case "+activate":
+			// self activate( true );
+			break;
+		
+		case "+smoke":
+			// self throwsmoke( true );
+			break;
+		
+		case "-smoke":
+			// self throwsmoke( false );
+			break;
+			
+		case "+holdbreath":
+			// self holdbreath( true );
+			break;
+			
 		case "-holdbreath":
+			// self holdbreath( false );
 			break;
 	}
 	
