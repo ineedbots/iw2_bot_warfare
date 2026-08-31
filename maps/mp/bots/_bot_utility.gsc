@@ -1899,6 +1899,14 @@ getMapName( map )
 }
 
 /*
+	CoD4
+*/
+getBaseWeaponName( weap )
+{
+	return strtok( weap, "_" )[ 0 ];
+}
+
+/*
 	cod2
 */
 waittill_any( string1, string2, string3, string4, string5 )

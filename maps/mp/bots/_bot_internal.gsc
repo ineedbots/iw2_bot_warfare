@@ -164,7 +164,15 @@ bot_skip_killcam()
 		
 		if ( isdefined( self.killcam ) )
 		{
+			self BotNotifyBotEvent( "killcam", "start" );
+			
+			wait 0.5 + randomint( 3 );
+			
+			wait 0.1;
+			
 			self notify( "end_killcam" );
+			
+			self BotNotifyBotEvent( "killcam", "stop" );
 		}
 	}
 }

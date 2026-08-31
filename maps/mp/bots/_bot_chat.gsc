@@ -5,9 +5,7 @@
 	Does bot chatter.
 */
 
-#include common_scripts\utility;
 #include maps\mp\_utility;
-#include maps\mp\gametypes\_hud_util;
 #include maps\mp\bots\_bot_utility;
 
 /*
@@ -15,9 +13,9 @@
 */
 init()
 {
-	if ( getdvar( "bots_main_chat" ) == "" )
+	if ( getcvar( "bots_main_chat" ) == "" )
 	{
-		setdvar( "bots_main_chat", 1.0 );
+		setcvar( "bots_main_chat", 1.0 );
 	}
 	
 	level thread onBotConnected();
@@ -41,7 +39,7 @@ onBotConnected()
 */
 BotDoChat( chance, string, isTeam )
 {
-	mod = getdvarfloat( "bots_main_chat" );
+	mod = getcvarfloat( "bots_main_chat" );
 	
 	if ( mod <= 0.0 )
 	{
@@ -88,7 +86,7 @@ start_death_watch()
 	{
 		self waittill( "death" );
 		
-		self thread bot_chat_death_watch( self.lastattacker, self.bots_lastks );
+		self thread bot_chat_death_watch( self.lastkiller, self.bots_lastks );
 		
 		self.bots_lastks = 0;
 	}
@@ -169,28 +167,12 @@ start_chat_watch()
 		
 		switch ( msg )
 		{
-			case "revive":
-				self thread bot_chat_revive_watch( a, b, c, d, e, f, g );
-				break;
-				
 			case "killcam":
 				self thread bot_chat_killcam_watch( a, b, c, d, e, f, g );
 				break;
 				
 			case "stuck":
 				self thread bot_chat_stuck_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "tube":
-				self thread bot_chat_tube_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "killstreak":
-				self thread bot_chat_killstreak_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "attack_vehicle":
-				self thread bot_chat_attack_vehicle_watch( a, b, c, d, e, f, g );
 				break;
 				
 			case "follow_threat":
@@ -205,16 +187,8 @@ start_chat_watch()
 				self thread bot_chat_follow_watch( a, b, c, d, e, f, g );
 				break;
 				
-			case "equ":
-				self thread bot_chat_equ_watch( a, b, c, d, e, f, g );
-				break;
-				
 			case "nade":
 				self thread bot_chat_nade_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "throwback":
-				self thread bot_chat_throwback_watch( a, b, c, d, e, f, g );
 				break;
 				
 			case "rage":
@@ -237,20 +211,8 @@ start_chat_watch()
 				self thread bot_chat_uav_target_watch( a, b, c, d, e, f, g );
 				break;
 				
-			case "attack_equ":
-				self thread bot_chat_attack_equ_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "dom":
-				self thread bot_chat_dom_watch( a, b, c, d, e, f, g );
-				break;
-				
 			case "hq":
 				self thread bot_chat_hq_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "sab":
-				self thread bot_chat_sab_watch( a, b, c, d, e, f, g );
 				break;
 				
 			case "sd":
@@ -261,18 +223,10 @@ start_chat_watch()
 				self thread bot_chat_cap_watch( a, b, c, d, e, f, g );
 				break;
 				
-			case "twar":
-				self thread bot_chat_twar_watch( a, b, c, d, e, f, g );
-				break;
-				
-			case "attack_dog":
-				self thread bot_chat_attack_dog_watch( a, b, c, d, e, f, g );
-				break;
-				
 			case "connection":
 				self thread bot_chat_connection_player_watch( a, b, c, d, e, f, g );
 				break;
-
+				
 			case "chat":
 				self thread bot_chat_chat_player_watch( a, b, c, d, e, f, g );
 				break;
@@ -316,7 +270,7 @@ start_startgame_watch()
 	
 	switch ( level.gametype )
 	{
-		case "war":
+		case "tdm":
 			switch ( randomint( 3 ) )
 			{
 				case 0:
@@ -325,24 +279,6 @@ start_startgame_watch()
 					
 				case 1:
 					self BotDoChat( 7, "Lets get em guys, wipe the floor with them." );
-					break;
-					
-				case 2:
-					self BotDoChat( 7, "Yeeeesss master..." );
-					break;
-			}
-			
-			break;
-			
-		case "dom":
-			switch ( randomint( 3 ) )
-			{
-				case 0:
-					self BotDoChat( 7, "Yaaayy!! I LOVE DOMINATION!!!!" );
-					break;
-					
-				case 1:
-					self BotDoChat( 7, "Lets cap the flags and them." );
 					break;
 					
 				case 2:
@@ -370,24 +306,6 @@ start_startgame_watch()
 			
 			break;
 			
-		case "sab":
-			switch ( randomint( 3 ) )
-			{
-				case 0:
-					self BotDoChat( 7, "Soccer/Football! Lets play it!" );
-					break;
-					
-				case 1:
-					self BotDoChat( 7, "Who plays sab these days." );
-					break;
-					
-				case 2:
-					self BotDoChat( 7, "I do not know what to say." );
-					break;
-			}
-			
-			break;
-			
 		case "dm":
 			switch ( randomint( 3 ) )
 			{
@@ -406,7 +324,7 @@ start_startgame_watch()
 			
 			break;
 			
-		case "koth":
+		case "hq":
 			self BotDoChat( 7, "HQ TIME!" );
 			break;
 	}
@@ -426,42 +344,41 @@ doQuickMessage()
 		soundalias = "";
 		saytext = "";
 		wait 2;
-		self.spamdelay = true;
 		
-		switch ( randomint( 11 ) )
+		switch ( randomint( 4 ) )
 		{
-			case 4 :
-				soundalias = "mp_cmd_suppressfire";
-				saytext = "Suppressing fire!";
+			case 0:
+				soundalias = "quickcommands";
+				saytext = ( randomint( 8 ) + 1 ) + "";
 				break;
 				
-			case 5 :
-				soundalias = "mp_cmd_followme";
-				saytext = "Follow Me!";
+			case 1:
+				soundalias = "quickstatements";
+				saytext = ( randomint( 8 ) + 1 ) + "";
 				break;
 				
-			case 6 :
-				soundalias = "mp_stm_enemyspotted";
-				saytext = "Enemy spotted!";
-				break;
-				
-			case 7 :
-				soundalias = "mp_cmd_fallback";
-				saytext = "Fall back!";
-				break;
-				
-			case 8 :
-				soundalias = "mp_stm_needreinforcements";
-				saytext = "Need reinforcements!";
+			case 2:
+				soundalias = "quickresponses";
+				saytext = ( randomint( 7 ) + 1 ) + "";
 				break;
 		}
 		
 		if ( soundalias != "" && saytext != "" )
 		{
-			self maps\mp\gametypes\_quickmessages::saveheadicon();
-			self maps\mp\gametypes\_quickmessages::doquickmessage( soundalias, saytext );
-			wait 2;
-			self maps\mp\gametypes\_quickmessages::restoreheadicon();
+			switch ( soundalias )
+			{
+				case "quickcommands":
+					self maps\mp\gametypes\_quickmessages::quickcommands( saytext );
+					break;
+					
+				case "quickstatements":
+					self maps\mp\gametypes\_quickmessages::quickstatements( saytext );
+					break;
+					
+				case "quickresponses":
+					self maps\mp\gametypes\_quickmessages::quickresponses( saytext );
+					break;
+			}
 		}
 		else
 		{
@@ -471,7 +388,6 @@ doQuickMessage()
 			}
 		}
 		
-		self.spamdelay = undefined;
 		wait randomint( 5 );
 		self.talking = false;
 	}
@@ -494,22 +410,33 @@ endgame_chat()
 	{
 		player = level.players[ i ];
 		
-		if ( player.pers[ "score" ] > b )
+		if ( player.score > b )
 		{
 			winner = player;
-			b = player.pers[ "score" ];
+			b = player.score;
 		}
 		
-		if ( player.pers[ "score" ] < w )
+		if ( player.score < w )
 		{
 			loser = player;
-			w = player.pers[ "score" ];
+			w = player.score;
 		}
 	}
 	
 	if ( level.teambased )
 	{
-		winningteam = maps\mp\gametypes\_globallogic::getwinningteam();
+		winningteam = "none";
+		alliedscore = getTeamScore( "allies" );
+		axisscore = getTeamScore( "axis" );
+
+		if ( alliedscore > axisscore )
+		{
+			winningteam = "allies";
+		}
+		else if ( axisscore > alliedscore )
+		{
+			winningteam = "axis";
+		}
 		
 		if ( self.pers[ "team" ] == winningteam )
 		{
@@ -935,23 +862,6 @@ endgame_chat()
 bot_chat_streak( streakCount )
 {
 	self endon( "disconnect" );
-	
-	if ( streakCount == 7 )
-	{
-		if ( isdefined( self.pers[ "hardPointItem" ] ) && self.pers[ "hardPointItem" ] == "dogs_mp" )
-		{
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 33, "Nice! I acheived the dogs!" );
-					break;
-			}
-		}
-		else
-		{
-			self BotDoChat( 33, "Huh?? I dont got my dogs :((" );
-		}
-	}
 }
 
 /*
@@ -1107,11 +1017,11 @@ bot_chat_killed_watch( victim )
 			break;
 			
 		case 34:
-			message = ( "i love " + getMapName( getdvar( "mapname" ) ) + "!" );
+			message = ( "i love " + getMapName( getcvar( "mapname" ) ) + "!" );
 			break;
 			
 		case 35:
-			message = ( getMapName( getdvar( "mapname" ) ) + " is my favorite map!" );
+			message = ( getMapName( getcvar( "mapname" ) ) + " is my favorite map!" );
 			break;
 			
 		case 36:
@@ -1329,7 +1239,7 @@ bot_chat_death_watch( killer, last_ks )
 			break;
 			
 		case 40:
-			message = ( "wow " + getMapName( getdvar( "mapname" ) ) + " is messed up" );
+			message = ( "wow " + getMapName( getcvar( "mapname" ) ) + " is messed up" );
 			break;
 			
 		case 41:
@@ -1373,19 +1283,19 @@ bot_chat_death_watch( killer, last_ks )
 			break;
 			
 		case 51:
-			message = ( "lol " + getMapName( getdvar( "mapname" ) ) + " sux" );
+			message = ( "lol " + getMapName( getcvar( "mapname" ) ) + " sux" );
 			break;
 			
 		case 52:
-			message = ( "why are we even playing on " + getMapName( getdvar( "mapname" ) ) + "?" );
+			message = ( "why are we even playing on " + getMapName( getcvar( "mapname" ) ) + "?" );
 			break;
 			
 		case 53:
-			message = ( getMapName( getdvar( "mapname" ) ) + " is such an unfair map!!" );
+			message = ( getMapName( getcvar( "mapname" ) ) + " is such an unfair map!!" );
 			break;
 			
 		case 54:
-			message = ( "what were they thinking when making " + getMapName( getdvar( "mapname" ) ) + "?!" );
+			message = ( "what were they thinking when making " + getMapName( getcvar( "mapname" ) ) + "?!" );
 			break;
 			
 		case 55:
@@ -1444,47 +1354,6 @@ bot_chat_death_watch( killer, last_ks )
 	
 	wait ( randomint( 3 ) + 1 );
 	self BotDoChat( 8, message );
-}
-
-/*
-	Revive
-*/
-bot_chat_revive_watch( state, revive, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "go":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i am going to revive " + revive.name );
-					break;
-			}
-			
-			break;
-			
-		case "start":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i am reviving " + revive.name );
-					break;
-			}
-			
-			break;
-			
-		case "stop":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i revived " + revive.name );
-					break;
-			}
-			
-			break;
-	}
 }
 
 /*
@@ -1579,73 +1448,6 @@ bot_chat_stuck_watch( a, b, c, d, e, f, g )
 	}
 	
 	self BotDoChat( 20, msg );
-}
-
-/*
-	Tube
-*/
-bot_chat_tube_watch( state, tubeWp, tubeWeap, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "go":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i am going to go tube" );
-					break;
-			}
-			
-			break;
-			
-		case "start":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i tubed" );
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
-	bot_chat_killstreak_watch( streakName, b, c, d, e, f, g )
-*/
-bot_chat_killstreak_watch( state, location, directionYaw, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "call":
-			if ( self.pers[ "hardPointItem" ] == "dogs_mp" )
-			{
-				self BotDoChat( 20, "wewt! i got the dogs!!" );
-			}
-			
-			break;
-	}
-}
-
-/*
-	bot_chat_attack_vehicle_watch( a, b, c, d, e, f, g )
-*/
-bot_chat_attack_vehicle_watch( state, vehicle, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "start":
-			break;
-			
-		case "stop":
-			break;
-	}
 }
 
 /*
@@ -1779,37 +1581,6 @@ bot_chat_follow_watch( state, player, time, d, e, f, g )
 }
 
 /*
-	bot_chat_equ_watch
-*/
-bot_chat_equ_watch( state, wp, weap, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "go":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "going to place a " + getBaseWeaponName( weap ) );
-					break;
-			}
-			
-			break;
-			
-		case "start":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "placed a " + getBaseWeaponName( weap ) );
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
 	bot_chat_nade_watch
 */
 bot_chat_nade_watch( state, wp, weap, d, e, f, g )
@@ -1833,37 +1604,6 @@ bot_chat_nade_watch( state, wp, weap, d, e, f, g )
 			{
 				case 0:
 					self BotDoChat( 10, "threw a " + getBaseWeaponName( weap ) );
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
-	bot_chat_throwback_watch
-*/
-bot_chat_throwback_watch( state, nade, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "start":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i am going to throw back the grenade!" );
-					break;
-			}
-			
-			break;
-			
-		case "stop":
-			switch ( randomint( 1 ) )
-			{
-				case 0:
-					self BotDoChat( 10, "i threw back the grenade!" );
 					break;
 			}
 			
@@ -2029,73 +1769,6 @@ bot_chat_uav_target_watch( state, heard, c, d, e, f, g )
 }
 
 /*
-	bot_chat_attack_equ_watch
-*/
-bot_chat_attack_equ_watch( state, equ, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "start":
-			break;
-			
-		case "stop":
-			break;
-	}
-}
-
-/*
-	bot_chat_dom_watch
-*/
-bot_chat_dom_watch( state, sub_state, flag, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( sub_state )
-	{
-		case "spawnkill":
-			switch ( state )
-			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "defend":
-			switch ( state )
-			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "cap":
-			switch ( state )
-			{
-				case "go":
-					break;
-					
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
 	bot_chat_hq_watch
 */
 bot_chat_hq_watch( state, sub_state, c, d, e, f, g )
@@ -2122,83 +1795,6 @@ bot_chat_hq_watch( state, sub_state, c, d, e, f, g )
 		case "defend":
 			switch ( state )
 			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
-	bot_chat_sab_watch
-*/
-bot_chat_sab_watch( state, sub_state, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( sub_state )
-	{
-		case "bomb":
-			switch ( state )
-			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "defuser":
-			switch ( state )
-			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "planter":
-			switch ( state )
-			{
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "plant":
-			switch ( state )
-			{
-				case "go":
-					break;
-					
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-			
-		case "defuse":
-			switch ( state )
-			{
-				case "go":
-					break;
-					
 				case "start":
 					break;
 					
@@ -2338,49 +1934,6 @@ bot_chat_cap_watch( state, sub_state, obj, d, e, f, g )
 					break;
 			}
 			
-			break;
-	}
-}
-
-/*
-	bot_chat_twar_watch
-*/
-bot_chat_twar_watch( state, sub_state, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( sub_state )
-	{
-		case "cap":
-			switch ( state )
-			{
-				case "go":
-					break;
-					
-				case "start":
-					break;
-					
-				case "stop":
-					break;
-			}
-			
-			break;
-	}
-}
-
-/*
-	bot_chat_attack_dog_watch
-*/
-bot_chat_attack_dog_watch( state, dog, c, d, e, f, g )
-{
-	self endon( "disconnect" );
-	
-	switch ( state )
-	{
-		case "start":
-			break;
-			
-		case "stop":
 			break;
 	}
 }

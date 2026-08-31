@@ -26,6 +26,9 @@ connected()
 	self.killerlocation = undefined;
 	self.lastkiller = undefined;
 	self.bot_change_class = true;
+	self.lastkilledplayer = undefined;
+	self.cur_kill_streak = 0;
+	self.cur_death_streak = 0;
 	
 	self thread difficulty();
 	self thread teamWatch();
@@ -84,6 +87,15 @@ onKilled( eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc,
 	
 	self.killerlocation = eAttacker.origin;
 	self.lastkiller = eAttacker;
+	self.cur_death_streak++;
+	
+	if ( eAttacker is_bot() )
+	{
+		eAttacker.cur_death_streak = 0;
+		eAttacker.lastkilledplayer = self;
+		eAttacker.cur_kill_streak++;
+		eAttacker notify( "killed_enemy" );
+	}
 }
 
 /*
@@ -640,6 +652,7 @@ onSpawned()
 		self.bot_lock_goal = false;
 		self.help_time = undefined;
 		self.bot_was_follow_script_update = undefined;
+		self.cur_kill_streak = 0;
 	}
 }
 

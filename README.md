@@ -1,6 +1,6 @@
 # IW2 Bot Warfare
 
-Bot Warfare for CoD2, in progress...
+Bot Warfare for CoD2.
 
 TODO:
-  - _bot_chat
+  - docs
