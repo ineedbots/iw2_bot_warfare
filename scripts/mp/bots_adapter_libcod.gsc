@@ -173,11 +173,11 @@ do_botaction( action )
 			break;
 		
 		case "-activate":
-			// self activate( false ); // no equal in libcod
+			self activate( false ); // no equal in libcod
 			break;
 		
 		case "+activate":
-			// self activate( true );
+			self activate( true );
 			break;
 		
 		case "+smoke":

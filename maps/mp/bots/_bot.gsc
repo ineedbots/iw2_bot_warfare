@@ -6,7 +6,7 @@
 */
 init()
 {
-	level.bw_version = "2.3.0 PR 1";
+	level.bw_version = "2.3.0";
 	
 	if ( getcvar( "bots_main" ) == "" )
 	{
@@ -129,11 +129,6 @@ init()
 	if ( getcvar( "bots_skill_max" ) == "" )
 	{
 		setcvar( "bots_skill_max", 7 );
-	}
-	
-	if ( getcvar( "bots_loadout_rank" ) == "" ) // what rank the bots should be around, -1 is around the players, 0 is all random
-	{
-		setcvar( "bots_loadout_rank", -1 );
 	}
 	
 	if ( getcvar( "bots_play_move" ) == "" ) // bots move
