@@ -1,7 +1,7 @@
 ![GitHub Logo](/bw-assets/bw-logo.png)
 
 # IW2 Bot Warfare
-Bot Warfare is a GSC mod for [libcod](https://github.com/ibuddieat/zk_libcod/) / [CoD2rev Server](https://github.com/voron00/CoD2rev_Server).
+Bot Warfare is a GSC mod for [CoD2rev Server](https://github.com/voron00/CoD2rev_Server)'s implementation of [libcod](https://znation.nl/cod2script/)'s bot functions.
 
 It aims to add playable AI to the multiplayer games of CoD2.
 
