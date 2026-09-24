@@ -116,6 +116,7 @@ You can easily setup a local LAN dedicated server for you to join and play on.
 	- Initial release
 
 ## Credits
+- voron00 - https://github.com/voron00/CoD2rev_Server
 - INeedGames - http://www.moddb.com/mods/bot-warfare
 - PeZBot team - http://www.moddb.com/mods/pezbot
 - MeatBot team - https://www.moddb.com/mods/meatbot-v092
