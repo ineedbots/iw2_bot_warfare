@@ -27,7 +27,7 @@ do_botaction( action )
 			break;
 			
 		case "+ads":
-			self adsaim( true );
+			self adsaim( true ); // setaim
 			break;
 			
 		case "-ads":
@@ -51,7 +51,7 @@ do_botaction( action )
 			break;
 			
 		case "+frag":
-			self thrownade( true );
+			self thrownade( true ); // throwgrenade
 			break;
 			
 		case "-frag":
@@ -85,15 +85,15 @@ do_botaction( action )
 			break;
 			
 		case "+smoke":
-			// self throwsmoke( true );
+			// self throwsmokegrenade( true );
 			break;
 			
 		case "-smoke":
-			// self throwsmoke( false );
+			// self throwsmokegrenade( false );
 			break;
 			
 		case "+holdbreath":
-			// self holdbreath( true );
+			// self holdbreath( true ); // no equal in libcod
 			break;
 			
 		case "-holdbreath":
@@ -114,6 +114,9 @@ do_botstop()
 	self setbotstance( "stand" );
 	self setlean( "none" );
 	self setwalkdir( "none" );
+	// self holdbreath( false );
+	// self throwsmokegrenade( false );
+	// self activate( false );
 	self do_botweapon( self getcurrentweapon() );
 	
 	// self botstop();
@@ -144,7 +147,7 @@ do_botmovement( forward, right )
 		self setwalkdir( "left" );
 	}
 	 
-	// self botmovement( forward, right );
+	// self botmovement( forward, right ); // setwalkvalues
 }
 
 do_isbot()
@@ -154,9 +157,7 @@ do_isbot()
 
 do_botangles( angles )
 {
-	self setplayerangles( angles );
-
-	// self botangles( angles[ 0 ], angles[ 1 ], angles[ 2 ] );
+	self setplayerangles( angles ); // botangles
 }
 
 do_botweapon( weapon )
