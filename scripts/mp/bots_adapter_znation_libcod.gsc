@@ -7,6 +7,8 @@ init()
 	level.bot_builtins[ "isbot" ] = ::do_isbot;
 	level.bot_builtins[ "botangles" ] = ::do_botangles;
 	level.bot_builtins[ "botweapon" ] = ::do_botweapon;
+	level.bot_builtins[ "isonladder" ] = ::do_isonladder;
+	level.bot_builtins[ "ismantling" ] = ::do_ismantling;
 }
 
 do_printconsole( s )
@@ -177,4 +179,14 @@ do_botweapon( weapon )
 	self switchtoweaponid( level.bot_weaponids[ weapon ] );
 
 	// self switchtoweapon( weapon );
+}
+
+do_ismantling()
+{
+	return self ismantling();
+}
+
+do_isonladder()
+{
+	return self isonladder();
 }

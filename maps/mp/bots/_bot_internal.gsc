@@ -242,7 +242,7 @@ doBotMovement_loop( data )
 	}
 	
 	// climb through windows
-	if ( self isMantling() )
+	if ( self BotBuiltinIsMantling() )
 	{
 		data.wasmantling = true;
 		self crouch();
@@ -262,7 +262,7 @@ doBotMovement_loop( data )
 		// check if need to jump
 		bt = bullettrace( startPosForward, startPosForward - ( 0, 0, 40 ), false, self );
 		
-		if ( bt[ "fraction" ] < 1 && bt[ "normal" ][ 2 ] > 0.9 && data.i > 1.5 && !self isOnLadder() )
+		if ( bt[ "fraction" ] < 1 && bt[ "normal" ][ 2 ] > 0.9 && data.i > 1.5 && !self BotBuiltinIsOnLadder() )
 		{
 			data.i = 0;
 			self thread jump();

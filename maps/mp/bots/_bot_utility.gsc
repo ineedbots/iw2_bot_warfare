@@ -112,6 +112,32 @@ BotBuiltinBotWeapon( weapon )
 }
 
 /*
+	Test
+*/
+BotBuiltinIsMantling()
+{
+	if ( isdefined( level.bot_builtins ) && isdefined( level.bot_builtins[ "ismantling" ] ) )
+	{
+		return self [[ level.bot_builtins[ "ismantling" ] ]]();
+	}
+	
+	return false;
+}
+
+/*
+	Test
+*/
+BotBuiltinIsOnLadder()
+{
+	if ( isdefined( level.bot_builtins ) && isdefined( level.bot_builtins[ "isonladder" ] ) )
+	{
+		return self [[ level.bot_builtins[ "isonladder" ] ]]();
+	}
+	
+	return false;
+}
+
+/*
 	Returns if player is the host
 */
 is_host()
@@ -557,22 +583,6 @@ getValidGrenade()
 isSecondaryGrenade( nade )
 {
 	return issubstr( nade, "smoke_grenade_" );
-}
-
-/*
-	CoD2
-*/
-isMantling()
-{
-	return false;
-}
-
-/*
-	CoD2
-*/
-isOnLadder()
-{
-	return false;
 }
 
 /*
